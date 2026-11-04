@@ -1,0 +1,6 @@
+{
+  "name": "Clínica Dental SET — Odontología Poblenou",
+  "description": "Propuesta digital de alta conversión y SEO para Clínica Dental SET (Carrer del Doctor Trueta 213, Barcelona). Especialidades dentales, equipo médico y contacto directo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
