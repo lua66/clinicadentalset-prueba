@@ -39,7 +39,8 @@ export function getAllPrerenderPaths(): string[] {
     }
   }
 
-  return [...localizedPublicPaths, '/crm'];
+  // Include private /crm shell (auth-gated) and localized 404 pages
+  return [...localizedPublicPaths, '/crm', '/404', '/ca/404', '/en/404'];
 }
 
 export { BASE_URL, buildLocalizedPath, SUPPORTED_LANGUAGES };

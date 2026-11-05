@@ -150,7 +150,6 @@ async function runPrerender() {
       fs.writeFileSync(indexHtmlPath, pageHtml, 'utf-8');
     } else {
       const cleanRel = routePath.replace(/^\//, '');
-      // Write both dist/<route>/index.html and dist/<route>.html for Vercel cleanUrls & static servers
       const dirIndexFile = path.join(DIST_DIR, cleanRel, 'index.html');
       const flatHtmlFile = path.join(DIST_DIR, `${cleanRel}.html`);
       fs.mkdirSync(path.dirname(dirIndexFile), { recursive: true });
@@ -162,7 +161,7 @@ async function runPrerender() {
   }
 
   fs.rmSync(TMP_SSR_DIR, { recursive: true, force: true });
-  console.log(`[prerender] Successfully pre-rendered ${renderedCount} static routes across es/ca/en.`);
+  console.log(`[prerender] Successfully pre-rendered ${renderedCount} static routes across es/ca/en + 404.`);
 }
 
 runPrerender().catch((err) => {

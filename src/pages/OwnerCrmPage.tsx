@@ -1,17 +1,17 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Private Password-Protected CRM Page for Clinic Owner (/crm)
- * Tracks WhatsApp & Call click conversions, timestamps, treatments, origin pages, and seen/unseen statuses.
+ * Private Server-Authenticated CRM Page for Clinic Owner (/crm)
+ * Passwords and contact leads are verified and stored strictly on the server (/api/crm/*).
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Lock,
   Unlock,
   Key,
   ShieldAlert,
-  MessageCircle,
+  ShieldCheck,
   Phone,
   CheckCircle2,
   Calendar,
@@ -26,21 +26,19 @@ import {
   Save,
   Check,
   AlertTriangle,
+  RefreshCw,
 } from 'lucide-react';
 import {
   CrmLead,
-  getCrmLeads,
-  markLeadAsSeen,
-  markLeadAsUnseen,
+  checkCrmSession,
+  loginCrm,
+  logoutCrm,
+  fetchCrmLeads,
+  updateCrmLeadStatus,
   markAllLeadsAsSeen,
   updateLeadNotes,
   deleteCrmLead,
-  trackCrmLead,
-  isCrmAuthenticated,
-  setCrmAuthenticated,
-  checkCrmPassword,
-  setStoredPassword,
-  getUnseenLeadsCount,
+  changeCrmPassword,
 } from '../utils/crmTracker';
 import { CLINIC_CONTACT, SPECIALTIES } from '../data/clinicData';
 
@@ -49,12 +47,15 @@ interface OwnerCrmPageProps {
 }
 
 export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
+  const [checkingSession, setCheckingSession] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [passwordInput, setPasswordInput] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
+  const [submittingLogin, setSubmittingLogin] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const [leads, setLeads] = useState<CrmLead[]>([]);
+  const [loadingLeads, setLoadingLeads] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'all' | 'sin_ver' | 'visto' | 'whatsapp' | 'call'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
@@ -63,72 +64,112 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [newPassword, setNewPassword] = useState<string>('');
-  const [settingsSuccess, setSettingsSuccess] = useState<string>('');
+  const [settingsFeedback, setSettingsFeedback] = useState<{ text: string; isError?: boolean } | null>(
+    null
+  );
 
-  useEffect(() => {
-    setIsAuthenticated(isCrmAuthenticated());
+  const refreshLeads = useCallback(async () => {
+    setLoadingLeads(true);
+    const result = await fetchCrmLeads();
+    setLoadingLeads(false);
+    if (result.unauthorized) {
+      setIsAuthenticated(false);
+      setLeads([]);
+      return;
+    }
+    if (result.ok) {
+      setLeads(result.leads);
+    }
   }, []);
 
-  const refreshLeads = () => {
-    setLeads(getCrmLeads());
-  };
-
   useEffect(() => {
-    refreshLeads();
-
-    const handleUpdate = () => refreshLeads();
-    window.addEventListener('set-crm-updated', handleUpdate);
-    window.addEventListener('storage', handleUpdate);
-
+    let active = true;
+    checkCrmSession().then((authenticated) => {
+      if (!active) return;
+      setIsAuthenticated(authenticated);
+      setCheckingSession(false);
+      if (authenticated) {
+        refreshLeads();
+      }
+    });
     return () => {
-      window.removeEventListener('set-crm-updated', handleUpdate);
-      window.removeEventListener('storage', handleUpdate);
+      active = false;
     };
-  }, []);
+  }, [refreshLeads]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (checkCrmPassword(passwordInput)) {
+    setSubmittingLogin(true);
+    setPasswordError('');
+
+    const result = await loginCrm(passwordInput);
+    setSubmittingLogin(false);
+
+    if (result.ok) {
       setIsAuthenticated(true);
       setPasswordError('');
       setPasswordInput('');
+      await refreshLeads();
     } else {
-      setPasswordError('Contraseña incorrecta. Por favor verifíquela.');
+      setPasswordError(result.error || 'Contraseña incorrecta. Por favor verifíquela.');
     }
   };
 
-  const handleLogout = () => {
-    setCrmAuthenticated(false);
+  const handleLogout = async () => {
+    await logoutCrm();
     setIsAuthenticated(false);
+    setLeads([]);
   };
 
-  const handleToggleLeadStatus = (lead: CrmLead) => {
-    if (lead.status === 'sin_ver') {
-      markLeadAsSeen(lead.id);
-    } else {
-      markLeadAsUnseen(lead.id);
+  const handleToggleLeadStatus = async (lead: CrmLead) => {
+    const nextStatus = lead.status === 'sin_ver' ? 'visto' : 'sin_ver';
+    const ok = await updateCrmLeadStatus(lead.id, nextStatus);
+    if (ok) {
+      await refreshLeads();
     }
   };
 
-  const handleSaveNote = (id: string) => {
-    updateLeadNotes(id, noteDraft);
-    setEditingNotesId(null);
-    setSavedNoteNotification(id);
-    setTimeout(() => setSavedNoteNotification(null), 2500);
+  const handleMarkAllSeen = async () => {
+    const ok = await markAllLeadsAsSeen();
+    if (ok) {
+      await refreshLeads();
+    }
   };
 
-  const handleSimulateLead = (type: 'whatsapp' | 'call') => {
+  const handleSaveNote = async (id: string) => {
+    const ok = await updateLeadNotes(id, noteDraft);
+    if (ok) {
+      setEditingNotesId(null);
+      setSavedNoteNotification(id);
+      await refreshLeads();
+      setTimeout(() => setSavedNoteNotification(null), 2500);
+    }
+  };
+
+  const handleDeleteLead = async (id: string) => {
+    const ok = await deleteCrmLead(id);
+    if (ok) {
+      await refreshLeads();
+    }
+  };
+
+  const handleSimulateLead = async (type: 'whatsapp' | 'call') => {
     const specialtyTitles = SPECIALTIES.map((s) => s.title.es);
     const randomTreatment =
       specialtyTitles[Math.floor(Math.random() * specialtyTitles.length)] || 'Consulta General';
 
-    trackCrmLead({
-      type,
-      treatment: randomTreatment,
-      sourcePage: `Prueba CRM (${type === 'whatsapp' ? 'WhatsApp' : 'Llamada'})`,
-      sourceUrl: '/',
-      phoneTarget: type === 'whatsapp' ? CLINIC_CONTACT.whatsapp : CLINIC_CONTACT.phone,
+    await fetch('/api/crm/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type,
+        treatment: randomTreatment,
+        sourcePage: `Prueba CRM (${type === 'whatsapp' ? 'WhatsApp' : 'Llamada'})`,
+        sourceUrl: '/',
+        phoneTarget: type === 'whatsapp' ? CLINIC_CONTACT.whatsapp : CLINIC_CONTACT.phone,
+      }),
     });
+    await refreshLeads();
   };
 
   const handleExportCsv = () => {
@@ -171,19 +212,24 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     document.body.removeChild(link);
   };
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword.trim().length >= 4) {
-      setStoredPassword(newPassword.trim());
-      setSettingsSuccess('Contraseña actualizada correctamente.');
+    const res = await changeCrmPassword(newPassword.trim());
+    if (res.ok) {
+      setSettingsFeedback({
+        text: res.message || 'Contraseña actualizada correctamente en el servidor.',
+      });
       setNewPassword('');
-      setTimeout(() => setSettingsSuccess(''), 3000);
+      setTimeout(() => setSettingsFeedback(null), 3500);
     } else {
-      setSettingsSuccess('La contraseña debe tener al menos 4 caracteres.');
+      setSettingsFeedback({
+        text: res.error || 'No se pudo actualizar la contraseña.',
+        isError: true,
+      });
     }
   };
 
-  const unseenCount = getUnseenLeadsCount();
+  const unseenCount = leads.filter((l) => l.status === 'sin_ver').length;
   const seenCount = leads.length - unseenCount;
   const whatsappCount = leads.filter((l) => l.type === 'whatsapp').length;
   const callCount = leads.filter((l) => l.type === 'call').length;
@@ -207,8 +253,8 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     return true;
   });
 
-  // SCREEN 1: PASSWORD AUTHENTICATION GATE
-  if (!isAuthenticated) {
+  // SCREEN 1: SERVER-VALIDATED PASSWORD AUTHENTICATION GATE
+  if (checkingSession || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#080C0A] flex flex-col items-center justify-center p-4 text-[#F2F7F0]">
         <div className="w-full max-w-md bg-[#101914] border border-[#1F3125] rounded-3xl p-8 shadow-2xl">
@@ -228,7 +274,7 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
               Panel CRM y Registro de Contactos
             </h1>
             <p className="text-xs text-[#B9CEBE] mt-1.5 leading-relaxed">
-              Acceso privado protegido por contraseña para consultar los clics a WhatsApp y teléfono realizados desde la web.
+              Acceso privado con validación en servidor para consultar los clics a WhatsApp y teléfono realizados desde la web.
             </p>
           </div>
 
@@ -249,7 +295,8 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                     setPasswordInput(e.target.value);
                     setPasswordError('');
                   }}
-                  placeholder="Introduce la contraseña"
+                  placeholder="Introduce la contraseña de dirección"
+                  disabled={submittingLogin || checkingSession}
                   className="w-full px-4 py-3 bg-[#080C0A] border border-[#2A4232] rounded-xl text-[#F5FAF3] placeholder-[#7B9480] focus:outline-none focus:ring-2 focus:ring-[#83C408] text-sm pr-11"
                   autoFocus
                 />
@@ -273,28 +320,24 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] font-extrabold text-xs sm:text-sm rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+              disabled={submittingLogin || checkingSession}
+              className="w-full py-3.5 px-4 bg-[#83C408] hover:bg-[#95DB0B] disabled:opacity-60 text-[#071408] font-extrabold text-xs sm:text-sm rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Key className="w-4 h-4" />
-              <span>Entrar al Panel Privado</span>
+              <span>{submittingLogin ? 'Verificando en servidor...' : 'Entrar al Panel Privado'}</span>
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-[#1D2D22] text-center">
-            <div className="p-3 bg-[#0B110E] rounded-xl border border-[#1F3125] text-[11px] text-[#B9CEBE]">
-              <span className="font-bold text-[#83C408]">Clave inicial de demostración: </span>
-              <code className="bg-black px-2 py-0.5 rounded border border-[#1F3125] text-[#F5FAF3] font-mono font-bold">
-                set2026
-              </code>
-              <p className="mt-1 text-[10px] text-[#9AB39E]">
-                (Modificable desde Seguridad una vez dentro del panel)
-              </p>
+          <div className="mt-6 pt-5 border-t border-[#1D2D22] text-center space-y-4">
+            <div className="p-3 bg-[#0B110E] rounded-xl border border-[#1F3125] text-[11px] text-[#9AB39E] flex items-center justify-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-[#83C408] shrink-0" />
+              <span>Autenticación protegida en servidor · Sesión cifrada</span>
             </div>
 
             <button
               type="button"
               onClick={onBackToWeb}
-              className="mt-4 text-xs font-bold text-[#83C408] hover:underline flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+              className="text-xs font-bold text-[#83C408] hover:underline flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Volver a la página web</span>
@@ -305,7 +348,7 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     );
   }
 
-  // SCREEN 2: AUTHENTICATED CRM DASHBOARD (Only visible after entering owner password)
+  // SCREEN 2: AUTHENTICATED CRM DASHBOARD
   return (
     <div className="min-h-screen bg-[#080C0A] text-[#F2F7F0] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -322,12 +365,22 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                 CRM de Dirección · Clínica Dental SET
               </h1>
               <p className="text-xs font-medium text-[#08120A]/80">
-                Registro privado de clics a WhatsApp y teléfono generados en la web
+                Registro privado en servidor de clics a WhatsApp y teléfono generados en la web
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={refreshLeads}
+              className="px-3 py-2 text-xs font-bold rounded-xl bg-[#071408] hover:bg-[#112413] text-[#83C408] border border-[#071408] flex items-center gap-1.5 cursor-pointer"
+              title="Actualizar registros desde el servidor"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 text-[#83C408] ${loadingLeads ? 'animate-spin' : ''}`} />
+              <span>Actualizar</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setShowSettings(!showSettings)}
@@ -372,14 +425,14 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
           <div className="bg-[#101914] border border-[#1F3125] rounded-2xl p-5 shadow-xs">
             <h3 className="text-base text-[#F5FAF3] mb-1.5 flex items-center gap-2">
               <Key className="w-4 h-4 text-[#83C408]" />
-              <span>Cambiar Contraseña de Dirección</span>
+              <span>Cambiar Contraseña de Dirección (Servidor)</span>
             </h3>
             <p className="text-xs text-[#B9CEBE] mb-4">
-              Actualiza la contraseña privada para acceder al registro CRM.
+              Actualiza la contraseña privada almacenada mediante hash criptográfico en el servidor.
             </p>
             <form onSubmit={handleChangePassword} className="flex flex-col sm:flex-row gap-3 max-w-md">
               <input
-                type="text"
+                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Nueva contraseña (mínimo 4 caracteres)"
@@ -392,9 +445,13 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                 Guardar Contraseña
               </button>
             </form>
-            {settingsSuccess && (
-              <p className="text-xs text-[#83C408] mt-2 font-bold">
-                {settingsSuccess}
+            {settingsFeedback && (
+              <p
+                className={`text-xs mt-2 font-bold ${
+                  settingsFeedback.isError ? 'text-rose-400' : 'text-[#83C408]'
+                }`}
+              >
+                {settingsFeedback.text}
               </p>
             )}
           </div>
@@ -410,7 +467,10 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-bold text-white">
-                    Aviso: {unseenCount} {unseenCount === 1 ? 'contacto nuevo sin revisar' : 'contactos nuevos sin revisar'}
+                    Aviso: {unseenCount}{' '}
+                    {unseenCount === 1
+                      ? 'contacto nuevo sin revisar'
+                      : 'contactos nuevos sin revisar'}
                   </h2>
                   <p className="text-xs text-rose-200 mt-0.5 leading-relaxed">
                     Este aviso permanece encendido mientras existan registros pendientes de marcar como vistos.
@@ -420,7 +480,7 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
               <button
                 type="button"
-                onClick={markAllLeadsAsSeen}
+                onClick={handleMarkAllSeen}
                 className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -678,7 +738,7 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
                       <button
                         type="button"
-                        onClick={() => deleteCrmLead(lead.id)}
+                        onClick={() => handleDeleteLead(lead.id)}
                         className="p-2 text-[#9AB39E] hover:text-rose-400 hover:bg-[#16231B] rounded-xl transition-colors cursor-pointer"
                         title="Eliminar registro"
                         aria-label="Eliminar registro"

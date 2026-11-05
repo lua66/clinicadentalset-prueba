@@ -12,12 +12,13 @@ import { DirectContactAndMap } from './components/DirectContactAndMap';
 import { CookieBanner } from './components/CookieBanner';
 import { SpecialtyDetailPage } from './pages/SpecialtyDetailPage';
 import { OwnerCrmPage } from './pages/OwnerCrmPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { trackCrmLead } from './utils/crmTracker';
 import { Language, Specialty } from './types';
 import { UI_TRANSLATIONS } from './i18n/translations';
 import { SPECIALTIES, CLINIC_CONTACT, TESTIMONIALS } from './data/clinicData';
 import { getSeoMetadata, applySeoMetadata } from './utils/seoManager';
-import { parseUrlPath, buildLocalizedPath } from './utils/routing';
+import { parseUrlPath, buildLocalizedPath, getLegacyRedirectPath } from './utils/routing';
 import {
   MessageCircle,
   Phone,
@@ -37,14 +38,24 @@ export interface AppProps {
 
 export function App({ initialPath }: AppProps = {}) {
   const [currentPath, setCurrentPath] = useState<string>(() => {
-    if (initialPath) return initialPath;
-    if (typeof window !== 'undefined') {
-      return window.location.pathname || '/';
-    }
-    return '/';
+    const raw =
+      initialPath ||
+      (typeof window !== 'undefined' ? window.location.pathname || '/' : '/');
+    return getLegacyRedirectPath(raw) || raw;
   });
 
-  const { lang, basePath } = parseUrlPath(currentPath);
+  const { lang, basePath, specialtySlug, isNotFound } = parseUrlPath(currentPath);
+
+  // Sync URL bar if a legacy untranslated path was normalized on client mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const legacy = getLegacyRedirectPath(window.location.pathname);
+      if (legacy) {
+        window.history.replaceState({}, '', legacy);
+        setCurrentPath(legacy);
+      }
+    }
+  }, []);
 
   // Dynamically update unique meta descriptions, canonical tags, hreflang, and schema per route & language
   useEffect(() => {
@@ -54,23 +65,28 @@ export function App({ initialPath }: AppProps = {}) {
 
   // Handle URL change
   const navigateTo = (path: string) => {
-    setCurrentPath(path);
+    const target = getLegacyRedirectPath(path) || path;
+    setCurrentPath(target);
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', path);
+      window.history.pushState({}, '', target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // Handle language switch via localized URLs (/, /ca/..., /en/...)
+  // Handle language switch via localized translated URLs (/, /ca/..., /en/...)
   const handleLanguageChange = (newLang: Language) => {
-    const localized = buildLocalizedPath(basePath, newLang);
+    const localized = buildLocalizedPath(
+      isNotFound ? `/404` : basePath,
+      newLang
+    );
     navigateTo(localized);
   };
 
   // Listen to popstate (browser back/forward)
   useEffect(() => {
     const handlePopState = () => {
-      setCurrentPath(window.location.pathname || '/');
+      const raw = window.location.pathname || '/';
+      setCurrentPath(getLegacyRedirectPath(raw) || raw);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -78,18 +94,12 @@ export function App({ initialPath }: AppProps = {}) {
 
   const t = UI_TRANSLATIONS[lang];
 
-  // Match current specialty route if on /especialidades/:slug
-  let selectedSpecialty: Specialty | undefined;
-  if (basePath.startsWith('/especialidades/')) {
-    const slug = basePath.replace('/especialidades/', '').split('/')[0];
-    selectedSpecialty =
-      SPECIALTIES.find((s) => s.slug === slug) ||
-      (slug === 'sedacion-consciente'
-        ? SPECIALTIES.find((s) => s.slug === 'protesis-dental')
-        : undefined);
-  }
+  // Match current specialty route if on /especialidades/:slug (or localized CA/EN equivalents)
+  const selectedSpecialty: Specialty | undefined = specialtySlug
+    ? SPECIALTIES.find((s) => s.slug === specialtySlug)
+    : undefined;
 
-  // HIDDEN PASSWORD-PROTECTED OWNER CRM ROUTE (/crm)
+  // PRIVATE PASSWORD-PROTECTED OWNER CRM ROUTE (/crm)
   if (basePath === '/crm') {
     return <OwnerCrmPage onBackToWeb={() => navigateTo('/')} />;
   }
@@ -109,8 +119,15 @@ export function App({ initialPath }: AppProps = {}) {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* ROUTE 1: Individual Specialty Pillar Page */}
-        {selectedSpecialty ? (
+        {/* ROUTE 404: Dedicated Not Found Page (No Soft 404 fallback to homepage) */}
+        {isNotFound || basePath === '/404' ? (
+          <NotFoundPage
+            lang={lang}
+            requestedPath={currentPath}
+            onNavigate={navigateTo}
+          />
+        ) : selectedSpecialty ? (
+          /* ROUTE 1: Individual Specialty Pillar Page (12 specialties across ES/CA/EN) */
           <>
             <SpecialtyDetailPage
               specialty={selectedSpecialty}
@@ -339,7 +356,7 @@ export function App({ initialPath }: AppProps = {}) {
               </div>
             </section>
 
-            {/* CRAWLABLE SPECIALTIES SUMMARY */}
+            {/* CRAWLABLE 12 SPECIALTIES SUMMARY */}
             <TreatmentsSummary
               lang={lang}
               onSelectSpecialty={(slug) =>
@@ -348,7 +365,7 @@ export function App({ initialPath }: AppProps = {}) {
               onViewAll={() => navigateTo(specialtiesIndexUrl)}
             />
 
-            {/* DOCTOR CLINIC PRESENTATION VIDEO (With "Generado con IA" watermark) */}
+            {/* DOCTOR CLINIC PRESENTATION VIDEO (With "Vídeo de muestra generado con IA" watermark) */}
             <DoctorPresentationVideo
               lang={lang}
               sourcePage="Página de Inicio (Vídeo Presentación Doctora)"

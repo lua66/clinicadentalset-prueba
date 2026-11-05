@@ -29,6 +29,7 @@ export interface MedicalTeamMemberSchedule {
 export interface Specialty {
   id: string;
   slug: string;
+  slugs: Record<Language, string>;
   schemaSpecialty?: string;
   title: Record<Language, string>;
   subtitle: Record<Language, string>;

@@ -34,7 +34,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // Specialties section
     specialtiesHeading: 'Especialidades Odontológicas',
-    specialtiesSubtitle: 'Atención odontológica integral adaptada a las necesidades de cada paciente en Poblenou.',
+    specialtiesSubtitle: 'Atención odontológica integral en Poblenou: implantología, cirugía oral, sedación consciente con anestesiólogo, odontopediatría, medicina oral y más.',
     viewSpecialtyDetails: 'Ver tratamiento y detalles',
     allSpecialties: 'Todas las Especialidades',
     pageSpecialtiesTitle: 'Especialidades Odontológicas en Poblenou',
@@ -76,6 +76,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     cookieAcceptAll: 'Aceptar todas',
     cookieEssentialOnly: 'Solo esenciales',
     cookieConfigure: 'Configurar cookies',
+
+    // 404 Page
+    notFoundEyebrow: 'Error 404 · Dirección no encontrada',
+    notFoundTitle: 'La página que buscas no existe',
+    notFoundSubtitle: 'Es posible que el enlace haya cambiado o que la dirección escrita no sea correcta. Puedes volver al inicio o consultar nuestras especialidades odontológicas en Poblenou.',
+    notFoundHomeBtn: 'Ir al Inicio',
+    notFoundSpecialtiesBtn: 'Ver Especialidades',
+    notFoundContactBtn: 'Contactar por WhatsApp',
 
     // Floating Sphere & Navigation
     floatingSphereTooltip: 'Emblema 3D SET',
@@ -127,7 +135,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // Specialties section
     specialtiesHeading: 'Especialitats Odontològiques',
-    specialtiesSubtitle: 'Atenció odontològica integral adaptada a les necessitats de cada pacient al Poblenou.',
+    specialtiesSubtitle: 'Atenció odontològica integral al Poblenou: implantologia, cirurgia oral, sedació conscient amb anestesiòleg, odontopediatria, medicina oral i més.',
     viewSpecialtyDetails: 'Veure tractament i detalls',
     allSpecialties: 'Totes les Especialitats',
     pageSpecialtiesTitle: 'Especialitats Odontològiques al Poblenou',
@@ -169,6 +177,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     cookieAcceptAll: 'Acceptar totes',
     cookieEssentialOnly: 'Només essencials',
     cookieConfigure: 'Configurar cookies',
+
+    // 404 Page
+    notFoundEyebrow: 'Error 404 · Adreça no trobada',
+    notFoundTitle: 'La pàgina que cerques no existeix',
+    notFoundSubtitle: 'És possible que l’enllaç hagi canviat o que l’adreça escrita no sigui correcta. Pots tornar a l’inici o consultar les nostres especialitats odontològiques al Poblenou.',
+    notFoundHomeBtn: 'Tornar a l’Inici',
+    notFoundSpecialtiesBtn: 'Veure Especialitats',
+    notFoundContactBtn: 'Contactar per WhatsApp',
 
     // Floating Sphere
     floatingSphereTooltip: 'Emblema 3D SET',
@@ -220,7 +236,7 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     // Specialties section
     specialtiesHeading: 'Dental Specialties',
-    specialtiesSubtitle: 'Comprehensive dental care tailored to each patient in Poblenou, Barcelona.',
+    specialtiesSubtitle: 'Comprehensive dental care in Poblenou: dental implants, oral surgery, conscious sedation with an anesthesiologist, pediatric dentistry, oral medicine, and more.',
     viewSpecialtyDetails: 'View treatment & details',
     allSpecialties: 'All Specialties',
     pageSpecialtiesTitle: 'Dental Specialties in Poblenou, Barcelona',
@@ -262,6 +278,14 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     cookieAcceptAll: 'Accept all',
     cookieEssentialOnly: 'Essential only',
     cookieConfigure: 'Cookie settings',
+
+    // 404 Page
+    notFoundEyebrow: 'Error 404 · Page Not Found',
+    notFoundTitle: 'The page you are looking for does not exist',
+    notFoundSubtitle: 'The link may have moved or the URL may contain a typo. You can return to the homepage or browse our dental specialties in Poblenou.',
+    notFoundHomeBtn: 'Back to Home',
+    notFoundSpecialtiesBtn: 'Explore Specialties',
+    notFoundContactBtn: 'Contact via WhatsApp',
 
     // Floating Sphere
     floatingSphereTooltip: '3D SET Emblem',

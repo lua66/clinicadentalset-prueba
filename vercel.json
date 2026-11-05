@@ -30,10 +30,43 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/ca/especialidades", "destination": "/ca/especialitats", "permanent": true },
+    { "source": "/en/especialidades", "destination": "/en/specialties", "permanent": true },
+    { "source": "/ca/equipo", "destination": "/ca/equip", "permanent": true },
+    { "source": "/en/equipo", "destination": "/en/team", "permanent": true },
+    { "source": "/en/clinica", "destination": "/en/clinic", "permanent": true },
+    { "source": "/ca/contacto", "destination": "/ca/contacte", "permanent": true },
+    { "source": "/en/contacto", "destination": "/en/contact", "permanent": true },
+    { "source": "/ca/especialidades/implantes-dentales", "destination": "/ca/especialitats/implants-dentals", "permanent": true },
+    { "source": "/en/especialidades/implantes-dentales", "destination": "/en/specialties/dental-implants", "permanent": true },
+    { "source": "/ca/especialidades/cirugia-oral", "destination": "/ca/especialitats/cirurgia-oral", "permanent": true },
+    { "source": "/en/especialidades/cirugia-oral", "destination": "/en/specialties/oral-surgery", "permanent": true },
+    { "source": "/ca/especialidades/sedacion-consciente", "destination": "/ca/especialitats/sedacio-conscient", "permanent": true },
+    { "source": "/en/especialidades/sedacion-consciente", "destination": "/en/specialties/conscious-sedation", "permanent": true },
+    { "source": "/ca/especialidades/odontopediatria", "destination": "/ca/especialitats/odontopediatria", "permanent": true },
+    { "source": "/en/especialidades/odontopediatria", "destination": "/en/specialties/pediatric-dentistry", "permanent": true },
+    { "source": "/ca/especialidades/medicina-oral", "destination": "/ca/especialitats/medicina-oral", "permanent": true },
+    { "source": "/en/especialidades/medicina-oral", "destination": "/en/specialties/oral-medicine", "permanent": true },
+    { "source": "/ca/especialidades/ortodoncia", "destination": "/ca/especialitats/ortodoncia", "permanent": true },
+    { "source": "/en/especialidades/ortodoncia", "destination": "/en/specialties/orthodontics", "permanent": true },
+    { "source": "/ca/especialidades/estetica-dental", "destination": "/ca/especialitats/estetica-dental", "permanent": true },
+    { "source": "/en/especialidades/estetica-dental", "destination": "/en/specialties/cosmetic-dentistry", "permanent": true },
+    { "source": "/ca/especialidades/periodoncia", "destination": "/ca/especialitats/periodoncia", "permanent": true },
+    { "source": "/en/especialidades/periodoncia", "destination": "/en/specialties/periodontics", "permanent": true },
+    { "source": "/ca/especialidades/endodoncia", "destination": "/ca/especialitats/endodoncia", "permanent": true },
+    { "source": "/en/especialidades/endodoncia", "destination": "/en/specialties/endodontics", "permanent": true },
+    { "source": "/ca/especialidades/odontologia-general", "destination": "/ca/especialitats/odontologia-general", "permanent": true },
+    { "source": "/en/especialidades/odontologia-general", "destination": "/en/specialties/general-dentistry", "permanent": true },
+    { "source": "/ca/especialidades/bruxismo-atm", "destination": "/ca/especialitats/bruxisme-atm", "permanent": true },
+    { "source": "/en/especialidades/bruxismo-atm", "destination": "/en/specialties/bruxism-tmj", "permanent": true },
+    { "source": "/ca/especialidades/protesis-dental", "destination": "/ca/especialitats/protesi-dental", "permanent": true },
+    { "source": "/en/especialidades/protesis-dental", "destination": "/en/specialties/dental-prosthetics", "permanent": true }
+  ],
   "rewrites": [
     {
-      "source": "/((?!assets/|robots\\.txt|sitemap\\.xml).*)",
-      "destination": "/index"
+      "source": "/api/crm/(.*)",
+      "destination": "/api/crm"
     }
   ]
 }

@@ -83,7 +83,7 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* Left Column (5 cols): Vertical 9:16 Video Showcase Frame with Persistent "Generado con IA" Watermark */}
+          {/* Left Column (5 cols): Vertical 9:16 Video Showcase Frame with Persistent "Vídeo de muestra generado con IA" Watermark */}
           <div className="lg:col-span-5 flex flex-col items-center">
             <div className="relative w-full max-w-[300px] sm:max-w-[325px] aspect-[9/16] rounded-3xl overflow-hidden bg-black border-2 border-[#83C408] shadow-2xl">
               <video
@@ -101,12 +101,14 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                 <source src={CLINIC_PRESENTATION_VIDEO_SRC} type="video/mp4" />
               </video>
 
-              {/* Permanent Watermark Overlay ("Generado con IA") */}
+              {/* Permanent Sample Watermark Overlay */}
               <div
-                aria-hidden="true"
-                className="pointer-events-none select-none absolute top-3 right-3 z-20 px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-xs border border-white/20 text-white/95 text-[11px] font-semibold tracking-wide shadow-sm"
+                aria-label="Vídeo de muestra generado con IA"
+                className="pointer-events-none select-none absolute top-3 left-3 right-3 z-20 flex justify-center"
               >
-                Generado con IA
+                <span className="px-2.5 py-1 rounded-md bg-black/80 backdrop-blur-xs border border-white/25 text-white/95 text-[11px] font-semibold tracking-wide text-center shadow-sm">
+                  Vídeo de muestra generado con IA
+                </span>
               </div>
 
               {!isPlaying && (

@@ -1,4 +1,5 @@
 import { Specialty, TeamMember, ClinicImage, Testimonial, MedicalTeamMemberSchedule } from '../types';
+import { SPECIALTY_SLUG_MAP } from '../utils/routing';
 
 export const CLINIC_CONTACT = {
   phone: '933 09 18 71',
@@ -36,7 +37,10 @@ const CLINIC_STANDARD_SCHEDULE_SLOTS = [
   },
 ];
 
-export const MEDICAL_TEAM_SCHEDULES: Record<'izbette' | 'ruby' | 'silvia', MedicalTeamMemberSchedule> = {
+export const MEDICAL_TEAM_SCHEDULES: Record<
+  'izbette' | 'ruby' | 'silvia' | 'anestesiologo',
+  MedicalTeamMemberSchedule
+> = {
   izbette: {
     name: 'Dra. Izbette Luis Torres',
     role: 'Odontóloga · Col. 5664 COEC',
@@ -56,6 +60,17 @@ export const MEDICAL_TEAM_SCHEDULES: Record<'izbette' | 'ruby' | 'silvia', Medic
       es: '[Horario de consulta de la Dra. Ruby Herrera a confirmar con recepción · Clínica: L-V 10:00h–14:00h / 15:00h–20:00h]',
       ca: '[Horari de consulta de la Dra. Ruby Herrera a confirmar amb recepció · Clínica: Dl-Dv 10:00h–14:00h / 15:00h–20:00h]',
       en: '[Dr. Ruby Herrera consultation hours confirmed via reception · Clinic: Mon–Fri 10:00–14:00 / 15:00–20:00]',
+    },
+    hoursAvailable: CLINIC_STANDARD_SCHEDULE_SLOTS,
+  },
+  anestesiologo: {
+    name: 'Médico Anestesiólogo en Clínica · [Nombre y n.º de colegiado a confirmar]',
+    role: 'Médico Especialista en Anestesiología · [N.º Colegiado a confirmar]',
+    medicalSpecialty: 'Anesthesia',
+    scheduleSummary: {
+      es: 'Sesiones de sedación consciente concertadas bajo cita previa en consulta · [Días y franja horaria exacta a confirmar con recepción]',
+      ca: 'Sessions de sedació conscient concertades amb cita prèvia a consulta · [Dies i franja horària exacta a confirmar amb recepció]',
+      en: 'Conscious sedation sessions scheduled by appointment at our clinic · [Exact days & hours confirmed via reception]',
     },
     hoursAvailable: CLINIC_STANDARD_SCHEDULE_SLOTS,
   },
@@ -161,16 +176,17 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'implantes-dentales',
     slug: 'implantes-dentales',
+    slugs: SPECIALTY_SLUG_MAP['implantes-dentales'],
     schemaSpecialty: 'OralSurgery',
     title: {
-      es: 'Implantes Dentales y Cirugía Oral',
-      ca: 'Implants Dentals i Cirurgia Oral',
-      en: 'Dental Implants & Oral Surgery',
+      es: 'Implantes Dentales',
+      ca: 'Implants Dentals',
+      en: 'Dental Implants',
     },
     subtitle: {
       es: 'Recupera la función masticatoria y la estética de tu sonrisa con tratamientos implantológicos adaptados a cada paciente.',
       ca: 'Recupera la funció masticatòria i l’estètica del teu somriure amb tractaments implantològics adaptats a cada pacient.',
-      en: 'Restore bite function and natural smile aesthetics with personalized implant dentistry in Poblenou.',
+      en: 'Restore bite function and natural smile aesthetics with personalized dental implant treatments in Poblenou.',
     },
     badge: {
       es: 'Implantología',
@@ -192,9 +208,9 @@ export const SPECIALTIES: Specialty[] = [
       en: 'Replacement of missing teeth through dental implants and individualized clinical evaluation.',
     },
     fullDescription: {
-      es: 'La pérdida de una o varias piezas dentales afecta tanto a la masticación como al equilibrio del resto de la boca. En Clínica Dental SET realizamos un estudio previo personalizado para valorar cada caso y planificar la reposición dental adecuada. [Detalles sobre protocolos quirúrgicos, materiales de implantes y pruebas diagnósticas a confirmar por la clínica.]',
-      ca: 'La pèrdua d’una o més peces dentals afecta tant la masticació com l’equilibri de la boca. A Clínica Dental SET realitzem un estudi previ personalitzat per valorar cada cas. [Detalls sobre protocols quirúrgics i proves diagnòstiques a confirmar per la clínica.]',
-      en: 'Missing teeth affect both chewing function and overall oral balance. At Clínica Dental SET we perform an individualized clinical evaluation for each patient. [Specific surgical protocols and diagnostic equipment to be confirmed by the clinic.]',
+      es: 'La pérdida de una o varias piezas dentales afecta tanto a la masticación como al equilibrio del resto de la boca. En Clínica Dental SET realizamos un estudio previo personalizado para valorar cada caso y planificar la reposición dental adecuada. [Detalles sobre protocolos implantológicos, materiales y pruebas diagnósticas a confirmar por la clínica.]',
+      ca: 'La pèrdua d’una o més peces dentals afecta tant la masticació com l’equilibri de la boca. A Clínica Dental SET realitzem un estudi previ personalitzat per valorar cada cas. [Detalls sobre protocols implantològics i proves diagnòstiques a confirmar per la clínica.]',
+      en: 'Missing teeth affect both chewing function and overall oral balance. At Clínica Dental SET we perform an individualized clinical evaluation for each patient. [Specific implant protocols and diagnostic equipment to be confirmed by the clinic.]',
     },
     indications: {
       es: [
@@ -220,12 +236,12 @@ export const SPECIALTIES: Specialty[] = [
           description: '[Descripción del procedimiento, marcas o materiales empleados confirmados por la clínica.]',
         },
         {
-          name: 'Prótesis sobre implantes',
-          description: '[Opciones de coronas o rehabilitaciones sobre implantes disponibles en la clínica.]',
+          name: 'Rehabilitación protésica sobre implantes',
+          description: '[Opciones de coronas o puentes sobre implantes disponibles en la clínica.]',
         },
         {
-          name: 'Cirugía oral y extracciones',
-          description: '[Tratamientos quirúrgicos habituales realizados en consulta.]',
+          name: 'Posibilidad de realizar el tratamiento con sedación consciente',
+          description: 'Disponemos de médico anestesiólogo en la clínica bajo cita previa para pacientes que desean mayor tranquilidad durante su tratamiento.',
         },
       ],
       ca: [
@@ -234,12 +250,12 @@ export const SPECIALTIES: Specialty[] = [
           description: '[Descripció del procediment i materials confirmats per la clínica.]',
         },
         {
-          name: 'Pròtesis sobre implants',
-          description: '[Opcions de corones o rehabilitacions sobre implants disponibles a la clínica.]',
+          name: 'Rehabilitació protèsica sobre implants',
+          description: '[Opcions de corones o ponts sobre implants disponibles a la clínica.]',
         },
         {
-          name: 'Cirurgia oral i extraccions',
-          description: '[Tractaments quirúrgics habituals realitzats a consulta.]',
+          name: 'Possibilitat de realitzar el tractament amb sedació conscient',
+          description: 'Disposem de metge anestesiòleg a la clínica amb cita prèvia per a pacients que desitgen més tranquil·litat.',
         },
       ],
       en: [
@@ -248,12 +264,12 @@ export const SPECIALTIES: Specialty[] = [
           description: '[Procedure overview and materials confirmed by the clinic.]',
         },
         {
-          name: 'Implant-supported prosthetics',
-          description: '[Crown and bridge options over dental implants available at our clinic.]',
+          name: 'Implant-supported crowns and bridges',
+          description: '[Prosthetic restoration options over dental implants available at our clinic.]',
         },
         {
-          name: 'Oral surgery & extractions',
-          description: '[Routine surgical procedures performed at the practice.]',
+          name: 'Optional conscious sedation with anesthesiologist',
+          description: 'We count on an in-house physician anesthesiologist by appointment for patients seeking extra comfort.',
         },
       ],
     },
@@ -264,8 +280,8 @@ export const SPECIALTIES: Specialty[] = [
           answer: '[Explicación del proceso de primera visita, pruebas radiográficas y planificación confirmada por la doctora.]',
         },
         {
-          question: '¿Qué cuidados posteriores requiere un implante dental?',
-          answer: '[Pautas de higiene, revisiones periódicas y seguimiento facilitadas por la clínica.]',
+          question: '¿Se pueden colocar implantes dentales bajo sedación consciente?',
+          answer: 'Sí, en Clínica Dental SET contamos con un médico anestesiólogo en consulta para realizar tratamientos de implantología bajo sedación consciente supervisada.',
         },
       ],
       ca: [
@@ -274,8 +290,8 @@ export const SPECIALTIES: Specialty[] = [
           answer: '[Explicació del procés de primera visita, proves radiogràfiques i planificació confirmada per la doctora.]',
         },
         {
-          question: 'Quines cures posteriors requereix un implant dental?',
-          answer: '[Pautes d’higiene, revisions periòdiques i seguiment facilitades per la clínica.]',
+          question: 'Es poden col·locar implants dentals sota sedació conscient?',
+          answer: 'Sí, a Clínica Dental SET comptem amb un metge anestesiòleg a consulta per realitzar tractaments d’implantologia sota sedació conscient supervisada.',
         },
       ],
       en: [
@@ -284,8 +300,8 @@ export const SPECIALTIES: Specialty[] = [
           answer: '[Overview of initial consultation, diagnostic imaging, and treatment planning confirmed by the clinic.]',
         },
         {
-          question: 'What aftercare is needed for dental implants?',
-          answer: '[Hygiene instructions and follow-up visit schedule confirmed by our clinical team.]',
+          question: 'Can dental implants be placed with conscious sedation?',
+          answer: 'Yes, Clínica Dental SET works with an in-house anesthesiologist by appointment to provide supervised conscious sedation.',
         },
       ],
     },
@@ -294,27 +310,635 @@ export const SPECIALTIES: Specialty[] = [
     features: {
       es: [
         'Atención directa con odontóloga colegiada',
-        'Valoración clínica personalizada',
+        'Opción de sedación consciente con anestesiólogo',
         '[Equipamiento diagnóstico confirmado por la clínica]',
         '[Opciones de pago o financiación a confirmar]',
       ],
       ca: [
         'Atenció directa amb odontòloga col·legiada',
-        'Valoració clínica personalitzada',
+        'Opció de sedació conscient amb anestesiòleg',
         '[Equipament diagnòstic confirmat per la clínica]',
         '[Opcions de pagament o finançament a confirmar]',
       ],
       en: [
         'Direct care with licensed dentist',
-        'Personalized clinical evaluation',
+        'Conscious sedation option with anesthesiologist',
         '[Diagnostic equipment confirmed by the clinic]',
         '[Payment options to be confirmed]',
       ],
     },
   },
   {
+    id: 'cirugia-oral',
+    slug: 'cirugia-oral',
+    slugs: SPECIALTY_SLUG_MAP['cirugia-oral'],
+    schemaSpecialty: 'OralSurgery',
+    title: {
+      es: 'Cirugía Oral',
+      ca: 'Cirurgia Oral',
+      en: 'Oral Surgery',
+    },
+    subtitle: {
+      es: 'Intervenciones quirúrgicas bucodentales planificadas con precisión clínica y seguimiento cercano en Poblenou.',
+      ca: 'Intervencions quirúrgiques bucodentals planificades amb precisió clínica i seguiment proper al Poblenou.',
+      en: 'Oral surgical procedures planned with attentive clinical follow-up at our Poblenou practice.',
+    },
+    badge: {
+      es: 'Cirugía Bucal',
+      ca: 'Cirurgia Bucal',
+      en: 'Oral Surgery',
+    },
+    leadDoctor: {
+      name: 'Dra. Ruby Alexandra Herrera Villamil',
+      role: 'Odontóloga Colegiada · Col. 5929 COEC',
+      colegiateNumber: 'Col. 5929 COEC',
+      image: '/assets/equip4.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
+    },
+    medicalTeamSchedule: [
+      MEDICAL_TEAM_SCHEDULES.ruby,
+      MEDICAL_TEAM_SCHEDULES.anestesiologo,
+      MEDICAL_TEAM_SCHEDULES.silvia,
+    ],
+    shortDescription: {
+      es: 'Extracciones dentales complejas, cordales y procedimientos quirúrgicos de tejidos orales en consulta.',
+      ca: 'Extraccions dentals complexes, queixals del seny i procediments quirúrgics de teixits orals a consulta.',
+      en: 'Tooth and wisdom tooth extractions and outpatient oral surgical care.',
+    },
+    fullDescription: {
+      es: 'En el área de cirugía oral de Clínica Dental SET abordamos intervenciones quirúrgicas de la cavidad oral tras una valoración previa detallada. Para los pacientes que lo necesiten, podemos coordinar la intervención con nuestro médico anestesiólogo mediante sedación consciente. [Detalles sobre procedimientos quirúrgicos específicos y protocolos posoperatorios confirmados por la clínica.]',
+      ca: 'A l’àrea de cirurgia oral de Clínica Dental SET abordem intervencions quirúrgiques de la cavitat oral després d’una valoració prèvia detallada. Podem coordinar la intervenció amb el nostre metge anestesiòleg mitjançant sedació conscient. [Detalls sobre procediments quirúrgics confirmats per la clínica.]',
+      en: 'Our oral surgery area handles surgical procedures of the mouth following a careful clinical evaluation, with optional conscious sedation supervised by our in-house physician anesthesiologist. [Specific surgical protocols confirmed by the clinic.]',
+    },
+    indications: {
+      es: [
+        'Extracción de muelas del juicio (cordales) incluidas o semierupcionadas',
+        'Extracciones dentales que requieren abordaje quirúrgico',
+        '[Otros procedimientos de cirugía oral menor confirmados por la clínica]',
+      ],
+      ca: [
+        'Extracció de queixals del seny inclosos o semierupcionats',
+        'Extraccions dentals que requereixen abordatge quirúrgic',
+        '[Altres procediments de cirurgia oral menor confirmats per la clínica]',
+      ],
+      en: [
+        'Impacted or partially erupted wisdom tooth extractions',
+        'Complex tooth extractions requiring surgical care',
+        '[Other minor oral surgery indications confirmed by the clinic]',
+      ],
+    },
+    treatments: {
+      es: [
+        {
+          name: 'Extracción de cordales (muelas del juicio)',
+          description: '[Valoración radiográfica y procedimiento quirúrgico confirmado por la doctora.]',
+        },
+        {
+          name: 'Extracciones dentales quirúrgicas',
+          description: '[Abordaje cuidadoso de raíces o piezas fracturadas y control posoperatorio.]',
+        },
+        {
+          name: 'Coordinación quirúrgica con sedación consciente',
+          description: 'Posibilidad de realizar la cirugía oral junto al médico anestesiólogo de la clínica.',
+        },
+      ],
+      ca: [
+        {
+          name: 'Extracció de queixals del seny',
+          description: '[Valoració radiogràfica i procediment quirúrgic confirmat per la doctora.]',
+        },
+        {
+          name: 'Extraccions dentals quirúrgiques',
+          description: '[Abordatge curós d’arrels o peces fracturades i control postoperatori.]',
+        },
+        {
+          name: 'Coordinació quirúrgica amb sedació conscient',
+          description: 'Possibilitat de realitzar la cirurgia oral amb el metge anestesiòleg de la clínica.',
+        },
+      ],
+      en: [
+        {
+          name: 'Wisdom tooth surgery',
+          description: '[Radiographic assessment and surgical extraction protocol confirmed by the doctor.]',
+        },
+        {
+          name: 'Surgical tooth extractions',
+          description: '[Careful management of fractured teeth or roots with post-operative follow-up.]',
+        },
+        {
+          name: 'Surgical care under conscious sedation',
+          description: 'Option to perform oral surgery together with our in-house physician anesthesiologist.',
+        },
+      ],
+    },
+    faqs: {
+      es: [
+        {
+          question: '¿Cómo es la recuperación tras una extracción dental quirúrgica?',
+          answer: '[Indicaciones posoperatorias, pautas de reposo e higiene facilitadas por el equipo médico.]',
+        },
+        {
+          question: '¿Puedo solicitar sedación consciente para una cirugía oral?',
+          answer: 'Sí. Si sientes nerviosismo ante una extracción o intervención quirúrgica, nuestro médico anestesiólogo puede asistir la intervención en consulta.',
+        },
+      ],
+      ca: [
+        {
+          question: 'Com és la recuperació després d’una extracció dental quirúrgica?',
+          answer: '[Indicacions postoperatòries, pautes de repòs i higiene facilitades per l’equip mèdic.]',
+        },
+        {
+          question: 'Puc sol·licitar sedació conscient per a una cirurgia oral?',
+          answer: 'Sí. Si sents nerviosisme davant d’una intervenció quirúrgica, el nostre metge anestesiòleg pot assistir la intervenció a consulta.',
+        },
+      ],
+      en: [
+        {
+          question: 'What is recovery like after oral surgery?',
+          answer: '[Post-operative care instructions and follow-up schedule confirmed by our team.]',
+        },
+        {
+          question: 'Can I request conscious sedation for oral surgery?',
+          answer: 'Yes. If you feel anxious about a surgical extraction, our in-house physician anesthesiologist can supervise conscious sedation.',
+        },
+      ],
+    },
+    image: '/assets/clinica2.jpg',
+    seoKeywords: ['cirugia oral poblenou', 'extraccion muelas del juicio barcelona', 'dentista cirugia doctor trueta'],
+    features: {
+      es: [
+        'Estudio previo en consulta',
+        'Disponible con médico anestesiólogo',
+        'Seguimiento posoperatorio cercano',
+      ],
+      ca: [
+        'Estudi previ a consulta',
+        'Disponible amb metge anestesiòleg',
+        'Seguiment postoperatori proper',
+      ],
+      en: [
+        'Individualized pre-surgical assessment',
+        'Available with physician anesthesiologist',
+        'Attentive post-operative follow-up',
+      ],
+    },
+  },
+  {
+    id: 'sedacion-consciente',
+    slug: 'sedacion-consciente',
+    slugs: SPECIALTY_SLUG_MAP['sedacion-consciente'],
+    schemaSpecialty: 'Anesthesia',
+    title: {
+      es: 'Sedación Consciente',
+      ca: 'Sedació Conscient',
+      en: 'Conscious Sedation',
+    },
+    subtitle: {
+      es: 'Tratamientos dentales sin miedo ni ansiedad gracias a la presencia de un médico anestesiólogo en nuestra clínica.',
+      ca: 'Tractaments dentals sense por ni ansietat gràcies a la presència d’un metge anestesiòleg a la nostra clínica.',
+      en: 'Calm, stress-free dental care supervised by our in-house physician anesthesiologist in Poblenou.',
+    },
+    badge: {
+      es: 'Anestesiólogo en Clínica',
+      ca: 'Anestesiòleg a Clínica',
+      en: 'In-House Anesthesiologist',
+    },
+    leadDoctor: {
+      name: 'Médico Anestesiólogo · Equipo Clínica Dental SET',
+      role: 'Anestesiología en Clínica · Junto a Dra. Herrera (Col. 5929) y Dra. Luis (Col. 5664 COEC)',
+      colegiateNumber: 'COEC · COMB',
+      image: '/assets/clinica5.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.anestesiologo.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.anestesiologo.hoursAvailable,
+    },
+    medicalTeamSchedule: [
+      MEDICAL_TEAM_SCHEDULES.anestesiologo,
+      MEDICAL_TEAM_SCHEDULES.ruby,
+      MEDICAL_TEAM_SCHEDULES.izbette,
+    ],
+    shortDescription: {
+      es: 'Servicio diferencial con médico anestesiólogo en consulta para realizar tratamientos dentales en estado de calma y bienestar.',
+      ca: 'Servei diferencial amb metge anestesiòleg a consulta per fer tractaments dentals en estat de calma i benestar.',
+      en: 'Distinctive in-house physician anesthesiologist service for calm, anxiety-free dental treatments.',
+    },
+    fullDescription: {
+      es: 'Sabemos que algunas personas sienten miedo o ansiedad al acudir al dentista, o necesitan realizar tratamientos largos en una sola sesión. En Clínica Dental SET contamos con un médico anestesiólogo que se desplaza a nuestra clínica de Poblenou para administrar y monitorizar la sedación consciente durante toda la visita. [Detalles clínicos específicos sobre valoración preanestésica y protocolos médicos facilitados por el anestesiólogo.]',
+      ca: 'Sabem que algunes persones senten por o ansietat en anar al dentista, o necessiten fer tractaments llargs en una sola sessió. A Clínica Dental SET comptem amb un metge anestesiòleg que atén a la nostra clínica del Poblenou per administrar i monitorar la sedació conscient. [Detalls clínics específics facilitats pel metge anestesiòleg.]',
+      en: 'We understand that many patients experience dental anxiety or prefer completing longer procedures comfortably in fewer visits. Clínica Dental SET counts on a physician anesthesiologist in our Poblenou practice to administer and monitor conscious sedation throughout your visit. [Specific pre-anesthetic protocols confirmed by the clinic.]',
+    },
+    indications: {
+      es: [
+        'Pacientes con miedo al dentista, ansiedad o fobia dental',
+        'Intervenciones de implantología o cirugía oral',
+        'Pacientes que prefieren agrupar varios tratamientos con mayor comodidad',
+        '[Otras indicaciones médicas valoradas por el médico anestesiólogo]',
+      ],
+      ca: [
+        'Pacients amb por al dentista, ansietat o fòbia dental',
+        'Intervencions d’implantologia o cirurgia oral',
+        'Pacients que prefereixen agrupar diversos tractaments amb més comoditat',
+        '[Altres indicacions mèdiques valorades pel metge anestesiòleg]',
+      ],
+      en: [
+        'Patients with dental anxiety, fear, or strong gag reflex',
+        'Dental implant or oral surgery procedures',
+        'Patients wishing to combine multiple dental treatments comfortably',
+        '[Additional medical indications assessed by the anesthesiologist]',
+      ],
+    },
+    treatments: {
+      es: [
+        {
+          name: 'Sedación consciente supervisada por médico anestesiólogo',
+          description: 'El paciente permanece en un estado de relajación profunda mientras el médico anestesiólogo controla sus constantes vitales en todo momento.',
+        },
+        {
+          name: 'Valoración médica preanestésica',
+          description: '[Revisión previa del historial médico y pautas indicadas antes de la sesión de sedación.]',
+        },
+        {
+          name: 'Aplicable a cualquier tratamiento odontológico',
+          description: 'Disponible para implantes dentales, cirugía oral, endodoncias, extracciones u odontología conservadora.',
+        },
+      ],
+      ca: [
+        {
+          name: 'Sedació conscient supervisada per metge anestesiòleg',
+          description: 'El pacient roman en un estat de relaxació profunda mentre el metge anestesiòleg controla les constants vitals en tot moment.',
+        },
+        {
+          name: 'Valoració mèdica preanestèsica',
+          description: '[Revisió prèvia de l’historial mèdic i pautes indicades abans de la sessió de sedació.]',
+        },
+        {
+          name: 'Aplicable a qualsevol tractament odontològic',
+          description: 'Disponible per a implants dentals, cirurgia oral, endodòncies, extraccions o odontologia conservadora.',
+        },
+      ],
+      en: [
+        {
+          name: 'Physician-supervised conscious sedation',
+          description: 'You remain deeply relaxed while our specialist anesthesiologist continuously monitors your vital signs.',
+        },
+        {
+          name: 'Pre-anesthetic medical evaluation',
+          description: '[Review of medical history and preparation guidelines prior to your sedation appointment.]',
+        },
+        {
+          name: 'Available across all dental procedures',
+          description: 'Can be combined with dental implants, oral surgery, root canals, extractions, or restorative care.',
+        },
+      ],
+    },
+    faqs: {
+      es: [
+        {
+          question: '¿Quién realiza la sedación consciente en Clínica Dental SET?',
+          answer: 'La sedación consciente es realizada y supervisada de principio a fin por un médico especialista en anestesiología en nuestra propia clínica.',
+        },
+        {
+          question: '¿Qué preparación se necesita antes de acudir con sedación consciente?',
+          answer: '[Indicaciones previas confirmadas por el médico anestesiólogo y el equipo de la clínica tras la primera visita.]',
+        },
+      ],
+      ca: [
+        {
+          question: 'Qui realitza la sedació conscient a Clínica Dental SET?',
+          answer: 'La sedació conscient és realitzada i supervisada de principi a fi per un metge especialista en anestesiologia a la nostra clínica.',
+        },
+        {
+          question: 'Quina preparació cal abans d’acudir amb sedació conscient?',
+          answer: '[Indicacions prèvies confirmades pel metge anestesiòleg i l’equip de la clínica després de la primera visita.]',
+        },
+      ],
+      en: [
+        {
+          question: 'Who administers conscious sedation at Clínica Dental SET?',
+          answer: 'Conscious sedation is administered and continuously monitored by a licensed physician anesthesiologist right inside our practice.',
+        },
+        {
+          question: 'How should I prepare for a conscious sedation visit?',
+          answer: '[Pre-appointment instructions provided by our anesthesiologist and dental team during your initial visit.]',
+        },
+      ],
+    },
+    image: '/assets/clinica5.jpg',
+    seoKeywords: ['sedacion dental barcelona', 'sedacion consciente poblenou', 'dentista con anestesiologo barcelona', 'miedo al dentista barcelona'],
+    features: {
+      es: [
+        'Médico especialista en anestesiología en consulta',
+        'Monitorización médica continua durante el tratamiento',
+        'Ideal para pacientes con fobia dental o tratamientos complejos',
+      ],
+      ca: [
+        'Metge especialista en anestesiologia a consulta',
+        'Monitoratge mèdic continu durant el tractament',
+        'Ideal per a pacients amb fòbia dental o tractaments complexos',
+      ],
+      en: [
+        'Physician anesthesiologist present in clinic',
+        'Continuous medical vital-sign monitoring',
+        'Ideal for dental phobia or complex treatments',
+      ],
+    },
+  },
+  {
+    id: 'odontopediatria',
+    slug: 'odontopediatria',
+    slugs: SPECIALTY_SLUG_MAP.odontopediatria,
+    schemaSpecialty: 'Pediatric',
+    title: {
+      es: 'Odontopediatría',
+      ca: 'Odontopediatria',
+      en: 'Pediatric Dentistry',
+    },
+    subtitle: {
+      es: 'Cuidado bucodental infantil y juvenil con trato cercano para acompañar el crecimiento de su sonrisa.',
+      ca: 'Cura bucodental infantil i juvenil amb tracte proper per acompanyar el creixement del seu somriure.',
+      en: 'Gentle, attentive dental care for children and teens in Poblenou, Barcelona.',
+    },
+    badge: {
+      es: 'Dentista Infantil',
+      ca: 'Dentista Infantil',
+      en: 'Kids & Teens',
+    },
+    leadDoctor: {
+      name: 'Dra. Izbette Luis Torres',
+      role: 'Odontóloga Colegiada · Col. 5664 COEC',
+      colegiateNumber: 'Col. 5664 COEC',
+      image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
+    },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia],
+    shortDescription: {
+      es: 'Revisiones infantiles, prevención de caries y seguimiento del recambio dental en un entorno tranquilo.',
+      ca: 'Revisions infantils, prevenció de càries i seguiment del recanvi dental en un entorn tranquil.',
+      en: 'Children’s dental checkups, cavity prevention, and tooth development monitoring in a calm setting.',
+    },
+    fullDescription: {
+      es: 'Acudir al dentista desde pequeños ayuda a crear hábitos saludables y a evitar el miedo en futuras visitas. En Clínica Dental SET atendemos a niños y adolescentes en Poblenou con paciencia y cercanía. [Detalles sobre edad recomendada de primera visita, selladores y protocolos infantiles confirmados por la clínica.]',
+      ca: 'Anar al dentista des de petits ajuda a crear hàbits saludables i a evitar la por en visites futures. A Clínica Dental SET atenem nens i adolescents al Poblenou amb paciència i proximitat. [Detalls sobre protocols infantils confirmats per la clínica.]',
+      en: 'Early dental visits help children build lifelong healthy habits without fear. At Clínica Dental SET we welcome children and teens in Poblenou with calm, patient-centered care. [Specific pediatric dentistry protocols confirmed by the clinic.]',
+    },
+    indications: {
+      es: [
+        'Revisiones periódicas de dientes de leche y dentición definitiva',
+        'Prevención y tratamiento de caries en edades infantiles',
+        'Seguimiento temprano de la mordida y el recambio dental',
+      ],
+      ca: [
+        'Revisions periòdiques de dents de llet i dentició definitiva',
+        'Prevenció i tractament de càries en edats infantils',
+        'Seguiment primerenc de la mossegada i el recanvi dental',
+      ],
+      en: [
+        'Regular checkups for baby teeth and permanent teeth',
+        'Pediatric cavity prevention and gentle restoration',
+        'Early monitoring of bite development and tooth eruption',
+      ],
+    },
+    treatments: {
+      es: [
+        {
+          name: 'Revisión dental infantil y prevención',
+          description: '[Exploración adaptada a cada edad, enseñanza de cepillado y pautas preventivas.]',
+        },
+        {
+          name: 'Tratamiento de caries en dientes temporales y definitivos',
+          description: '[Procedimientos conservadores adaptados al paciente infantil.]',
+        },
+        {
+          name: 'Control del desarrollo mandibular y erupción dental',
+          description: '[Detección temprana de alteraciones para valorar la necesidad de ortodoncia.]',
+        },
+      ],
+      ca: [
+        {
+          name: 'Revisió dental infantil i prevenció',
+          description: '[Exploració adaptada a cada edat, ensenyament de raspallat i pautes preventives.]',
+        },
+        {
+          name: 'Tractament de càries en dents temporals i definitives',
+          description: '[Procediments conservadors adaptats al pacient infantil.]',
+        },
+        {
+          name: 'Control del desenvolupament mandibular i erupció dental',
+          description: '[Detecció primerenca d’alteracions per valorar la necessitat d’ortodòncia.]',
+        },
+      ],
+      en: [
+        {
+          name: 'Pediatric checkups & preventive care',
+          description: '[Age-appropriate exams, brushing guidance, and preventive care.]',
+        },
+        {
+          name: 'Cavity care for primary and permanent teeth',
+          description: '[Gentle restorative care tailored to young patients.]',
+        },
+        {
+          name: 'Jaw growth & eruption monitoring',
+          description: '[Early assessment to identify any need for future orthodontic care.]',
+        },
+      ],
+    },
+    faqs: {
+      es: [
+        {
+          question: '¿Cómo ayudáis a que los niños vengan tranquilos al dentista?',
+          answer: 'Dedicamos el tiempo necesario a explicar cada paso con un lenguaje cercano y sin prisas, siempre acompañados por nuestras odontólogas.',
+        },
+        {
+          question: '¿Cada cuánto deben acudir los niños a revisión?',
+          answer: '[Frecuencia recomendada de revisiones infantiles confirmada por la doctora.]',
+        },
+      ],
+      ca: [
+        {
+          question: 'Com ajudeu que els nens vinguin tranquils al dentista?',
+          answer: 'Dediquem el temps necessari a explicar cada pas amb un llenguatge proper i sense presses.',
+        },
+        {
+          question: 'Cada quant han d’acudir els nens a revisió?',
+          answer: '[Freqüència recomanada de revisions infantils confirmada per la doctora.]',
+        },
+      ],
+      en: [
+        {
+          question: 'How do you help children feel comfortable at the dentist?',
+          answer: 'We take the time to explain every step in friendly, calm language so children build positive trust.',
+        },
+        {
+          question: 'How often should children have dental checkups?',
+          answer: '[Recommended pediatric checkup schedule confirmed by our doctors.]',
+        },
+      ],
+    },
+    image: '/assets/dents1.jpg',
+    seoKeywords: ['odontopediatria poblenou', 'dentista infantil barcelona doctor trueta', 'dentista ninos sant marti'],
+    features: {
+      es: [
+        'Trato cercano y paciente para niños y familias',
+        'Prevención y seguimiento del crecimiento dental',
+        'Continuidad asistencial en toda la etapa infantil y juvenil',
+      ],
+      ca: [
+        'Tracte proper i pacient per a nens i famílies',
+        'Prevenció i seguiment del creixement dental',
+        'Continuïtat assistencial durant tota l’etapa infantil i juvenil',
+      ],
+      en: [
+        'Warm, patient approach for children and parents',
+        'Preventive care & dental growth monitoring',
+        'Continuity of care through childhood and teens',
+      ],
+    },
+  },
+  {
+    id: 'medicina-oral',
+    slug: 'medicina-oral',
+    slugs: SPECIALTY_SLUG_MAP['medicina-oral'],
+    schemaSpecialty: 'Dentistry',
+    title: {
+      es: 'Medicina Oral',
+      ca: 'Medicina Oral',
+      en: 'Oral Medicine',
+    },
+    subtitle: {
+      es: 'Diagnóstico y seguimiento clínico de alteraciones de la mucosa oral, lengua, encías y glándulas salivales.',
+      ca: 'Diagnòstic i seguiment clínic d’alteracions de la mucosa oral, llengua, genives i glàndules salivals.',
+      en: 'Clinical diagnosis and care of conditions affecting the oral mucosa, tongue, gums, and salivary glands.',
+    },
+    badge: {
+      es: 'Medicina Bucal',
+      ca: 'Medicina Bucal',
+      en: 'Oral Medicine',
+    },
+    leadDoctor: {
+      name: 'Dra. Ruby Alexandra Herrera Villamil',
+      role: 'Odontóloga Colegiada · Col. 5929 COEC',
+      colegiateNumber: 'Col. 5929 COEC',
+      image: '/assets/equip4.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
+    },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.ruby, MEDICAL_TEAM_SCHEDULES.izbette],
+    shortDescription: {
+      es: 'Exploración y diagnóstico de lesiones orales, aftas recurrentes, infecciones o molestias en los tejidos blandos de la boca.',
+      ca: 'Exploració i diagnòstic de lesions orals, aftes recurrents, infeccions o molèsties als teixits tous de la boca.',
+      en: 'Evaluation and diagnosis of oral mucosal lesions, recurrent mouth ulcers, infections, or soft-tissue discomfort.',
+    },
+    fullDescription: {
+      es: 'La medicina oral se ocupa del diagnóstico y tratamiento médico de las patologías que afectan a los tejidos blandos de la cavidad oral, más allá de los dientes. En Clínica Dental SET realizamos exploraciones clínicas cuidadosas para estudiar cualquier lesión o molestia persistente. [Detalles sobre protocolos diagnósticos y pruebas complementarias confirmados por la clínica.]',
+      ca: 'La medicina oral s’ocupa del diagnòstic i tractament mèdic de les patologies que afecten els teixits tous de la cavitat oral, més enllà de les dents. A Clínica Dental SET realitzem exploracions clíniques curoses per estudiar qualsevol lesió persistent. [Detalls sobre protocols diagnòstics confirmats per la clínica.]',
+      en: 'Oral medicine focuses on diagnosing and medically managing conditions affecting the soft tissues of the mouth. At Clínica Dental SET we perform careful clinical examinations to evaluate persistent oral lesions or discomfort. [Diagnostic protocols confirmed by the clinic.]',
+    },
+    indications: {
+      es: [
+        'Llagas, aftas o heridas en la boca que tardan en cicatrizar',
+        'Cambios de coloración, manchas blancas o rojas en mucosa o lengua',
+        'Sequedad bucal persistente o infecciones orales',
+      ],
+      ca: [
+        'Nafres, aftes o ferides a la boca que triguen a cicatritzar',
+        'Canvis de coloració, taques blanques o vermelles a mucosa o llengua',
+        'Sequedat bucal persistent o infeccions orals',
+      ],
+      en: [
+        'Oral ulcers or sores that take more than two weeks to heal',
+        'White or red patches or texture changes on gums, cheeks, or tongue',
+        'Persistent dry mouth or recurrent oral infections',
+      ],
+    },
+    treatments: {
+      es: [
+        {
+          name: 'Exploración clínica y diagnóstico de lesiones orales',
+          description: '[Valoración detallada de mucosa, paladar, lengua y labios en consulta.]',
+        },
+        {
+          name: 'Tratamiento médico y seguimiento de patología oral',
+          description: '[Pautas terapéuticas y controles periódicos adaptados a cada diagnóstico.]',
+        },
+      ],
+      ca: [
+        {
+          name: 'Exploració clínica i diagnòstic de lesions orals',
+          description: '[Valoració detallada de mucosa, paladar, llengua i llavis a consulta.]',
+        },
+        {
+          name: 'Tractament mèdic i seguiment de patologia oral',
+          description: '[Pautes terapèutiques i controls periòdics adaptats a cada diagnòstic.]',
+        },
+      ],
+      en: [
+        {
+          name: 'Clinical oral mucosa screening & diagnosis',
+          description: '[Detailed examination of oral mucosa, palate, tongue, and lips.]',
+        },
+        {
+          name: 'Medical management & follow-up',
+          description: '[Tailored medical care plans and periodic clinical monitoring.]',
+        },
+      ],
+    },
+    faqs: {
+      es: [
+        {
+          question: '¿Cuándo conviene consultar por una llaga o mancha en la boca?',
+          answer: 'Ante cualquier herida, úlcera o cambio en el aspecto de la mucosa oral que permanezca más de 15 días sin desaparecer, es recomendable acudir a revisión odontológica.',
+        },
+        {
+          question: '¿Qué incluye una visita de medicina oral?',
+          answer: '[Descripción de la historia clínica, exploración física y pruebas complementarias si fueran necesarias.]',
+        },
+      ],
+      ca: [
+        {
+          question: 'Quan convé consultar per una nafra o taca a la boca?',
+          answer: 'Davant qualsevol ferida, úlcera o canvi a la mucosa oral que romangui més de 15 dies sense desaparèixer, és recomanable acudir a revisió.',
+        },
+        {
+          question: 'Què inclou una visita de medicina oral?',
+          answer: '[Descripció de la història clínica, exploració física i proves complementàries si fossin necessàries.]',
+        },
+      ],
+      en: [
+        {
+          question: 'When should I have a mouth sore or patch checked?',
+          answer: 'If any mouth ulcer, lump, or color change lasts longer than two weeks, scheduling an oral evaluation is strongly recommended.',
+        },
+        {
+          question: 'What does an oral medicine consultation involve?',
+          answer: '[Medical history review, physical oral exam, and any diagnostic follow-up confirmed by the clinic.]',
+        },
+      ],
+    },
+    image: '/assets/clinica7.jpg',
+    seoKeywords: ['medicina oral poblenou', 'diagnostico lesiones bucales barcelona', 'dentista medicina oral doctor trueta'],
+    features: {
+      es: [
+        'Exploración clínica minuciosa de tejidos blandos',
+        'Detección precoz y seguimiento personalizado',
+        'Atención directa con odontóloga colegiada',
+      ],
+      ca: [
+        'Exploració clínica minuciosa de teixits tous',
+        'Detecció precoç i seguiment personalitzat',
+        'Atenció directa amb odontòloga col·legiada',
+      ],
+      en: [
+        'Thorough oral soft-tissue examination',
+        'Early detection and personalized monitoring',
+        'Direct care with a licensed dentist',
+      ],
+    },
+  },
+  {
     id: 'ortodoncia',
     slug: 'ortodoncia',
+    slugs: SPECIALTY_SLUG_MAP.ortodoncia,
     schemaSpecialty: 'Orthodontics',
     title: {
       es: 'Ortodoncia',
@@ -471,6 +1095,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'estetica-dental',
     slug: 'estetica-dental',
+    slugs: SPECIALTY_SLUG_MAP['estetica-dental'],
     schemaSpecialty: 'Prosthodontics',
     title: {
       es: 'Estética Dental y Blanqueamiento',
@@ -610,6 +1235,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'periodoncia',
     slug: 'periodoncia',
+    slugs: SPECIALTY_SLUG_MAP.periodoncia,
     schemaSpecialty: 'Periodontics',
     title: {
       es: 'Periodoncia y Salud de Encías',
@@ -749,6 +1375,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'endodoncia',
     slug: 'endodoncia',
+    slugs: SPECIALTY_SLUG_MAP.endodoncia,
     schemaSpecialty: 'Dentistry',
     title: {
       es: 'Endodoncia',
@@ -888,6 +1515,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'odontologia-general',
     slug: 'odontologia-general',
+    slugs: SPECIALTY_SLUG_MAP['odontologia-general'],
     schemaSpecialty: 'Dentistry',
     title: {
       es: 'Odontología General y Prevención',
@@ -923,7 +1551,7 @@ export const SPECIALTIES: Specialty[] = [
       en: 'Oral checkups, professional cleanings, and tooth-colored fillings to prevent dental disease.',
     },
     fullDescription: {
-      es: 'Las revisiones periódicas permiten detectar a tiempo cualquier alteración en dientes o encías y resolverla de forma sencilla y conservadora. [Detalles sobre servicios de odontología general, odontopediatría y protocolos preventivos confirmados por la clínica.]',
+      es: 'Las revisiones periódicas permiten detectar a tiempo cualquier alteración en dientes o encías y resolverla de forma sencilla y conservadora. [Detalles sobre servicios de odontología general y protocolos preventivos confirmados por la clínica.]',
       ca: 'Les revisions periòdiques permeten detectar a temps qualsevol alteració en dents o genives i resoldre-la de manera senzilla i conservadora. [Detalls sobre serveis preventius confirmats per la clínica.]',
       en: 'Regular checkups allow early detection and simple conservative care for teeth and gums. [Preventive and family dentistry details confirmed by the clinic.]',
     },
@@ -996,7 +1624,7 @@ export const SPECIALTIES: Specialty[] = [
         },
         {
           question: '¿Atendéis a pacientes de todas las edades?',
-          answer: '[Información sobre atención familiar e infantil confirmada por la clínica.]',
+          answer: 'Sí, atendemos tanto a adultos como a niños (odontopediatría) con trato cercano y continuado en Poblenou.',
         },
       ],
       ca: [
@@ -1006,7 +1634,7 @@ export const SPECIALTIES: Specialty[] = [
         },
         {
           question: 'Ateneu pacients de totes les edats?',
-          answer: '[Informació sobre atenció familiar i infantil confirmada per la clínica.]',
+          answer: 'Sí, atenem tant adults com nens (odontopediatria) amb tracte proper i continuat al Poblenou.',
         },
       ],
       en: [
@@ -1016,7 +1644,7 @@ export const SPECIALTIES: Specialty[] = [
         },
         {
           question: 'Do you treat patients of all ages?',
-          answer: '[Family and pediatric dentistry availability confirmed by the clinic.]',
+          answer: 'Yes, we care for both adults and children (pediatric dentistry) at our Poblenou clinic.',
         },
       ],
     },
@@ -1043,6 +1671,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'bruxismo-atm',
     slug: 'bruxismo-atm',
+    slugs: SPECIALTY_SLUG_MAP['bruxismo-atm'],
     schemaSpecialty: 'Prosthodontics',
     title: {
       es: 'Bruxismo y Articulación ATM',
@@ -1182,6 +1811,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'protesis-dental',
     slug: 'protesis-dental',
+    slugs: SPECIALTY_SLUG_MAP['protesis-dental'],
     schemaSpecialty: 'Prosthodontics',
     title: {
       es: 'Prótesis Dental y Rehabilitación',
@@ -1440,7 +2070,7 @@ export const TESTIMONIALS: Testimonial[] = [
     },
     comment: {
       es: '[Espacio reservado para insertar una reseña real y autorizada de Google Business Profile de Clínica Dental SET.]',
-      ca: '[Espai reservat per inserir una ressenya real i autoritzada de Google Business Profile de Clínica Dental SET.]',
+      ca: '[Espacio reservat per inserir una ressenya real i autoritzada de Google Business Profile de Clínica Dental SET.]',
       en: '[Placeholder reserved for an authentic, patient-authorized Google Business Profile review for Clínica Dental SET.]',
     },
     rating: 5,
@@ -1457,7 +2087,7 @@ export const TESTIMONIALS: Testimonial[] = [
     },
     comment: {
       es: '[Espacio reservado para insertar una reseña real y autorizada de Google Business Profile de Clínica Dental SET.]',
-      ca: '[Espai reservat per inserir una ressenya real i autoritzada de Google Business Profile de Clínica Dental SET.]',
+      ca: '[Espacio reservat per inserir una ressenya real i autoritzada de Google Business Profile de Clínica Dental SET.]',
       en: '[Placeholder reserved for an authentic, patient-authorized Google Business Profile review for Clínica Dental SET.]',
     },
     rating: 5,

@@ -84,7 +84,10 @@ function buildMedicalTeamSchema(
   localBusinessId: string
 ) {
   return members.map((member) => ({
-    '@type': member.name.startsWith('Dra.') ? ['Person', 'Physician'] : ['Person'],
+    '@type':
+      member.name.startsWith('Dra.') || member.medicalSpecialty === 'Anesthesia'
+        ? ['Person', 'Physician']
+        : ['Person'],
     name: member.name,
     jobTitle: member.role,
     medicalSpecialty: member.medicalSpecialty,
@@ -119,18 +122,46 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
   const allTeamMembers = [
     MEDICAL_TEAM_SCHEDULES.izbette,
     MEDICAL_TEAM_SCHEDULES.ruby,
+    MEDICAL_TEAM_SCHEDULES.anestesiologo,
     MEDICAL_TEAM_SCHEDULES.silvia,
   ];
 
-  // Check if it's an individual specialty page
-  if (basePath.startsWith('/especialidades/')) {
-    const slug = basePath.replace('/especialidades/', '').split('/')[0];
-    const specialty =
-      SPECIALTIES.find((s) => s.slug === slug) ||
-      (slug === 'sedacion-consciente'
-        ? SPECIALTIES.find((s) => s.slug === 'protesis-dental')
-        : undefined);
+  // Explicit 404 route metadata
+  if (parsed.isNotFound || basePath === '/404') {
+    const canonicalPath = buildLocalizedPath('/404', lang);
+    const canonicalUrl = `${BASE_URL}${canonicalPath}`;
+    return {
+      title:
+        lang === 'ca'
+          ? '404 · Pàgina no trobada | Clínica Dental SET'
+          : lang === 'en'
+          ? '404 · Page Not Found | Clínica Dental SET'
+          : '404 · Página no encontrada | Clínica Dental SET',
+      description:
+        lang === 'ca'
+          ? 'L’adreça sol·licitada no existeix a Clínica Dental SET Barcelona.'
+          : lang === 'en'
+          ? 'The requested address does not exist on Clínica Dental SET Barcelona.'
+          : 'La dirección solicitada no existe en Clínica Dental SET Barcelona.',
+      canonicalPath,
+      canonicalUrl,
+      alternates: buildAlternates('/404'),
+      robots: 'noindex, nofollow',
+      ogType: 'website',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      schemaJson: {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: '404 - Clínica Dental SET',
+      },
+    };
+  }
 
+  // Individual specialty page
+  if (parsed.specialtySlug || basePath.startsWith('/especialidades/')) {
+    const slug = parsed.specialtySlug || basePath.replace('/especialidades/', '').split('/')[0];
+    const specialty = SPECIALTIES.find((s) => s.slug === slug);
     if (specialty) {
       return getSpecialtySeo(specialty, lang);
     }
@@ -174,10 +205,10 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
           : 'Especialidades Odontológicas en Poblenou | Clínica Dental SET',
       description:
         lang === 'ca'
-          ? 'Coneix les nostres especialitats odontològiques al Poblenou (Carrer Doctor Trueta, 213): implants, ortodòncia, estètica, periodòncia i endodòncia.'
+          ? 'Coneix les nostres 12 especialitats odontològiques al Poblenou: implants, cirurgia oral, sedació conscient amb anestesiòleg, odontopediatria i medicina oral.'
           : lang === 'en'
-          ? 'Explore our dental specialties in Poblenou, Barcelona (Carrer Doctor Trueta, 213): implants, orthodontics, aesthetics, periodontics, and endodontics.'
-          : 'Descubre nuestras especialidades odontológicas en Poblenou (Carrer del Doctor Trueta, 213): implantes, ortodoncia, estética, periodoncia y endodoncia.',
+          ? 'Explore our 12 dental specialties in Poblenou, Barcelona: implants, oral surgery, conscious sedation with anesthesiologist, pediatric dentistry, and oral medicine.'
+          : 'Descubre nuestras 12 especialidades odontológicas en Poblenou: implantes dentales, cirugía oral, sedación consciente con anestesiólogo, odontopediatría y medicina oral.',
       canonicalPath,
       canonicalUrl,
       alternates: buildAlternates('/especialidades'),
@@ -276,7 +307,7 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': ['LocalBusiness', 'MedicalClinic', 'Dentist'],
-        '@id': `${BASE_URL}/clinica#localbusiness`,
+        '@id': `${BASE_URL}${canonicalPath}#localbusiness`,
         name: 'Clínica Dental SET - Instalaciones Poblenou',
         url: canonicalUrl,
         inLanguage: getOgLocale(lang).replace('_', '-'),
@@ -343,7 +374,7 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
     };
   }
 
-  // Default: Homepage (/, /ca, /en)
+  // Homepage (/, /ca, /en)
   const canonicalPath = buildLocalizedPath('/', lang);
   const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
@@ -388,10 +419,12 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       employee: buildMedicalTeamSchema(allTeamMembers, `${BASE_URL}/#localbusiness`),
       medicalSpecialty: [
         'Dentistry',
+        'OralSurgery',
+        'Anesthesia',
+        'Pediatric',
         'Orthodontics',
         'Periodontics',
         'Prosthodontics',
-        'OralSurgery',
       ],
     },
   };
@@ -405,9 +438,29 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
 
   const titles: Record<string, Record<Language, string>> = {
     'implantes-dentales': {
-      es: 'Implantes Dentales y Cirugía Oral en Poblenou | Clínica Dental SET',
-      ca: 'Implants Dentals i Cirurgia Oral al Poblenou | Clínica Dental SET',
-      en: 'Dental Implants & Oral Surgery in Poblenou | Clínica Dental SET',
+      es: 'Implantes Dentales en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Implants Dentals al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Dental Implants in Poblenou, Barcelona | Clínica Dental SET',
+    },
+    'cirugia-oral': {
+      es: 'Cirugía Oral en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Cirurgia Oral al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Oral Surgery in Poblenou, Barcelona | Clínica Dental SET',
+    },
+    'sedacion-consciente': {
+      es: 'Sedación Consciente con Anestesiólogo en Barcelona | Clínica Dental SET',
+      ca: 'Sedació Conscient amb Anestesiòleg a Barcelona | Clínica Dental SET',
+      en: 'Conscious Sedation with Anesthesiologist in Barcelona | Clínica Dental SET',
+    },
+    odontopediatria: {
+      es: 'Odontopediatría y Dentista Infantil en Poblenou | Clínica Dental SET',
+      ca: 'Odontopediatria i Dentista Infantil al Poblenou | Clínica Dental SET',
+      en: 'Pediatric Dentistry for Children in Poblenou | Clínica Dental SET',
+    },
+    'medicina-oral': {
+      es: 'Medicina Oral en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Medicina Oral al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Oral Medicine in Poblenou, Barcelona | Clínica Dental SET',
     },
     ortodoncia: {
       es: 'Ortodoncia en Poblenou, Barcelona | Clínica Dental SET',
@@ -593,10 +646,7 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
 export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
   if (typeof document === 'undefined') return;
 
-  // 0. HTML lang attribute
   document.documentElement.lang = lang;
-
-  // 1. Title
   document.title = seo.title;
 
   const setMetaName = (name: string, content: string) => {
@@ -609,12 +659,10 @@ export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
     el.setAttribute('content', content);
   };
 
-  // 2. Meta Description & Staging noindex protection
   setMetaName('description', seo.description);
   setMetaName('robots', seo.robots);
   setMetaName('googlebot', seo.robots);
 
-  // 3. Canonical Tag
   let linkCanonical = document.querySelector('link[rel="canonical"]');
   if (!linkCanonical) {
     linkCanonical = document.createElement('link');
@@ -623,7 +671,6 @@ export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
   }
   linkCanonical.setAttribute('href', seo.canonicalUrl);
 
-  // 4. Multilingual Hreflang Alternate Tags
   const hreflangs: Array<{ key: keyof PageSeoMetadata['alternates']; href: string }> = [
     { key: 'es', href: seo.alternates.es },
     { key: 'ca', href: seo.alternates.ca },
@@ -642,7 +689,6 @@ export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
     linkAlt.setAttribute('href', href);
   });
 
-  // 5. OpenGraph Tags
   const setMetaProperty = (property: string, content: string) => {
     let el = document.querySelector(`meta[property="${property}"]`);
     if (!el) {
@@ -660,11 +706,9 @@ export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
   setMetaProperty('og:locale', seo.ogLocale);
   setMetaProperty('og:image', seo.ogImage);
 
-  // 6. Twitter Card Tags
   setMetaName('twitter:title', seo.title);
   setMetaName('twitter:description', seo.description);
 
-  // 7. Schema.org JSON-LD Script
   let schemaScript = document.getElementById('dynamic-schema-ld') as HTMLScriptElement | null;
   if (!schemaScript) {
     schemaScript = document.createElement('script');

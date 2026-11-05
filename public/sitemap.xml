@@ -34,26 +34,26 @@
   <url>
     <loc>https://clinicadentalset.com/especialidades</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades</loc>
+    <loc>https://clinicadentalset.com/en/specialties</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -63,26 +63,26 @@
   <url>
     <loc>https://clinicadentalset.com/equipo</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/equipo" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equipo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/equipo" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equip" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/team" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/equipo" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/equipo</loc>
+    <loc>https://clinicadentalset.com/ca/equip</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/equipo" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equipo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/equipo" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equip" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/team" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/equipo" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/equipo</loc>
+    <loc>https://clinicadentalset.com/en/team</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/equipo" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equipo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/equipo" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/equip" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/team" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/equipo" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -93,7 +93,7 @@
     <loc>https://clinicadentalset.com/clinica</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/clinica" />
     <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/clinica" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinica" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinic" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/clinica" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -102,16 +102,16 @@
     <loc>https://clinicadentalset.com/ca/clinica</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/clinica" />
     <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/clinica" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinica" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinic" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/clinica" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/clinica</loc>
+    <loc>https://clinicadentalset.com/en/clinic</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/clinica" />
     <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/clinica" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinica" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/clinic" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/clinica" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -121,251 +121,374 @@
   <url>
     <loc>https://clinicadentalset.com/contacto</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/contacto" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contacto" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacte" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/contacto" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/contacto</loc>
+    <loc>https://clinicadentalset.com/ca/contacte</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/contacto" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contacto" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacte" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/contacto" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/contacto</loc>
+    <loc>https://clinicadentalset.com/en/contact</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/contacto" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contacto" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/contacte" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/contact" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/contacto" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Specialty Pillar Pages (8 specialties x 3 languages) -->
+  <!-- 1. Dental Implants (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/implantes-dentales</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/implantes-dentales" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/implants-dentals" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-implants" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/implantes-dentales</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/implants-dentals</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/implantes-dentales" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/implants-dentals" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-implants" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/implantes-dentales</loc>
+    <loc>https://clinicadentalset.com/en/specialties/dental-implants</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/implantes-dentales" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/implantes-dentales" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/implants-dentals" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-implants" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/implantes-dentales" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 2. Oral Surgery (ES / CA / EN) -->
+  <url>
+    <loc>https://clinicadentalset.com/especialidades/cirugia-oral</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/cirurgia-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-surgery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/ca/especialitats/cirurgia-oral</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/cirurgia-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-surgery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/en/specialties/oral-surgery</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/cirurgia-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-surgery" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/cirugia-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 3. Conscious Sedation with Anesthesiologist (ES / CA / EN) -->
+  <url>
+    <loc>https://clinicadentalset.com/especialidades/sedacion-consciente</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/sedacio-conscient" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/conscious-sedation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/ca/especialitats/sedacio-conscient</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/sedacio-conscient" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/conscious-sedation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/en/specialties/conscious-sedation</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/sedacio-conscient" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/conscious-sedation" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/sedacion-consciente" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 4. Pediatric Dentistry (ES / CA / EN) -->
+  <url>
+    <loc>https://clinicadentalset.com/especialidades/odontopediatria</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/pediatric-dentistry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/ca/especialitats/odontopediatria</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/pediatric-dentistry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/en/specialties/pediatric-dentistry</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontopediatria" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/pediatric-dentistry" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontopediatria" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 5. Oral Medicine (ES / CA / EN) -->
+  <url>
+    <loc>https://clinicadentalset.com/especialidades/medicina-oral</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-medicine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/ca/especialitats/medicina-oral</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-medicine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://clinicadentalset.com/en/specialties/oral-medicine</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/medicina-oral" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/oral-medicine" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/medicina-oral" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- 6. Orthodontics (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/ortodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/orthodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/ortodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/ortodoncia</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/ortodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/orthodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/ortodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/ortodoncia</loc>
+    <loc>https://clinicadentalset.com/en/specialties/orthodontics</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/ortodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/ortodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/orthodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/ortodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 7. Cosmetic Dentistry (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/estetica-dental</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/cosmetic-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/estetica-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/estetica-dental</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/estetica-dental</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/cosmetic-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/estetica-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/estetica-dental</loc>
+    <loc>https://clinicadentalset.com/en/specialties/cosmetic-dentistry</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/estetica-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/estetica-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/cosmetic-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/estetica-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 8. Periodontics (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/periodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/periodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/periodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/periodoncia</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/periodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/periodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/periodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/periodoncia</loc>
+    <loc>https://clinicadentalset.com/en/specialties/periodontics</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/periodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/periodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/periodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/periodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 9. Endodontics (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/endodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/endodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/endodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/endodoncia</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/endodoncia</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/endodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/endodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/endodoncia</loc>
+    <loc>https://clinicadentalset.com/en/specialties/endodontics</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/endodoncia" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/endodoncia" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/endodontics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/endodoncia" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 10. General Dentistry (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/odontologia-general</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/general-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontologia-general" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/odontologia-general</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/odontologia-general</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/general-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontologia-general" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/odontologia-general</loc>
+    <loc>https://clinicadentalset.com/en/specialties/general-dentistry</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/odontologia-general" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/odontologia-general" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/general-dentistry" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/odontologia-general" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 11. Bruxism & TMJ (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/bruxismo-atm</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/bruxismo-atm" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/bruxisme-atm" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/bruxism-tmj" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/bruxismo-atm</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/bruxisme-atm</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/bruxismo-atm" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/bruxisme-atm" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/bruxism-tmj" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/bruxismo-atm</loc>
+    <loc>https://clinicadentalset.com/en/specialties/bruxism-tmj</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/bruxismo-atm" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/bruxismo-atm" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/bruxisme-atm" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/bruxism-tmj" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/bruxismo-atm" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
+  <!-- 12. Dental Prosthetics (ES / CA / EN) -->
   <url>
     <loc>https://clinicadentalset.com/especialidades/protesis-dental</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/protesis-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/protesi-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-prosthetics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/protesis-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/ca/especialidades/protesis-dental</loc>
+    <loc>https://clinicadentalset.com/ca/especialitats/protesi-dental</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/protesis-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/protesi-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-prosthetics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/protesis-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://clinicadentalset.com/en/especialidades/protesis-dental</loc>
+    <loc>https://clinicadentalset.com/en/specialties/dental-prosthetics</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://clinicadentalset.com/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialidades/protesis-dental" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/especialidades/protesis-dental" />
+    <xhtml:link rel="alternate" hreflang="ca" href="https://clinicadentalset.com/ca/especialitats/protesi-dental" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://clinicadentalset.com/en/specialties/dental-prosthetics" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://clinicadentalset.com/especialidades/protesis-dental" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
