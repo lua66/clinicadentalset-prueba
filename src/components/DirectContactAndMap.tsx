@@ -6,6 +6,7 @@ import { UI_TRANSLATIONS } from '../i18n/translations';
 import { CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
 import { hasThirdPartyCookieConsent, saveCookieConsent } from '../utils/cookieConsent';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface DirectContactAndMapProps {
   lang: Language;
@@ -101,7 +102,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       href={CLINIC_CONTACT.googleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#83C408] hover:underline mt-2"
+                      className="inline-flex items-center min-h-[44px] gap-1.5 px-2.5 py-2 text-[11px] font-bold text-[#83C408] hover:underline mt-1"
                     >
                       <Navigation className="w-3 h-3" />
                       <span>{t.mapOpenExternal}</span>
@@ -134,7 +135,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                     <button
                       type="button"
                       onClick={handleEnableMap}
-                      className="px-5 py-2.5 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors cursor-pointer"
+                      className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors cursor-pointer"
                     >
                       {t.mapAcceptBtn}
                     </button>
@@ -143,7 +144,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       href={CLINIC_CONTACT.googleMapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl transition-colors"
+                      className="inline-flex items-center justify-center min-h-[44px] gap-1.5 px-4 py-2.5 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl transition-colors"
                     >
                       <Navigation className="w-3.5 h-3.5 text-[#83C408]" />
                       <span>{t.mapOpenExternal}</span>
@@ -182,7 +183,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                 </div>
 
                 <a
-                  href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20me%20gustar%C3%ADa%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+                  href={buildWhatsAppUrl(lang)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
@@ -192,7 +193,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       sourcePage: 'Sección Contacto y Mapa Poblenou',
                     });
                   }}
-                  className="w-full sm:w-auto px-6 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-6 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>{t.sendWhatsAppBtn}</span>
@@ -233,7 +234,7 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       sourcePage: 'Sección Contacto y Mapa Poblenou',
                     });
                   }}
-                  className="w-full sm:w-auto px-5 py-2.5 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] rounded-xl border border-[#83C408]/60 hover:border-[#83C408] transition-colors flex items-center justify-center gap-2 tabular-nums cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] rounded-xl border border-[#83C408]/60 hover:border-[#83C408] transition-colors flex items-center justify-center gap-2 tabular-nums cursor-pointer"
                 >
                   <Phone className="w-3.5 h-3.5 text-[#83C408]" />
                   <span>{t.quickCallBtn}</span>
@@ -275,7 +276,10 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
 
               <div className="flex items-center gap-3 pt-1 text-xs">
                 <Mail className="w-3.5 h-3.5 text-[#83C408] shrink-0" />
-                <a href={`mailto:${CLINIC_CONTACT.email}`} className="hover:underline text-[#F5FAF3]">
+                <a
+                  href={`mailto:${CLINIC_CONTACT.email}`}
+                  className="inline-flex items-center min-h-[44px] py-2 hover:underline text-[#F5FAF3]"
+                >
                   {CLINIC_CONTACT.email}
                 </a>
               </div>

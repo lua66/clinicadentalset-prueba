@@ -39,7 +39,7 @@ export const TreatmentsSummary: React.FC<TreatmentsSummaryProps> = ({
               e.preventDefault();
               onViewAll();
             }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] transition-colors cursor-pointer self-start sm:self-auto"
+            className="inline-flex items-center min-h-[44px] gap-2 px-4 py-2.5 rounded-lg text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] transition-colors cursor-pointer self-start sm:self-auto"
           >
             <span>{t.allSpecialties}</span>
             <ArrowRight className="w-4 h-4" />

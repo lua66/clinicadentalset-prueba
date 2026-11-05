@@ -6,6 +6,7 @@ import { CLINIC_CONTACT, SPECIALTIES } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
 import { buildLocalizedPath } from '../utils/routing';
 import { resetCookieConsentPrompt } from '../utils/cookieConsent';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface FooterProps {
   lang: Language;
@@ -47,10 +48,10 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
           {/* Column 2: Specialties Silo (Crawlable Links for SEO) */}
           <div>
-            <h4 className="text-sm font-semibold text-[#F5FAF3] mb-4">
+            <h4 className="text-sm font-semibold text-[#F5FAF3] mb-3">
               {t.footerCol2Title}
             </h4>
-            <ul className="space-y-2 text-xs">
+            <ul className="space-y-0.5 text-xs">
               {SPECIALTIES.map((spec) => {
                 const href = buildLocalizedPath(`/especialidades/${spec.slug}`, lang);
                 return (
@@ -61,9 +62,9 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                         e.preventDefault();
                         onNavigate(href);
                       }}
-                      className="text-[#B9CEBE] hover:text-[#83C408] hover:underline transition-colors text-left truncate max-w-full block cursor-pointer"
+                      className="inline-flex items-center min-h-[44px] py-2 text-[#B9CEBE] hover:text-[#83C408] hover:underline transition-colors text-left w-full cursor-pointer"
                     >
-                      {spec.title[lang]}
+                      <span className="truncate">{spec.title[lang]}</span>
                     </a>
                   </li>
                 );
@@ -94,7 +95,10 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
             <div className="flex items-center gap-2.5 text-xs">
               <Mail className="w-4 h-4 text-[#83C408] shrink-0" />
-              <a href={`mailto:${CLINIC_CONTACT.email}`} className="hover:underline text-[#F5FAF3]">
+              <a
+                href={`mailto:${CLINIC_CONTACT.email}`}
+                className="inline-flex items-center min-h-[44px] py-2 hover:underline text-[#F5FAF3]"
+              >
                 {CLINIC_CONTACT.email}
               </a>
             </div>
@@ -111,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
             </p>
 
             <a
-              href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+              href={buildWhatsAppUrl(lang)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
@@ -121,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                   sourcePage: 'Pie de Página (Footer)',
                 });
               }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 px-4 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"
+              className="flex items-center justify-center min-h-[44px] gap-2 w-full py-2.5 px-4 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
               <span>WhatsApp</span>
@@ -136,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                   sourcePage: 'Pie de Página (Footer)',
                 });
               }}
-              className="flex items-center justify-center gap-2 w-full py-2 px-4 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg transition-colors border border-[#83C408]/60 hover:border-[#83C408] tabular-nums cursor-pointer"
+              className="flex items-center justify-center min-h-[44px] gap-2 w-full py-2.5 px-4 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg transition-colors border border-[#83C408]/60 hover:border-[#83C408] tabular-nums cursor-pointer"
             >
               <Phone className="w-3.5 h-3.5 text-[#83C408]" />
               <span>{t.quickCallBtn}</span>
@@ -148,14 +152,14 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
         <div className="mt-12 pt-8 border-t border-[#1D2D22] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#9AB39E]">
           <p>© {new Date().getFullYear()} {t.allRightsReserved}</p>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-5">
             <a
               href={buildLocalizedPath('/contacto', lang)}
               onClick={(e) => {
                 e.preventDefault();
                 onNavigate(buildLocalizedPath('/contacto', lang));
               }}
-              className="hover:text-[#83C408] cursor-pointer"
+              className="inline-flex items-center min-h-[44px] px-1 hover:text-[#83C408] cursor-pointer"
             >
               {t.legalNotice}
             </a>
@@ -165,14 +169,14 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 e.preventDefault();
                 onNavigate(buildLocalizedPath('/contacto', lang));
               }}
-              className="hover:text-[#83C408] cursor-pointer"
+              className="inline-flex items-center min-h-[44px] px-1 hover:text-[#83C408] cursor-pointer"
             >
               {t.privacyPolicy}
             </a>
             <button
               type="button"
               onClick={resetCookieConsentPrompt}
-              className="text-[#83C408] hover:underline cursor-pointer"
+              className="inline-flex items-center min-h-[44px] px-1 text-[#83C408] hover:underline cursor-pointer"
             >
               {t.cookieConfigure}
             </button>
@@ -184,7 +188,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                 e.preventDefault();
                 onNavigate('/crm');
               }}
-              className="inline-flex items-center gap-1 text-[#9AB39E] hover:text-[#83C408] transition-colors cursor-pointer"
+              className="inline-flex items-center min-h-[44px] px-1 gap-1.5 text-[#9AB39E] hover:text-[#83C408] transition-colors cursor-pointer"
             >
               <Lock className="w-3 h-3" />
               <span>{t.ownerPrivateAccess}</span>

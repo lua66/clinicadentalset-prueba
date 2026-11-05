@@ -5,6 +5,7 @@ import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { TEAM_MEMBERS, CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface TeamSectionProps {
   lang: Language;
@@ -145,7 +146,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
           </div>
 
           <a
-            href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20con%20el%20equipo%20de%20Cl%C3%ADnica%20Dental%20SET.`}
+            href={buildWhatsAppUrl(lang, { intent: 'team' })}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
@@ -155,7 +156,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({
                 sourcePage: 'Sección Equipo Médico',
               });
             }}
-            className="px-5 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors whitespace-nowrap flex items-center gap-2 shrink-0 cursor-pointer"
+            className="inline-flex items-center justify-center min-h-[44px] px-5 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors whitespace-nowrap gap-2 shrink-0 cursor-pointer"
           >
             <MessageCircle className="w-4 h-4" />
             <span>WhatsApp · {CLINIC_CONTACT.whatsapp}</span>

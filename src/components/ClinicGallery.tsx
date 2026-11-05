@@ -63,7 +63,7 @@ export const ClinicGallery: React.FC<ClinicGalleryProps> = ({
                     type="button"
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                    className={`inline-flex items-center min-h-[44px] px-3.5 py-2 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                       selectedCategory === cat.id
                         ? 'bg-[#83C408] text-[#071408] shadow-xs font-extrabold'
                         : 'text-[#83C408] hover:bg-[#16231B]'
@@ -89,7 +89,7 @@ export const ClinicGallery: React.FC<ClinicGalleryProps> = ({
                   type="button"
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                  className={`inline-flex items-center min-h-[44px] px-3.5 py-2 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                     selectedCategory === cat.id
                       ? 'bg-[#83C408] text-[#071408] shadow-xs font-extrabold'
                       : 'text-[#83C408] hover:bg-[#16231B]'
@@ -178,7 +178,7 @@ export const ClinicGallery: React.FC<ClinicGalleryProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveImage(null)}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] flex items-center justify-center transition-colors cursor-pointer"
+                className="absolute top-4 right-4 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Cerrar vista ampliada"
               >
                 <X className="w-5 h-5" />

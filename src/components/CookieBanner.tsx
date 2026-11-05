@@ -53,14 +53,14 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ lang }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <button
             type="button"
             onClick={() => {
               saveCookieConsent('essential_only');
               setVisible(false);
             }}
-            className="px-4 py-2 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] border-2 border-[#83C408] rounded-xl shadow-xs transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5FAF3]"
           >
             {t.cookieEssentialOnly}
           </button>
@@ -71,7 +71,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ lang }) => {
               saveCookieConsent('accepted');
               setVisible(false);
             }}
-            className="px-4 py-2 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] border-2 border-[#83C408] rounded-xl shadow-xs transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5FAF3]"
           >
             {t.cookieAcceptAll}
           </button>

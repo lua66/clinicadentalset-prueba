@@ -205,10 +205,10 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
           : 'Especialidades Odontológicas en Poblenou | Clínica Dental SET',
       description:
         lang === 'ca'
-          ? 'Coneix les nostres 12 especialitats odontològiques al Poblenou: implants, cirurgia oral, sedació conscient amb anestesiòleg, odontopediatria i medicina oral.'
+          ? '12 especialitats odontològiques al Poblenou, Barcelona: implants, cirurgia oral, sedació amb anestesiòleg, odontopediatria, medicina oral i ortodòncia.'
           : lang === 'en'
-          ? 'Explore our 12 dental specialties in Poblenou, Barcelona: implants, oral surgery, conscious sedation with anesthesiologist, pediatric dentistry, and oral medicine.'
-          : 'Descubre nuestras 12 especialidades odontológicas en Poblenou: implantes dentales, cirugía oral, sedación consciente con anestesiólogo, odontopediatría y medicina oral.',
+          ? '12 dental specialties in Poblenou, Barcelona: implants, oral surgery, sedation with anesthesiologist, pediatric dentistry, oral medicine, and orthodontics.'
+          : '12 especialidades odontológicas en Poblenou, Barcelona: implantes, cirugía oral, sedación con anestesiólogo, odontopediatría, medicina oral y ortodoncia.',
       canonicalPath,
       canonicalUrl,
       alternates: buildAlternates('/especialidades'),
@@ -448,14 +448,14 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
       en: 'Oral Surgery in Poblenou, Barcelona | Clínica Dental SET',
     },
     'sedacion-consciente': {
-      es: 'Sedación Consciente con Anestesiólogo en Barcelona | Clínica Dental SET',
-      ca: 'Sedació Conscient amb Anestesiòleg a Barcelona | Clínica Dental SET',
-      en: 'Conscious Sedation with Anesthesiologist in Barcelona | Clínica Dental SET',
+      es: 'Sedación Dental en Barcelona | Clínica Dental SET',
+      ca: 'Sedació Dental a Barcelona | Clínica Dental SET',
+      en: 'Conscious Dental Sedation Barcelona | Clínica Dental SET',
     },
     odontopediatria: {
-      es: 'Odontopediatría y Dentista Infantil en Poblenou | Clínica Dental SET',
-      ca: 'Odontopediatria i Dentista Infantil al Poblenou | Clínica Dental SET',
-      en: 'Pediatric Dentistry for Children in Poblenou | Clínica Dental SET',
+      es: 'Odontopediatría en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Odontopediatria al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Pediatric Dentistry in Poblenou | Clínica Dental SET',
     },
     'medicina-oral': {
       es: 'Medicina Oral en Poblenou, Barcelona | Clínica Dental SET',
@@ -468,44 +468,104 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
       en: 'Orthodontics in Poblenou, Barcelona | Clínica Dental SET',
     },
     'estetica-dental': {
-      es: 'Estética Dental y Blanqueamiento en Poblenou | Clínica Dental SET',
-      ca: 'Estètica Dental i Blanquejament al Poblenou | Clínica Dental SET',
-      en: 'Cosmetic Dentistry & Whitening in Poblenou | Clínica Dental SET',
+      es: 'Estética Dental en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Estètica Dental al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Cosmetic Dentistry in Poblenou | Clínica Dental SET',
     },
     periodoncia: {
-      es: 'Periodoncia y Salud de Encías en Poblenou | Clínica Dental SET',
-      ca: 'Periodòncia i Salut de Genives al Poblenou | Clínica Dental SET',
-      en: 'Periodontics & Gum Health in Poblenou | Clínica Dental SET',
+      es: 'Periodoncia en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Periodòncia al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Periodontics in Poblenou, Barcelona | Clínica Dental SET',
     },
     endodoncia: {
       es: 'Endodoncia en Poblenou, Barcelona | Clínica Dental SET',
       ca: 'Endodòncia al Poblenou, Barcelona | Clínica Dental SET',
-      en: 'Endodontics (Root Canal) in Poblenou | Clínica Dental SET',
+      en: 'Endodontics in Poblenou, Barcelona | Clínica Dental SET',
     },
     'odontologia-general': {
-      es: 'Odontología General y Prevención en Poblenou | Clínica Dental SET',
-      ca: 'Odontologia General i Prevenció al Poblenou | Clínica Dental SET',
-      en: 'General & Preventive Dentistry in Poblenou | Clínica Dental SET',
+      es: 'Odontología General en Poblenou | Clínica Dental SET',
+      ca: 'Odontologia General al Poblenou | Clínica Dental SET',
+      en: 'General Dentistry in Poblenou | Clínica Dental SET',
     },
     'bruxismo-atm': {
-      es: 'Bruxismo y Articulación ATM en Poblenou | Clínica Dental SET',
-      ca: 'Bruxisme i Articulació ATM al Poblenou | Clínica Dental SET',
-      en: 'Bruxism & TMJ Occlusion in Poblenou | Clínica Dental SET',
+      es: 'Bruxismo y ATM en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Bruxisme i ATM al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Bruxism & TMJ in Poblenou, Barcelona | Clínica Dental SET',
     },
     'protesis-dental': {
-      es: 'Prótesis Dental y Rehabilitación en Poblenou | Clínica Dental SET',
-      ca: 'Pròtesi Dental i Rehabilitació al Poblenou | Clínica Dental SET',
-      en: 'Dental Prosthetics & Rehabilitation in Poblenou | Clínica Dental SET',
+      es: 'Prótesis Dental en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Pròtesi Dental al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Dental Prosthetics in Poblenou | Clínica Dental SET',
     },
   };
 
-  const title = titles[specialty.slug]?.[lang] || `${specTitle} en Poblenou | Clínica Dental SET`;
+  const descriptions: Record<string, Record<Language, string>> = {
+    'implantes-dentales': {
+      es: 'Implantes dentales en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención cercana con la Dra. Ruby Herrera (Col. 5929 COEC).',
+      ca: 'Implants dentals a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció propera amb la Dra. Ruby Herrera (Col. 5929 COEC).',
+      en: 'Dental implants at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Direct care with Dr. Ruby Herrera (Col. 5929 COEC).',
+    },
+    'cirugia-oral': {
+      es: 'Cirugía oral en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención quirúrgica cercana con la Dra. Ruby Herrera (Col. 5929 COEC).',
+      ca: 'Cirurgia oral a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció quirúrgica propera amb la Dra. Ruby Herrera (Col. 5929 COEC).',
+      en: 'Oral surgery at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Direct surgical care with Dr. Ruby Herrera (Col. 5929 COEC).',
+    },
+    'sedacion-consciente': {
+      es: 'Sedación consciente con médico anestesiólogo en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Atención sin ansiedad.',
+      ca: 'Sedació conscient amb metge anestesiòleg a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Atenció sense ansietat.',
+      en: 'Conscious dental sedation with an anesthesiologist at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Calm, relaxed care.',
+    },
+    odontopediatria: {
+      es: 'Odontopediatría y cuidado dental infantil en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención cercana para niños y jóvenes.',
+      ca: 'Odontopediatria i cura dental infantil a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció propera per a infants i joves.',
+      en: 'Pediatric dentistry for children and teens at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Gentle family dental care.',
+    },
+    'medicina-oral': {
+      es: 'Medicina oral en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Diagnóstico clínico de mucosa oral, lengua y glándulas salivales.',
+      ca: 'Medicina oral a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Diagnòstic clínic de mucosa oral, llengua i glàndules salivals.',
+      en: 'Oral medicine at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Clinical diagnosis of oral mucosa, tongue, and salivary glands.',
+    },
+    ortodoncia: {
+      es: 'Ortodoncia en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Estudio personalizado de alineación dental y oclusión con equipo COEC.',
+      ca: 'Ortodòncia a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Estudi personalitzat d’alineació dental i oclusió amb equip COEC.',
+      en: 'Orthodontics at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Personalized dental alignment and bite care by COEC dentists.',
+    },
+    'estetica-dental': {
+      es: 'Estética dental en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención cercana con la Dra. Izbette Luis Torres (Col. 5664 COEC).',
+      ca: 'Estètica dental a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció propera amb la Dra. Izbette Luis Torres (Col. 5664 COEC).',
+      en: 'Cosmetic dentistry at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Direct care with Dr. Izbette Luis Torres (Col. 5664 COEC).',
+    },
+    periodoncia: {
+      es: 'Periodoncia y cuidado de encías en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención con la Dra. Ruby Herrera (Col. 5929 COEC).',
+      ca: 'Periodòncia i cura de genives a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció amb la Dra. Ruby Herrera (Col. 5929 COEC).',
+      en: 'Periodontics and gum care at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Direct care with Dr. Ruby Herrera (Col. 5929 COEC).',
+    },
+    endodoncia: {
+      es: 'Endodoncia y conservación dental en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención con la Dra. Izbette Luis (Col. 5664 COEC).',
+      ca: 'Endodòncia i conservació dental a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció amb la Dra. Izbette Luis (Col. 5664 COEC).',
+      en: 'Endodontics and root canal care at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Care with Dr. Izbette Luis (Col. 5664 COEC).',
+    },
+    'odontologia-general': {
+      es: 'Odontología general y prevención en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Revisiones y cuidado bucodental en Barcelona.',
+      ca: 'Odontologia general i prevenció a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Revisions i cura bucodental a Barcelona.',
+      en: 'General and preventive dentistry at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Routine checkups and family care.',
+    },
+    'bruxismo-atm': {
+      es: 'Tratamiento de bruxismo y ATM en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención cercana con equipo colegiado COEC.',
+      ca: 'Tractament de bruxisme i ATM a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció propera amb equip col·legiat COEC.',
+      en: 'Bruxism and TMJ care at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona). Personalized occlusal evaluation by COEC dentists.',
+    },
+    'protesis-dental': {
+      es: 'Prótesis dental fija y removible en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atención cercana con la Dra. Izbette Luis Torres.',
+      ca: 'Pròtesi dental fixa i amovible a Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Atenció propera amb la Dra. Izbette Luis Torres.',
+      en: 'Fixed and removable dental prosthetics at Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou). Personal care with Dr. Izbette Luis Torres.',
+    },
+  };
+
+  const title = titles[specialty.slug]?.[lang] || `${specTitle} | Clínica Dental SET`;
   const description =
-    lang === 'ca'
-      ? `${specTitle} a Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Atenció propera amb ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`
-      : lang === 'en'
-      ? `${specTitle} at Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Direct care with ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`
-      : `${specTitle} en Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Atención cercana con ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`;
+    descriptions[specialty.slug]?.[lang] ||
+    `${specTitle} en Clínica Dental SET (C/ Doctor Trueta, 213, Poblenou, Barcelona).`;
 
   const localBusinessId = `${canonicalUrl}#localbusiness`;
 

@@ -3,6 +3,8 @@ import { Play, CheckCircle2, MessageCircle, Phone, MapPin, Video } from 'lucide-
 import { Language } from '../types';
 import { CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { UI_TRANSLATIONS } from '../i18n/translations';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 export const CLINIC_PRESENTATION_VIDEO_SRC =
   '/assets/aistudio/grok-video-e1e617ff-5ea9-4be6-9254-fcd60ca32667_06854a3a.mp4';
@@ -16,6 +18,7 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
   lang,
   sourcePage = 'Página de Inicio (Vídeo Presentación Doctora)',
 }) => {
+  const t = UI_TRANSLATIONS[lang];
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -172,7 +175,7 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
 
             <div className="pt-3 flex flex-wrap items-center gap-3">
               <a
-                href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola%20Dra.%20Izbette,%20he%20visto%20el%20v%C3%ADdeo%20de%20la%20cl%C3%ADnica%20y%20me%20gustar%C3%ADa%20pedir%20cita%20en%20Poblenou.`}
+                href={buildWhatsAppUrl(lang, { intent: 'video' })}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => {
@@ -182,7 +185,7 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                     sourcePage,
                   });
                 }}
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center justify-center min-h-[44px] gap-2.5 px-6 py-3 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm transition-all cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>WhatsApp</span>
@@ -197,10 +200,10 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                     sourcePage,
                   });
                 }}
-                className="inline-flex items-center gap-2 px-5 py-3.5 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all cursor-pointer"
+                className="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-[#83C408]" />
-                <span>Llamar {CLINIC_CONTACT.phone}</span>
+                <span>{t.callNow}</span>
               </a>
 
               <div className="inline-flex items-center gap-1.5 text-xs text-[#9AB39E] pl-1">

@@ -6,7 +6,6 @@
  * Zero passwords, credentials, or contact lists are bundled into client JS.
  */
 
-import { hasThirdPartyCookieConsent } from './cookieConsent';
 
 export interface CrmLead {
   id: string;
@@ -96,20 +95,6 @@ export const trackCrmLead = (params: {
       .catch(() => {
         // Ignore transient network interruption on navigation
       });
-
-    // Push structured click conversion event if dataLayer is configured & analytics consented
-    if (hasThirdPartyCookieConsent()) {
-      const win = window as unknown as { dataLayer?: Array<Record<string, unknown>> };
-      if (Array.isArray(win.dataLayer)) {
-        win.dataLayer.push({
-          event: 'clinic_contact_click',
-          contact_channel: params.type,
-          specialty_or_treatment: payload.treatment,
-          source_page: payload.sourcePage,
-          source_url: payload.sourceUrl,
-        });
-      }
-    }
   }
 };
 

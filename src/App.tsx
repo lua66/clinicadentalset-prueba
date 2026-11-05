@@ -11,14 +11,16 @@ import { DoctorPresentationVideo } from './components/DoctorPresentationVideo';
 import { DirectContactAndMap } from './components/DirectContactAndMap';
 import { CookieBanner } from './components/CookieBanner';
 import { SpecialtyDetailPage } from './pages/SpecialtyDetailPage';
-import { OwnerCrmPage } from './pages/OwnerCrmPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { trackCrmLead } from './utils/crmTracker';
+import { buildWhatsAppUrl } from './utils/whatsapp';
 import { Language, Specialty } from './types';
 import { UI_TRANSLATIONS } from './i18n/translations';
 import { SPECIALTIES, CLINIC_CONTACT, TESTIMONIALS } from './data/clinicData';
 import { getSeoMetadata, applySeoMetadata } from './utils/seoManager';
 import { parseUrlPath, buildLocalizedPath, getLegacyRedirectPath } from './utils/routing';
+
+const LazyOwnerCrmPage = React.lazy(() => import('./pages/OwnerCrmPage'));
 import {
   MessageCircle,
   Phone,
@@ -99,9 +101,19 @@ export function App({ initialPath }: AppProps = {}) {
     ? SPECIALTIES.find((s) => s.slug === specialtySlug)
     : undefined;
 
-  // PRIVATE PASSWORD-PROTECTED OWNER CRM ROUTE (/crm)
+  // PRIVATE PASSWORD-PROTECTED OWNER CRM ROUTE (/crm) — Loaded in dedicated JS chunk
   if (basePath === '/crm') {
-    return <OwnerCrmPage onBackToWeb={() => navigateTo('/')} />;
+    return (
+      <React.Suspense
+        fallback={
+          <div className="min-h-screen bg-[#080C0A] text-[#F2F7F0] flex items-center justify-center p-6 text-sm">
+            Cargando panel privado de dirección...
+          </div>
+        }
+      >
+        <LazyOwnerCrmPage onBackToWeb={() => navigateTo('/')} />
+      </React.Suspense>
+    );
   }
 
   const specialtiesIndexUrl = buildLocalizedPath('/especialidades', lang);
@@ -249,7 +261,7 @@ export function App({ initialPath }: AppProps = {}) {
                     {/* Direct Contact Buttons in Corporate Brand Green #83C408 */}
                     <div className="pt-2 flex flex-wrap items-center gap-3">
                       <a
-                        href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+                        href={buildWhatsAppUrl(lang)}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => {
@@ -260,7 +272,7 @@ export function App({ initialPath }: AppProps = {}) {
                             sourceUrl: currentPath,
                           });
                         }}
-                        className="inline-flex items-center gap-2.5 px-6 py-3.5 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm hover:shadow-md transition-all whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center min-h-[44px] gap-2.5 px-6 py-3 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm hover:shadow-md transition-all whitespace-nowrap shrink-0 cursor-pointer"
                       >
                         <MessageCircle className="w-4 h-4 shrink-0" />
                         <span>{t.heroCtaWhatsApp}</span>
@@ -276,7 +288,7 @@ export function App({ initialPath }: AppProps = {}) {
                             sourceUrl: currentPath,
                           });
                         }}
-                        className="inline-flex items-center gap-2 px-5 py-3.5 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all whitespace-nowrap shrink-0 cursor-pointer"
                       >
                         <Phone className="w-4 h-4 text-[#83C408] shrink-0" />
                         <span>{t.heroCtaPhone}</span>
@@ -288,7 +300,7 @@ export function App({ initialPath }: AppProps = {}) {
                           e.preventDefault();
                           navigateTo(specialtiesIndexUrl);
                         }}
-                        className="inline-flex items-center gap-1.5 px-4 py-3.5 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914]/80 hover:bg-[#16231B] border border-[#83C408]/40 hover:border-[#83C408] rounded-xl transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                        className="inline-flex items-center justify-center min-h-[44px] gap-1.5 px-4 py-3 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914]/80 hover:bg-[#16231B] border border-[#83C408]/40 hover:border-[#83C408] rounded-xl transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                       >
                         <span>{t.heroCtaSpecialties}</span>
                         <ArrowRight className="w-4 h-4" />
@@ -398,9 +410,9 @@ export function App({ initialPath }: AppProps = {}) {
                       e.preventDefault();
                       navigateTo(clinicGalleryUrl);
                     }}
-                    className="px-5 py-2.5 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl transition-colors whitespace-nowrap cursor-pointer shrink-0 flex items-center gap-2"
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl transition-colors whitespace-nowrap cursor-pointer shrink-0 gap-2"
                   >
-                    <span>Ver galería de instalaciones</span>
+                    <span>{t.viewGalleryBtn}</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
@@ -470,7 +482,7 @@ export function App({ initialPath }: AppProps = {}) {
         className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#080C0A]/95 backdrop-blur-md border-t border-[#83C408] px-3 py-2 flex items-center gap-2 shadow-[0_-4px_16px_rgba(0,0,0,0.45)] pointer-events-auto"
       >
         <a
-          href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+          href={buildWhatsAppUrl(lang)}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => {
@@ -481,7 +493,7 @@ export function App({ initialPath }: AppProps = {}) {
               sourceUrl: currentPath,
             });
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs cursor-pointer"
+          className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs cursor-pointer"
         >
           <MessageCircle className="w-4 h-4" />
           <span>WhatsApp</span>
@@ -497,10 +509,10 @@ export function App({ initialPath }: AppProps = {}) {
               sourceUrl: currentPath,
             });
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg border border-[#83C408]/70 tabular-nums cursor-pointer"
+          className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg border border-[#83C408]/70 tabular-nums cursor-pointer"
         >
           <Phone className="w-3.5 h-3.5 text-[#83C408]" />
-          <span>Llamar {CLINIC_CONTACT.phone}</span>
+          <span>{t.callNow}</span>
         </a>
       </aside>
 

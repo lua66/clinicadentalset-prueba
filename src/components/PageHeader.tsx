@@ -49,7 +49,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                         e.preventDefault();
                         onNavigate(buildLocalizedPath(crumb.path!, lang));
                       }}
-                      className="hover:text-[#83C408] hover:underline transition-colors cursor-pointer whitespace-nowrap"
+                      className="inline-flex items-center min-h-[44px] px-1 hover:text-[#83C408] hover:underline transition-colors cursor-pointer whitespace-nowrap"
                     >
                       {crumb.label}
                     </a>

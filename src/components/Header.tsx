@@ -5,6 +5,7 @@ import { UI_TRANSLATIONS } from '../i18n/translations';
 import { CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
 import { buildLocalizedPath, parseUrlPath } from '../utils/routing';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface HeaderProps {
   currentPath: string;
@@ -51,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
             e.preventDefault();
             handleNav('/');
           }}
-          className="flex items-center text-left group whitespace-nowrap shrink-0 cursor-pointer rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#081E0D]"
+          className="inline-flex items-center min-h-[44px] py-1 text-left group whitespace-nowrap shrink-0 cursor-pointer rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#081E0D]"
           aria-label="Ir a Inicio de Clínica Dental SET"
         >
           <img
@@ -65,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* ZONE 2: 5 Clean Single-Line Navigation Links */}
         <nav
           aria-label="Navegación principal"
-          className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm tracking-tight"
+          className="hidden lg:flex items-center gap-5 xl:gap-7 text-sm tracking-tight"
         >
           {navItems.map((item) => {
             const href = buildLocalizedPath(item.path, lang);
@@ -78,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({
                   handleNav(item.path);
                 }}
                 aria-current={item.isActive ? 'page' : undefined}
-                className={`whitespace-nowrap shrink-0 relative py-1.5 transition-colors duration-150 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#081E0D] after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:rounded-full after:bg-[#081E0D] after:transition-transform after:duration-200 ${
+                className={`inline-flex items-center min-h-[44px] whitespace-nowrap shrink-0 relative py-2 transition-colors duration-150 cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#081E0D] after:content-[''] after:absolute after:bottom-1 after:left-0 after:right-0 after:h-[2.5px] after:rounded-full after:bg-[#081E0D] after:transition-transform after:duration-200 ${
                   item.isActive
                     ? 'text-[#051408] font-extrabold after:scale-x-100'
                     : 'text-[#081E0D]/85 hover:text-[#051408] font-semibold after:scale-x-0 hover:after:scale-x-100'
@@ -109,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
                     onLanguageChange(l);
                     setMobileMenuOpen(false);
                   }}
-                  className={`px-2.5 py-1 rounded-md uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#081E0D] ${
+                  className={`inline-flex items-center justify-center min-w-[38px] min-h-[44px] px-2.5 py-2 rounded-md uppercase whitespace-nowrap shrink-0 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#081E0D] ${
                     lang === l
                       ? 'bg-[#081E0D] text-[#83C408] shadow-xs font-extrabold'
                       : 'text-[#081E0D]/90 hover:text-[#051408] hover:bg-[#081E0D]/10 font-semibold'
@@ -124,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Primary Action Button: WhatsApp */}
           <a
-            href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20me%20gustar%C3%ADa%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+            href={buildWhatsAppUrl(lang)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {
@@ -135,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
                 sourceUrl: currentPath,
               });
             }}
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-extrabold text-[#FAFDF6] bg-[#081E0D] hover:bg-[#113619] rounded-lg shadow-xs border border-[#081E0D] transition-all whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#081E0D]"
+            className="hidden sm:inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-2.5 text-xs font-extrabold text-[#FAFDF6] bg-[#081E0D] hover:bg-[#113619] rounded-lg shadow-xs border border-[#081E0D] transition-all whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#081E0D]"
           >
             <MessageCircle className="w-4 h-4 text-[#83C408] shrink-0" />
             <span>{t.whatsappCta}</span>
@@ -145,7 +146,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#081E0D] hover:bg-[#081E0D]/15 rounded-lg cursor-pointer shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#081E0D]"
+            className="lg:hidden inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2 text-[#081E0D] hover:bg-[#081E0D]/15 rounded-lg cursor-pointer shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#081E0D]"
             aria-label={mobileMenuOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'}
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -167,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({
                   handleNav(item.path);
                 }}
                 aria-current={item.isActive ? 'page' : undefined}
-                className={`block w-full text-left px-3.5 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
+                className={`flex items-center w-full min-h-[44px] text-left px-3.5 py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
                   item.isActive
                     ? 'bg-[#081E0D] text-[#83C408] font-extrabold'
                     : 'text-[#081E0D] hover:bg-[#081E0D]/12 font-semibold'
@@ -180,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="pt-3 border-t border-[#081E0D]/20 flex flex-col sm:flex-row gap-2">
             <a
-              href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+              href={buildWhatsAppUrl(lang)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => {
@@ -191,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                   sourceUrl: currentPath,
                 });
               }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-extrabold text-[#FAFDF6] bg-[#081E0D] hover:bg-[#113619] rounded-lg transition-colors"
+              className="flex-1 flex items-center justify-center min-h-[44px] gap-2 py-2.5 px-4 text-xs font-extrabold text-[#FAFDF6] bg-[#081E0D] hover:bg-[#113619] rounded-lg transition-colors"
             >
               <MessageCircle className="w-4 h-4 text-[#83C408]" />
               <span>WhatsApp</span>
@@ -206,7 +207,7 @@ export const Header: React.FC<HeaderProps> = ({
                   sourceUrl: currentPath,
                 });
               }}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 text-xs font-bold text-[#83C408] bg-[#071408] hover:bg-[#112413] border border-[#071408] rounded-lg tabular-nums transition-colors"
+              className="flex-1 flex items-center justify-center min-h-[44px] gap-2 py-2.5 px-4 text-xs font-bold text-[#83C408] bg-[#071408] hover:bg-[#112413] border border-[#071408] rounded-lg tabular-nums transition-colors"
               aria-label="Llamar a la clínica"
             >
               <Phone className="w-4 h-4 text-[#83C408]" />

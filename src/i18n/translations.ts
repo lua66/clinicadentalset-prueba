@@ -72,10 +72,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Aceptar cookies y mostrar mapa',
     mapOpenExternal: 'Abrir en Google Maps',
     cookieBannerTitle: 'Uso de cookies y privacidad',
-    cookieBannerDesc: 'Utilizamos almacenamiento técnico esencial para la navegación y, solo si nos das tu consentimiento, cookies de terceros para mostrar el mapa interactivo de Google Maps y medir los clics de contacto.',
+    cookieBannerDesc: 'Utilizamos almacenamiento técnico esencial para la navegación y, solo si nos das tu consentimiento, cookies de terceros para mostrar el mapa interactivo de Google Maps.',
     cookieAcceptAll: 'Aceptar todas',
     cookieEssentialOnly: 'Solo esenciales',
     cookieConfigure: 'Configurar cookies',
+    viewGalleryBtn: 'Ver galería de instalaciones',
 
     // 404 Page
     notFoundEyebrow: 'Error 404 · Dirección no encontrada',
@@ -173,10 +174,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Acceptar cookies i mostrar mapa',
     mapOpenExternal: 'Obrir a Google Maps',
     cookieBannerTitle: 'Ús de cookies i privadesa',
-    cookieBannerDesc: 'Utilitzem emmagatzematge tècnic essencial per a la navegació i, només amb el teu consentiment, cookies de tercers per mostrar Google Maps i mesurar clics de contacte.',
+    cookieBannerDesc: 'Utilitzem emmagatzematge tècnic essencial per a la navegació i, només amb el teu consentiment, cookies de tercers per mostrar el mapa interactiu de Google Maps.',
     cookieAcceptAll: 'Acceptar totes',
     cookieEssentialOnly: 'Només essencials',
     cookieConfigure: 'Configurar cookies',
+    viewGalleryBtn: 'Veure galeria d’instal·lacions',
 
     // 404 Page
     notFoundEyebrow: 'Error 404 · Adreça no trobada',
@@ -274,10 +276,11 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Accept cookies & load map',
     mapOpenExternal: 'Open in Google Maps',
     cookieBannerTitle: 'Cookies & Privacy Preferences',
-    cookieBannerDesc: 'We use essential technical storage for navigation and, only with your consent, third-party cookies to display the interactive Google Map and measure contact clicks.',
+    cookieBannerDesc: 'We use essential technical storage for navigation and, only with your consent, third-party cookies to display the interactive Google Map.',
     cookieAcceptAll: 'Accept all',
     cookieEssentialOnly: 'Essential only',
     cookieConfigure: 'Cookie settings',
+    viewGalleryBtn: 'View clinic facilities gallery',
 
     // 404 Page
     notFoundEyebrow: 'Error 404 · Page Not Found',

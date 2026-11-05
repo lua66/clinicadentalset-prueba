@@ -803,3 +803,5 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     </div>
   );
 };
+
+export default OwnerCrmPage;

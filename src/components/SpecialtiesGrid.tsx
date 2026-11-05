@@ -6,6 +6,7 @@ import { SPECIALTIES, CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
 import { DentalSphere } from './DentalSphere';
 import { buildLocalizedPath } from '../utils/routing';
+import { buildWhatsAppUrl } from '../utils/whatsapp';
 
 interface SpecialtiesGridProps {
   lang: Language;
@@ -108,14 +109,17 @@ export const SpecialtiesGrid: React.FC<SpecialtiesGridProps> = ({
                       e.preventDefault();
                       onSelectSpecialty(spec.slug);
                     }}
-                    className="flex-1 py-2 px-3 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-lg transition-colors flex items-center justify-between cursor-pointer"
+                    className="flex-1 min-h-[44px] py-2.5 px-3 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-lg transition-colors flex items-center justify-between cursor-pointer"
                   >
                     <span>{t.viewSpecialtyDetails}</span>
                     <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
 
                   <a
-                    href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20consultar%20sobre%20${encodeURIComponent(spec.title[lang])}%20en%20Cl%C3%ADnica%20Dental%20SET.`}
+                    href={buildWhatsAppUrl(lang, {
+                      intent: 'specialty',
+                      specialtyName: spec.title[lang],
+                    })}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => {
@@ -126,9 +130,9 @@ export const SpecialtiesGrid: React.FC<SpecialtiesGridProps> = ({
                         sourceUrl: specHref,
                       });
                     }}
-                    className="p-2.5 text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"
-                    title="Consultar por WhatsApp"
-                    aria-label={`Consultar por WhatsApp sobre ${spec.title[lang]}`}
+                    className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"
+                    title="WhatsApp"
+                    aria-label={`WhatsApp · ${spec.title[lang]}`}
                   >
                     <MessageCircle className="w-4 h-4" />
                   </a>
