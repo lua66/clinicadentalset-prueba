@@ -20,7 +20,6 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     const width = container.clientWidth || (isHero ? 380 : 220);
     const height = container.clientHeight || (isHero ? 380 : 220);
 
-    // Three.js Scene, Camera, Renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.z = isHero ? 4.2 : 5.0;
@@ -35,7 +34,6 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // Canvas Texture: Exactly Logo and Name 180 degrees apart so they NEVER collide
     const canvas = document.createElement('canvas');
     canvas.width = 2048;
     canvas.height = 1024;
@@ -44,16 +42,14 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     const renderTexture = (logoImg?: HTMLImageElement) => {
       if (!ctx) return;
 
-      // Clean, premium dental dark-emerald background
       const grad = ctx.createLinearGradient(0, 0, 2048, 1024);
-      grad.addColorStop(0, '#05120a');
-      grad.addColorStop(0.5, '#0b2416');
-      grad.addColorStop(1, '#07180e');
+      grad.addColorStop(0, '#0D2614');
+      grad.addColorStop(0.5, '#153E21');
+      grad.addColorStop(1, '#0A1E10');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 2048, 1024);
 
-      // Subtle longitude & latitude lines
-      ctx.strokeStyle = 'rgba(131, 196, 8, 0.15)';
+      ctx.strokeStyle = 'rgba(131, 196, 8, 0.22)';
       ctx.lineWidth = 1.5;
       for (let i = 0; i < 2048; i += 128) {
         ctx.beginPath();
@@ -68,9 +64,8 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
         ctx.stroke();
       }
 
-      // Elegant equator hairline accents
       ctx.strokeStyle = '#83C408';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(0, 360);
       ctx.lineTo(2048, 360);
@@ -78,7 +73,7 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
       ctx.lineTo(2048, 664);
       ctx.stroke();
 
-      // SIDE 1 (Centered at x = 512): ONLY the authentic Logo
+      // Side 1: Official Logo
       if (logoImg && logoImg.complete && logoImg.naturalWidth > 0) {
         const logoTargetW = 440;
         const logoTargetH = (logoImg.naturalHeight / logoImg.naturalWidth) * logoTargetW;
@@ -92,31 +87,28 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
       } else {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = '700 64px "Plus Jakarta Sans", sans-serif';
+        ctx.font = '400 62px "Marcellus", Georgia, serif';
         ctx.fillStyle = '#FFFFFF';
         ctx.fillText('CLÍNICA DENTAL SET', 512, 512);
       }
 
-      // SIDE 2 (Centered at x = 1536, exactly 180° away so they NEVER collide): ONLY the Name "CLÍNICA DENTAL SET"
+      // Side 2 (180 degrees opposite): Brand Name in Marcellus + Raleway
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      // Line 1: CLÍNICA
-      ctx.font = '500 48px "Plus Jakarta Sans", sans-serif';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-      ctx.letterSpacing = '14px';
+      ctx.font = '600 44px "Raleway", sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      ctx.letterSpacing = '12px';
       ctx.fillText('CLÍNICA', 1536, 460);
 
-      // Line 2: DENTAL SET
-      ctx.font = '800 76px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '400 76px "Marcellus", Georgia, serif';
       ctx.fillStyle = '#83C408';
-      ctx.letterSpacing = '10px';
+      ctx.letterSpacing = '8px';
       ctx.fillText('DENTAL SET', 1536, 560);
     };
 
     renderTexture();
 
-    // Load authentic logo image
     const logoImg = new Image();
     logoImg.src = '/assets/logo-blanc.png';
     logoImg.onload = () => {
@@ -128,34 +120,31 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     sphereTexture.wrapS = THREE.RepeatWrapping;
     sphereTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-    // Main Sphere Mesh (Exact original 1.55 radius on Homepage Hero)
     const sphereRadius = isHero ? 1.55 : 1.5;
     const geometry = new THREE.SphereGeometry(sphereRadius, 64, 64);
     const material = new THREE.MeshStandardMaterial({
       map: sphereTexture,
-      roughness: 0.3,
-      metalness: 0.2,
+      roughness: 0.25,
+      metalness: 0.15,
     });
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
-    // Glowing atmospheric outer shield
     const glowGeometry = new THREE.SphereGeometry(sphereRadius * 1.05, 32, 32);
     const glowMaterial = new THREE.MeshBasicMaterial({
       color: 0x83c408,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.18,
       wireframe: true,
     });
     const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
     scene.add(glowSphere);
 
-    // Orbital ring
     const ringGeometry = new THREE.RingGeometry(sphereRadius * 1.25, sphereRadius * 1.32, 64);
     const ringMaterial = new THREE.MeshBasicMaterial({
-      color: 0x23a455,
+      color: 0x83c408,
       transparent: true,
-      opacity: isHero ? 0.35 : 0.3,
+      opacity: isHero ? 0.32 : 0.28,
       side: THREE.DoubleSide,
     });
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
@@ -163,8 +152,7 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     ring.rotation.y = Math.PI / 6;
     scene.add(ring);
 
-    // Particles
-    const particleCount = isHero ? 50 : 32;
+    const particleCount = isHero ? 44 : 28;
     const particlesGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -185,19 +173,17 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     const particles = new THREE.Points(particlesGeo, particlesMat);
     scene.add(particles);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.45);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x83c408, 2.0);
+    const dirLight1 = new THREE.DirectionalLight(0x83c408, 2.1);
     dirLight1.position.set(5, 4, 6);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0x23a455, 1.5);
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 1.2);
     dirLight2.position.set(-5, -3, -4);
     scene.add(dirLight2);
 
-    // Mouse Interaction
     let mouseX = 0;
     let mouseY = 0;
     let targetRotationX = 0;
@@ -214,7 +200,6 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
 
     container.addEventListener('mousemove', handleMouseMove);
 
-    // Animation Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
 
@@ -275,13 +260,9 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
   }, [mode]);
 
   if (mode === 'hero') {
-    // Original Homepage Hero Mode (420x420 centerpiece)
     return (
       <div className={`relative w-full max-w-[420px] aspect-square mx-auto flex items-center justify-center ${className}`}>
-        {/* Background ambient glow aura in brand green */}
-        <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#23A455]/25 via-[#83C408]/20 to-transparent blur-3xl pointer-events-none" />
-
-        {/* 3D Three.js Canvas Container */}
+        <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#83C408]/25 via-[#1B7A2B]/15 to-transparent blur-3xl pointer-events-none" />
         <div
           ref={mountRef}
           className="w-full h-full cursor-grab active:cursor-grabbing transition-transform duration-300 hover:scale-[1.02]"
@@ -291,12 +272,11 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     );
   }
 
-  // Unified Subpage Header Mode (consistent height across all secondary pages)
   return (
     <div
       className={`relative w-24 h-24 sm:w-40 sm:h-40 lg:w-[220px] lg:h-[220px] aspect-square shrink-0 flex items-center justify-center ${className}`}
     >
-      <div className="absolute inset-3 rounded-full bg-gradient-to-tr from-[#23A455]/25 via-[#83C408]/20 to-transparent blur-2xl pointer-events-none" />
+      <div className="absolute inset-3 rounded-full bg-gradient-to-tr from-[#83C408]/20 via-[#1B7A2B]/10 to-transparent blur-2xl pointer-events-none" />
       <div
         ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing transition-transform duration-200 hover:scale-[1.03]"

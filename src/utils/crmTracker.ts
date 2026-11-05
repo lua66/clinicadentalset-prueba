@@ -1,15 +1,17 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * CRM Tracker for Clínica Dental SET
- * Tracks patient conversions (WhatsApp clicks & direct calls), timestamps,
- * treatments, origin pages, and unread ("sin ver") alert status.
+ * Private CRM & Click Measurement Tracker for Clínica Dental SET
+ * Tracks patient conversion clicks (WhatsApp & telephone), timestamps,
+ * specialty/treatment interest, source page, and unseen ("sin_ver") owner status.
  */
+
+import { hasThirdPartyCookieConsent } from './cookieConsent';
 
 export interface CrmLead {
   id: string;
   type: 'whatsapp' | 'call';
-  phoneTarget: string; // "+34 648 83 48 94" or "933 09 18 71"
+  phoneTarget: string;
   treatment: string;
   sourcePage: string;
   sourceUrl: string;
@@ -26,49 +28,35 @@ const AUTH_KEY = 'set_clinic_crm_auth';
 const PASSWORD_KEY = 'set_clinic_crm_password';
 const DEFAULT_PASSWORD = 'set2026';
 
-// Initial realistic demo leads so the owner can immediately see the CRM in action
-// with 1 active 'sin_ver' lead keeping the alert button illuminated as requested.
+const INITIAL_DEMO_TIMESTAMP = 1777971600000;
+
 const INITIAL_LEADS: CrmLead[] = [
   {
-    id: 'lead-init-1',
+    id: 'lead-demo-1',
     type: 'whatsapp',
-    phoneTarget: '+34 648 83 48 94',
-    treatment: 'Implantes Dentales',
-    sourcePage: 'Página de Especialidad: Implantes',
+    phoneTarget: '697 35 85 40',
+    treatment: 'Implantes Dentales y Cirugía Oral',
+    sourcePage: 'Página de Especialidad: Implantes Dentales',
     sourceUrl: '/especialidades/implantes-dentales',
-    timestamp: Date.now() - 1000 * 60 * 25, // 25 mins ago
-    formattedDate: new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(Date.now() - 1000 * 60 * 25),
-    formattedTime: new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit' }).format(Date.now() - 1000 * 60 * 25),
+    timestamp: INITIAL_DEMO_TIMESTAMP,
+    formattedDate: '05/05/2026',
+    formattedTime: '11:20:00',
     status: 'sin_ver',
-    notes: 'Interesado en sustitución de pieza posterior y presupuesto de corona.',
+    notes: '[Registro de ejemplo · Clic en botón de WhatsApp desde especialidad]',
   },
   {
-    id: 'lead-init-2',
-    type: 'whatsapp',
-    phoneTarget: '+34 648 83 48 94',
-    treatment: 'Ortodoncia Invisible',
-    sourcePage: 'Página de Inicio (Hero Principal)',
-    sourceUrl: '/',
-    timestamp: Date.now() - 1000 * 60 * 60 * 3, // 3 hours ago
-    formattedDate: new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(Date.now() - 1000 * 60 * 60 * 3),
-    formattedTime: new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit' }).format(Date.now() - 1000 * 60 * 60 * 3),
-    status: 'visto',
-    notes: 'Cita programada para primera valoración con escáner 3D.',
-    seenAt: 'Hoy a las 11:30',
-  },
-  {
-    id: 'lead-init-3',
+    id: 'lead-demo-2',
     type: 'call',
     phoneTarget: '933 09 18 71',
-    treatment: 'Higiene y Limpieza Dental',
-    sourcePage: 'Contacto y Mapa (Poblenou)',
-    sourceUrl: '/contacto',
-    timestamp: Date.now() - 1000 * 60 * 60 * 26, // yesterday
-    formattedDate: new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(Date.now() - 1000 * 60 * 60 * 26),
-    formattedTime: '16:40',
+    treatment: 'Consulta General',
+    sourcePage: 'Página de Inicio',
+    sourceUrl: '/',
+    timestamp: INITIAL_DEMO_TIMESTAMP - 3600 * 1000 * 2,
+    formattedDate: '05/05/2026',
+    formattedTime: '09:20:00',
     status: 'visto',
-    notes: 'Vecino de Carrer Doctor Trueta, consulta por limpieza con ultrasonidos.',
-    seenAt: 'Ayer a las 17:00',
+    notes: '[Registro de ejemplo · Clic en teléfono de la clínica]',
+    seenAt: '05/05 09:45',
   },
 ];
 
@@ -91,7 +79,6 @@ export const saveCrmLeads = (leads: CrmLead[]): void => {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
-    // Dispatch custom event to notify all components in the app
     window.dispatchEvent(new CustomEvent('set-crm-updated'));
   } catch (e) {
     console.error('Error saving CRM leads to localStorage:', e);
@@ -99,7 +86,7 @@ export const saveCrmLeads = (leads: CrmLead[]): void => {
 };
 
 /**
- * Tracks an outbound WhatsApp or phone call conversion
+ * Tracks an outbound WhatsApp or phone call click conversion
  */
 export const trackCrmLead = (params: {
   type: 'whatsapp' | 'call';
@@ -125,28 +112,39 @@ export const trackCrmLead = (params: {
     type: params.type,
     phoneTarget:
       params.phoneTarget ||
-      (params.type === 'whatsapp' ? '+34 648 83 48 94' : '933 09 18 71'),
-    treatment: params.treatment || 'Consulta General / Cita Odontológica',
-    sourcePage: params.sourcePage || (typeof document !== 'undefined' ? document.title : 'Web Clínica SET'),
+      (params.type === 'whatsapp' ? '697 35 85 40' : '933 09 18 71'),
+    treatment: params.treatment || 'Consulta General',
+    sourcePage: params.sourcePage || (typeof document !== 'undefined' ? document.title : 'Web Clínica Dental SET'),
     sourceUrl:
       params.sourceUrl ||
       (typeof window !== 'undefined' ? window.location.pathname : '/'),
     timestamp: now.getTime(),
     formattedDate,
     formattedTime,
-    status: 'sin_ver', // Always starts as 'sin_ver' so the illuminated button turns on!
+    status: 'sin_ver',
   };
 
   const leads = getCrmLeads();
   const updatedLeads = [newLead, ...leads];
   saveCrmLeads(updatedLeads);
 
+  // Push structured click conversion event if dataLayer is configured & analytics consented
+  if (typeof window !== 'undefined' && hasThirdPartyCookieConsent()) {
+    const win = window as unknown as { dataLayer?: Array<Record<string, unknown>> };
+    if (Array.isArray(win.dataLayer)) {
+      win.dataLayer.push({
+        event: 'clinic_contact_click',
+        contact_channel: params.type,
+        specialty_or_treatment: newLead.treatment,
+        source_page: newLead.sourcePage,
+        source_url: newLead.sourceUrl,
+      });
+    }
+  }
+
   return newLead;
 };
 
-/**
- * Marks an individual lead as seen ("visto")
- */
 export const markLeadAsSeen = (leadId: string): void => {
   const now = new Date();
   const seenAt = new Intl.DateTimeFormat('es-ES', {
@@ -162,9 +160,6 @@ export const markLeadAsSeen = (leadId: string): void => {
   saveCrmLeads(leads);
 };
 
-/**
- * Marks an individual lead as unseen ("sin_ver")
- */
 export const markLeadAsUnseen = (leadId: string): void => {
   const leads = getCrmLeads().map((l) =>
     l.id === leadId ? { ...l, status: 'sin_ver' as const, seenAt: undefined } : l
@@ -172,9 +167,6 @@ export const markLeadAsUnseen = (leadId: string): void => {
   saveCrmLeads(leads);
 };
 
-/**
- * Marks all leads as seen ("visto")
- */
 export const markAllLeadsAsSeen = (): void => {
   const now = new Date();
   const seenAt = new Intl.DateTimeFormat('es-ES', {
@@ -192,9 +184,6 @@ export const markAllLeadsAsSeen = (): void => {
   saveCrmLeads(leads);
 };
 
-/**
- * Update private notes of a lead
- */
 export const updateLeadNotes = (leadId: string, notes: string): void => {
   const leads = getCrmLeads().map((l) =>
     l.id === leadId ? { ...l, notes } : l
@@ -202,25 +191,16 @@ export const updateLeadNotes = (leadId: string, notes: string): void => {
   saveCrmLeads(leads);
 };
 
-/**
- * Delete a lead
- */
 export const deleteCrmLead = (leadId: string): void => {
   const leads = getCrmLeads().filter((l) => l.id !== leadId);
   saveCrmLeads(leads);
 };
 
-/**
- * Calculates current unseen count
- */
 export const getUnseenLeadsCount = (): number => {
   const leads = getCrmLeads();
   return leads.filter((l) => l.status === 'sin_ver').length;
 };
 
-/**
- * Password & Authentication Management
- */
 export const getStoredPassword = (): string => {
   if (typeof window === 'undefined') return DEFAULT_PASSWORD;
   return localStorage.getItem(PASSWORD_KEY) || DEFAULT_PASSWORD;

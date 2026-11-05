@@ -1,15 +1,26 @@
 import { Language, Specialty, MedicalTeamMemberSchedule } from '../types';
 import { SPECIALTIES, CLINIC_CONTACT, MEDICAL_TEAM_SCHEDULES } from '../data/clinicData';
+import { parseUrlPath, buildLocalizedPath } from './routing';
 
 export interface PageSeoMetadata {
   title: string;
   description: string;
   canonicalPath: string;
+  canonicalUrl: string;
+  alternates: {
+    es: string;
+    ca: string;
+    en: string;
+    'x-default': string;
+  };
+  robots: string;
   ogType: string;
+  ogLocale: string;
+  ogImage: string;
   schemaJson: object;
 }
 
-const BASE_URL = 'https://clinicadentalset.com';
+export const BASE_URL = 'https://clinicadentalset.com';
 
 const CLINIC_POSTAL_ADDRESS = {
   '@type': 'PostalAddress',
@@ -32,21 +43,14 @@ const CLINIC_OPENING_HOURS_SPEC = [
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     opens: '10:00',
     closes: '14:00',
-    description: 'Horario asistencial de mañana',
+    description: 'Horario asistencial de mañana (Lunes a Viernes)',
   },
   {
     '@type': 'OpeningHoursSpecification',
     dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
     opens: '15:00',
     closes: '20:00',
-    description: 'Horario asistencial de tarde',
-  },
-  {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Saturday', 'Sunday'],
-    opens: '10:00',
-    closes: '14:00',
-    description: 'Urgencias odontológicas con cita previa',
+    description: 'Horario asistencial de tarde (Lunes a Viernes)',
   },
 ];
 
@@ -57,11 +61,23 @@ const CLINIC_AREA_SERVED = [
   { '@type': 'PostalCodeSpecification', postalCode: '08005', addressCountry: 'ES' },
 ];
 
-const CLINIC_AMENITIES = [
-  { '@type': 'LocationFeatureSpecification', name: 'Metro L4 Poblenou / Llacuna (a 4 min a pie)', value: true },
-  { '@type': 'LocationFeatureSpecification', name: 'Acceso a pie de calle (Bajos)', value: true },
-  { '@type': 'LocationFeatureSpecification', name: 'Esterilización Hospitalaria Clase B', value: true },
-];
+function buildAlternates(basePath: string) {
+  const esPath = buildLocalizedPath(basePath, 'es');
+  const caPath = buildLocalizedPath(basePath, 'ca');
+  const enPath = buildLocalizedPath(basePath, 'en');
+  return {
+    es: `${BASE_URL}${esPath}`,
+    ca: `${BASE_URL}${caPath}`,
+    en: `${BASE_URL}${enPath}`,
+    'x-default': `${BASE_URL}${esPath}`,
+  };
+}
+
+function getOgLocale(lang: Language): string {
+  if (lang === 'ca') return 'ca_ES';
+  if (lang === 'en') return 'en_US';
+  return 'es_ES';
+}
 
 function buildMedicalTeamSchema(
   members: MedicalTeamMemberSchedule[],
@@ -90,27 +106,15 @@ function buildMedicalTeamSchema(
       contactType: 'appointment scheduling',
       areaServed: 'ES-B',
       availableLanguage: ['Spanish', 'Catalan', 'English'],
-      hoursAvailable: member.hoursAvailable.map((slot) => ({
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: slot.dayOfWeek,
-        opens: slot.opens,
-        closes: slot.closes,
-        ...(slot.description ? { description: slot.description } : {}),
-      })),
+      hoursAvailable: CLINIC_OPENING_HOURS_SPEC,
     },
   }));
 }
 
-export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
-  // Check if it's an individual specialty page
-  if (path.startsWith('/especialidades/')) {
-    const slug = path.replace('/especialidades/', '').split('/')[0];
-    const specialty = SPECIALTIES.find((s) => s.slug === slug);
-
-    if (specialty) {
-      return getSpecialtySeo(specialty, lang);
-    }
-  }
+export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSeoMetadata {
+  const parsed = parseUrlPath(rawPath);
+  const lang: Language = explicitLang || parsed.lang;
+  const basePath = parsed.basePath;
 
   const allTeamMembers = [
     MEDICAL_TEAM_SCHEDULES.izbette,
@@ -118,29 +122,78 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
     MEDICAL_TEAM_SCHEDULES.silvia,
   ];
 
-  // Handle static sub-pages
-  if (path === '/especialidades') {
+  // Check if it's an individual specialty page
+  if (basePath.startsWith('/especialidades/')) {
+    const slug = basePath.replace('/especialidades/', '').split('/')[0];
+    const specialty =
+      SPECIALTIES.find((s) => s.slug === slug) ||
+      (slug === 'sedacion-consciente'
+        ? SPECIALTIES.find((s) => s.slug === 'protesis-dental')
+        : undefined);
+
+    if (specialty) {
+      return getSpecialtySeo(specialty, lang);
+    }
+  }
+
+  // Handle /crm (strictly private & noindex)
+  if (basePath === '/crm') {
+    const canonicalUrl = `${BASE_URL}/crm`;
     return {
-      title: lang === 'ca'
-        ? 'Especialitats Odontològiques al Poblenou | Clínica Dental SET'
-        : lang === 'en'
-        ? 'Dental Specialties in Poblenou Barcelona | Clínica Dental SET'
-        : 'Especialidades Odontológicas en Poblenou | Clínica Dental SET',
-      description: lang === 'ca'
-        ? 'Coneix totes les nostres especialitats dentals al Poblenou: implants, ortodòncia invisible, periodòncia i estètica. Consulta el teu tractament.'
-        : lang === 'en'
-        ? 'Explore our comprehensive dental specialties in Poblenou, Barcelona: implants, clear aligners, periodontics and aesthetics. Dedicated care.'
-        : 'Descubre todas nuestras especialidades odontológicas en Poblenou: implantes, ortodoncia invisible, estética dental y periodoncia. Pide tu cita.',
-      canonicalPath: '/especialidades',
+      title: 'Acceso Privado Dirección | Clínica Dental SET',
+      description: 'Panel interno de dirección de Clínica Dental SET.',
+      canonicalPath: '/crm',
+      canonicalUrl,
+      alternates: {
+        es: canonicalUrl,
+        ca: canonicalUrl,
+        en: canonicalUrl,
+        'x-default': canonicalUrl,
+      },
+      robots: 'noindex, nofollow, noarchive',
       ogType: 'website',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      schemaJson: {
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: 'Acceso Privado Dirección - Clínica Dental SET',
+      },
+    };
+  }
+
+  if (basePath === '/especialidades') {
+    const canonicalPath = buildLocalizedPath('/especialidades', lang);
+    const canonicalUrl = `${BASE_URL}${canonicalPath}`;
+    return {
+      title:
+        lang === 'ca'
+          ? 'Especialitats Odontològiques al Poblenou | Clínica Dental SET'
+          : lang === 'en'
+          ? 'Dental Specialties in Poblenou, Barcelona | Clínica Dental SET'
+          : 'Especialidades Odontológicas en Poblenou | Clínica Dental SET',
+      description:
+        lang === 'ca'
+          ? 'Coneix les nostres especialitats odontològiques al Poblenou (Carrer Doctor Trueta, 213): implants, ortodòncia, estètica, periodòncia i endodòncia.'
+          : lang === 'en'
+          ? 'Explore our dental specialties in Poblenou, Barcelona (Carrer Doctor Trueta, 213): implants, orthodontics, aesthetics, periodontics, and endodontics.'
+          : 'Descubre nuestras especialidades odontológicas en Poblenou (Carrer del Doctor Trueta, 213): implantes, ortodoncia, estética, periodoncia y endodoncia.',
+      canonicalPath,
+      canonicalUrl,
+      alternates: buildAlternates('/especialidades'),
+      robots: 'noindex, nofollow',
+      ogType: 'website',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
         name: 'Especialidades Odontológicas - Clínica Dental SET',
-        url: `${BASE_URL}/especialidades`,
-        description: 'Especialidades odontológicas integrales en Carrer del Doctor Trueta 213, Poblenou.',
+        url: canonicalUrl,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
+        description: 'Especialidades odontológicas en Carrer del Doctor Trueta, 213, Poblenou, Barcelona.',
         provider: {
-          '@type': ['LocalBusiness', 'Dentist'],
+          '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
           '@id': `${BASE_URL}/#localbusiness`,
           name: 'Clínica Dental SET',
           telephone: CLINIC_CONTACT.phoneClean,
@@ -153,27 +206,37 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
     };
   }
 
-  if (path === '/equipo') {
+  if (basePath === '/equipo') {
+    const canonicalPath = buildLocalizedPath('/equipo', lang);
+    const canonicalUrl = `${BASE_URL}${canonicalPath}`;
     return {
-      title: lang === 'ca'
-        ? 'Equip Mèdic i Odontòlogues al Poblenou | Dra. Izbette i Dra. Ruby'
-        : lang === 'en'
-        ? 'Medical Dental Team in Poblenou | Dr. Izbette Luis & Dr. Ruby Herrera'
-        : 'Equipo Médico Dental en Poblenou | Dra. Izbette Luis y Dra. Ruby Herrera',
-      description: lang === 'ca'
-        ? 'Quadre mèdic col·legiat a Clínica Dental SET Poblenou. Dra. Izbette Luis i Dra. Ruby Herrera. Odontologia propera i familiar de confiança.'
-        : lang === 'en'
-        ? 'Board-certified dental team in Poblenou, Barcelona. Dr. Izbette Luis and Dr. Ruby Herrera. Over 40 years of local healthcare tradition.'
-        : 'Cuadro médico colegiado en Clínica Dental SET Poblenou. Dra. Izbette Luis y Dra. Ruby Herrera. Odontología cercana y de confianza.',
-      canonicalPath: '/equipo',
+      title:
+        lang === 'ca'
+          ? 'Equip Mèdic i Odontòlogues al Poblenou | Clínica Dental SET'
+          : lang === 'en'
+          ? 'Medical & Dental Team in Poblenou | Clínica Dental SET'
+          : 'Equipo Médico y Odontólogas en Poblenou | Clínica Dental SET',
+      description:
+        lang === 'ca'
+          ? 'Equip mèdic col·legiat a Clínica Dental SET Poblenou: Dra. Izbette Luis Torres (Col. 5664 COEC) i Dra. Ruby Herrera Villamil (Col. 5929 COEC).'
+          : lang === 'en'
+          ? 'Licensed dental team at Clínica Dental SET Poblenou: Dr. Izbette Luis Torres (Col. 5664 COEC) and Dr. Ruby Herrera Villamil (Col. 5929 COEC).'
+          : 'Cuadro médico colegiado en Clínica Dental SET Poblenou: Dra. Izbette Luis Torres (Col. 5664 COEC) y Dra. Ruby Herrera Villamil (Col. 5929 COEC).',
+      canonicalPath,
+      canonicalUrl,
+      alternates: buildAlternates('/equipo'),
+      robots: 'noindex, nofollow',
       ogType: 'profile',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/equip1.jpg`,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'AboutPage',
         name: 'Equipo Médico - Clínica Dental SET',
-        url: `${BASE_URL}/equipo`,
+        url: canonicalUrl,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
         mainEntity: {
-          '@type': ['LocalBusiness', 'Dentist', 'MedicalOrganization'],
+          '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
           '@id': `${BASE_URL}/#localbusiness`,
           name: 'Clínica Dental SET',
           telephone: CLINIC_CONTACT.phoneClean,
@@ -187,57 +250,76 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
     };
   }
 
-  if (path === '/clinica') {
+  if (basePath === '/clinica') {
+    const canonicalPath = buildLocalizedPath('/clinica', lang);
+    const canonicalUrl = `${BASE_URL}${canonicalPath}`;
     return {
-      title: lang === 'ca'
-        ? 'Instal·lacions i Gabinets al Poblenou | Clínica Dental SET'
-        : lang === 'en'
-        ? 'Facilities & Clinical Operatories | Clínica Dental SET Barcelona'
-        : 'Instalaciones y Gabinetes en Poblenou | Clínica Dental SET',
-      description: lang === 'ca'
-        ? 'Instal·lacions d’última generació al Carrer del Doctor Trueta 213, Poblenou. Esterilització hospitalària classe B i tecnologia diagnòstica 3D.'
-        : lang === 'en'
-        ? 'Modern clinical facilities in Poblenou, Barcelona. Class-B sterilization protocols and 3D diagnostics for your comfort and safety.'
-        : 'Instalaciones de última generación en Carrer del Doctor Trueta 213, Poblenou. Gabinetes equipados con esterilización clase B y tecnología 3D.',
-      canonicalPath: '/clinica',
+      title:
+        lang === 'ca'
+          ? 'Instal·lacions al Poblenou | Clínica Dental SET Barcelona'
+          : lang === 'en'
+          ? 'Facilities in Poblenou | Clínica Dental SET Barcelona'
+          : 'Instalaciones en Poblenou | Clínica Dental SET Barcelona',
+      description:
+        lang === 'ca'
+          ? 'Coneix les instal·lacions de Clínica Dental SET al Carrer del Doctor Trueta, 213, Baixos, Poblenou, Barcelona.'
+          : lang === 'en'
+          ? 'Tour Clínica Dental SET facilities at Carrer del Doctor Trueta, 213, Ground Floor, Poblenou, Barcelona.'
+          : 'Conoce las instalaciones de Clínica Dental SET en Carrer del Doctor Trueta, 213, Bajos, Poblenou, Barcelona.',
+      canonicalPath,
+      canonicalUrl,
+      alternates: buildAlternates('/clinica'),
+      robots: 'noindex, nofollow',
       ogType: 'website',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/clinica1.jpg`,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': ['LocalBusiness', 'MedicalClinic', 'Dentist'],
         '@id': `${BASE_URL}/clinica#localbusiness`,
         name: 'Clínica Dental SET - Instalaciones Poblenou',
-        url: `${BASE_URL}/clinica`,
+        url: canonicalUrl,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
         telephone: CLINIC_CONTACT.phoneClean,
         address: CLINIC_POSTAL_ADDRESS,
         geo: CLINIC_GEO_COORDINATES,
         hasMap: CLINIC_CONTACT.googleMapsUrl,
         openingHoursSpecification: CLINIC_OPENING_HOURS_SPEC,
-        amenityFeature: CLINIC_AMENITIES,
       },
     };
   }
 
-  if (path === '/contacto') {
+  if (basePath === '/contacto') {
+    const canonicalPath = buildLocalizedPath('/contacto', lang);
+    const canonicalUrl = `${BASE_URL}${canonicalPath}`;
     return {
-      title: lang === 'ca'
-        ? 'Contacte, Telèfon i Ubicació al Poblenou | Clínica Dental SET'
-        : lang === 'en'
-        ? 'Contact, Phone & Location in Poblenou | Clínica Dental SET'
-        : 'Contacto, Teléfono y Ubicación en Poblenou | Clínica Dental SET',
-      description: lang === 'ca'
-        ? 'Comunica’t directament amb Clínica Dental SET al Carrer Doctor Trueta 213, Poblenou. Telèfon: 933 09 18 71. Contacte directe per WhatsApp.'
-        : lang === 'en'
-        ? 'Contact Clínica Dental SET in Poblenou Barcelona. Phone: 933 09 18 71. Carrer del Doctor Trueta 213. Instant WhatsApp appointment booking.'
-        : 'Contacta directamente con Clínica Dental SET en Carrer Doctor Trueta 213, Poblenou. Teléfono: 933 09 18 71. Cita directa por WhatsApp.',
-      canonicalPath: '/contacto',
+      title:
+        lang === 'ca'
+          ? 'Contacte, Telèfon i Ubicació al Poblenou | Clínica Dental SET'
+          : lang === 'en'
+          ? 'Contact, Phone & Location in Poblenou | Clínica Dental SET'
+          : 'Contacto, Teléfono y Ubicación en Poblenou | Clínica Dental SET',
+      description:
+        lang === 'ca'
+          ? 'Contacta amb Clínica Dental SET al Carrer del Doctor Trueta, 213, Baixos, Barcelona. Telèfon 933 09 18 71 i WhatsApp directe.'
+          : lang === 'en'
+          ? 'Contact Clínica Dental SET at Carrer del Doctor Trueta, 213, Barcelona. Phone 933 09 18 71 and direct WhatsApp booking.'
+          : 'Contacta con Clínica Dental SET en Carrer del Doctor Trueta, 213, Bajos, Barcelona. Teléfono 933 09 18 71 y WhatsApp directo.',
+      canonicalPath,
+      canonicalUrl,
+      alternates: buildAlternates('/contacto'),
+      robots: 'noindex, nofollow',
       ogType: 'website',
+      ogLocale: getOgLocale(lang),
+      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'ContactPage',
         name: 'Contacto - Clínica Dental SET',
-        url: `${BASE_URL}/contacto`,
+        url: canonicalUrl,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
         mainEntity: {
-          '@type': ['LocalBusiness', 'Dentist'],
+          '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
           '@id': `${BASE_URL}/#localbusiness`,
           name: 'Clínica Dental SET',
           telephone: CLINIC_CONTACT.phoneClean,
@@ -253,6 +335,7 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
               telephone: CLINIC_CONTACT.phoneClean,
               contactType: 'customer service',
               availableLanguage: ['Spanish', 'Catalan', 'English'],
+              hoursAvailable: CLINIC_OPENING_HOURS_SPEC,
             },
           ],
         },
@@ -260,39 +343,47 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
     };
   }
 
-  // Default: Homepage (/)
+  // Default: Homepage (/, /ca, /en)
+  const canonicalPath = buildLocalizedPath('/', lang);
+  const canonicalUrl = `${BASE_URL}${canonicalPath}`;
+
   return {
-    title: lang === 'ca'
-      ? 'Clínica Dental SET Barcelona | Odontologia Avançada al Poblenou'
-      : lang === 'en'
-      ? 'Clínica Dental SET Barcelona | Advanced Family Dentistry in Poblenou'
-      : 'Clínica Dental SET Barcelona | Odontología Avanzada en Poblenou',
-    description: lang === 'ca'
-      ? 'Clínica Dental SET al Poblenou, Barcelona. Més de 40 anys de tradició familiar al Carrer Doctor Trueta 213. Contacte directe per WhatsApp.'
-      : lang === 'en'
-      ? 'Clínica Dental SET in Poblenou, Barcelona. Over 40 years of dental care tradition on Carrer Doctor Trueta 213. Direct WhatsApp booking.'
-      : 'Clínica Dental SET en Poblenou, Barcelona. Más de 40 años cuidando de tu sonrisa en Carrer del Doctor Trueta 213. Contacto directo por WhatsApp.',
-    canonicalPath: '/',
+    title:
+      lang === 'ca'
+        ? 'Clínica Dental SET Barcelona | Odontologia al Poblenou'
+        : lang === 'en'
+        ? 'Clínica Dental SET Barcelona | Family Dentistry in Poblenou'
+        : 'Clínica Dental SET Barcelona | Odontología en Poblenou',
+    description:
+      lang === 'ca'
+        ? 'Clínica Dental SET al Poblenou, Barcelona (Carrer del Doctor Trueta, 213). Més de 25 anys cuidant la teva salut bucodental. Contacte directe per WhatsApp.'
+        : lang === 'en'
+        ? 'Clínica Dental SET in Poblenou, Barcelona (Carrer del Doctor Trueta, 213). Over 25 years caring for your oral health. Direct WhatsApp & phone contact.'
+        : 'Clínica Dental SET en Poblenou, Barcelona (Carrer del Doctor Trueta, 213). Más de 25 años cuidando tu sonrisa con trato cercano. Contacto directo por WhatsApp.',
+    canonicalPath,
+    canonicalUrl,
+    alternates: buildAlternates('/'),
+    robots: 'noindex, nofollow',
     ogType: 'website',
+    ogLocale: getOgLocale(lang),
+    ogImage: `${BASE_URL}/assets/logo-blanc.png`,
     schemaJson: {
       '@context': 'https://schema.org',
       '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
       '@id': `${BASE_URL}/#localbusiness`,
       name: 'Clínica Dental SET',
+      description: 'Clínica dental en Poblenou, Barcelona, con más de 25 años de experiencia.',
       image: `${BASE_URL}/assets/logo-blanc.png`,
       logo: `${BASE_URL}/assets/logo-blanc.png`,
-      url: BASE_URL,
+      url: canonicalUrl,
+      inLanguage: getOgLocale(lang).replace('_', '-'),
       telephone: CLINIC_CONTACT.phoneClean,
       email: CLINIC_CONTACT.email,
-      priceRange: '€€',
-      currenciesAccepted: 'EUR',
-      paymentAccepted: 'Cash, Credit Card, Debit Card, Financing',
       address: CLINIC_POSTAL_ADDRESS,
       geo: CLINIC_GEO_COORDINATES,
       hasMap: CLINIC_CONTACT.googleMapsUrl,
       sameAs: [CLINIC_CONTACT.googleMapsUrl, BASE_URL],
       areaServed: CLINIC_AREA_SERVED,
-      amenityFeature: CLINIC_AMENITIES,
       openingHoursSpecification: CLINIC_OPENING_HOURS_SPEC,
       employee: buildMedicalTeamSchema(allTeamMembers, `${BASE_URL}/#localbusiness`),
       medicalSpecialty: [
@@ -308,114 +399,68 @@ export function getSeoMetadata(path: string, lang: Language): PageSeoMetadata {
 
 function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata {
   const specTitle = specialty.title[lang];
-  const specSubtitle = specialty.subtitle[lang];
+  const basePath = `/especialidades/${specialty.slug}`;
+  const canonicalPath = buildLocalizedPath(basePath, lang);
+  const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
-  // Custom high-CTR titles per specialty
   const titles: Record<string, Record<Language, string>> = {
     'implantes-dentales': {
-      es: 'Implantes Dentales en Poblenou, Barcelona | Clínica Dental SET',
-      ca: 'Implants Dentals al Poblenou, Barcelona | Clínica Dental SET',
-      en: 'Dental Implants in Poblenou, Barcelona | Clínica Dental SET',
+      es: 'Implantes Dentales y Cirugía Oral en Poblenou | Clínica Dental SET',
+      ca: 'Implants Dentals i Cirurgia Oral al Poblenou | Clínica Dental SET',
+      en: 'Dental Implants & Oral Surgery in Poblenou | Clínica Dental SET',
     },
-    'ortodoncia': {
-      es: 'Ortodoncia Invisible e Invisalign en Poblenou | Clínica Dental SET',
-      ca: 'Ortodòncia Invisible i Invisalign al Poblenou | Clínica Dental SET',
-      en: 'Clear Aligners & Invisalign in Poblenou | Clínica Dental SET',
-    },
-    'estetica-dental': {
-      es: 'Estética Dental y Carillas de Porcelana en Poblenou | Clínica SET',
-      ca: 'Estètica Dental i Carilles de Porcellana al Poblenou | Clínica SET',
-      en: 'Cosmetic Dentistry & Veneers in Poblenou | Clínica Dental SET',
-    },
-    'periodoncia': {
-      es: 'Periodoncia y Tratamiento de Encías en Poblenou | Clínica SET',
-      ca: 'Periodòncia i Tractament de Genives al Poblenou | Clínica SET',
-      en: 'Periodontics & Gum Disease Care in Poblenou | Clínica Dental SET',
-    },
-    'endodoncia': {
-      es: 'Endodoncia y Preservación Dental en Poblenou | Clínica Dental SET',
-      ca: 'Endodòncia i Preservació Dental al Poblenou | Clínica Dental SET',
-      en: 'Root Canal & Tooth Preservation in Poblenou | Clínica Dental SET',
-    },
-    'odontologia-general': {
-      es: 'Odontología General y Limpieza Dental en Poblenou | Clínica SET',
-      ca: 'Odontologia General i Neteja Dental al Poblenou | Clínica SET',
-      en: 'General Dentistry & Teeth Cleaning in Poblenou | Clínica SET',
-    },
-    'bruxismo-atm': {
-      es: 'Férula de Descarga Michigan para Bruxismo en Poblenou | Clínica SET',
-      ca: 'Fèrula de Descàrrega Michigan per a Bruxisme al Poblenou | SET',
-      en: 'TMJ Splint & Teeth Grinding Treatment in Poblenou | Clínica SET',
-    },
-    'sedacion-consciente': {
-      es: 'Sedación Consciente para Miedo al Dentista en Poblenou | Clínica SET',
-      ca: 'Sedació Conscient per a Por al Dentista al Poblenou | Clínica SET',
-      en: 'Conscious Sedation for Dental Fear in Poblenou | Clínica SET',
-    },
-  };
-
-  // Custom 130-155 char meta descriptions with call to action
-  const descriptions: Record<string, Record<Language, string>> = {
-    'implantes-dentales': {
-      es: 'Especialistas en implantes dentales fijos y carga inmediata en Poblenou (Doctor Trueta 213). Máxima precisión quirúrgica 3D. Pide cita directa por WhatsApp.',
-      ca: 'Especialistes en implants dentals fixos i càrrega immediata al Poblenou (Doctor Trueta 213). Màxima precisió 3D. Demana cita per WhatsApp.',
-      en: 'Specialists in dental implants and immediate loading in Poblenou (Doctor Trueta 213). Computer-guided 3D accuracy. Book directly via WhatsApp.',
-    },
-    'ortodoncia': {
-      es: 'Alinea tu sonrisa de forma invisible y cómoda en Poblenou. Férulas transparentes y escaneo 3D digital con la Dra. Izbette Luis. Pide tu cita directa.',
-      ca: 'Alinea el teu somriure de manera invisible i còmoda al Poblenou. Fèrules transparents i escàner 3D amb la Dra. Izbette Luis. Demana la teva cita.',
-      en: 'Straighten teeth discreetly with invisible clear aligners in Poblenou. 3D digital impressions with Dr. Izbette Luis. Book on WhatsApp today.',
+    ortodoncia: {
+      es: 'Ortodoncia en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Ortodòncia al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Orthodontics in Poblenou, Barcelona | Clínica Dental SET',
     },
     'estetica-dental': {
-      es: 'Diseño de sonrisa natural con microcarillas cerámicas y blanqueamiento LED en Poblenou. Resultados armónicos y seguros. Contacta por WhatsApp directo.',
-      ca: 'Disseny de somriure natural amb microcarilles de ceràmica i blanquejament LED al Poblenou. Resultats harmònics. Contacta per WhatsApp directe.',
-      en: 'Harmonious smile design with porcelain micro-veneers and safe LED whitening in Poblenou. Natural elegance. Contact us via WhatsApp.',
+      es: 'Estética Dental y Blanqueamiento en Poblenou | Clínica Dental SET',
+      ca: 'Estètica Dental i Blanquejament al Poblenou | Clínica Dental SET',
+      en: 'Cosmetic Dentistry & Whitening in Poblenou | Clínica Dental SET',
     },
-    'periodoncia': {
-      es: 'Detén el sangrado y retracción de encías en Poblenou. Tratamiento de periodontitis y curetajes con la cirujana Dra. Ruby Herrera. Cita por WhatsApp.',
-      ca: 'Atura el sagnat i la piorrea al Poblenou. Tractament de periodontitis i curetatges amb la cirurgiana Dra. Ruby Herrera. Cita per WhatsApp.',
-      en: 'Stop gum bleeding, recession, and bone loss in Poblenou. Advanced periodontitis care with Dr. Ruby Herrera. Fast WhatsApp booking.',
+    periodoncia: {
+      es: 'Periodoncia y Salud de Encías en Poblenou | Clínica Dental SET',
+      ca: 'Periodòncia i Salut de Genives al Poblenou | Clínica Dental SET',
+      en: 'Periodontics & Gum Health in Poblenou | Clínica Dental SET',
     },
-    'endodoncia': {
-      es: 'Salva tu diente natural y alivia el dolor agudo de muelas en Poblenou. Endodoncia rotatoria de alta precisión en Doctor Trueta 213. Contacto directo.',
-      ca: 'Salva la teva dent natural i calma el dolor agut al Poblenou. Endodòncia rotatòria de precisió al Carrer Doctor Trueta 213. Contacte directe.',
-      en: 'Relieve intense tooth pain and save your natural tooth in Poblenou. High-precision rotary root canal care at Doctor Trueta 213. Chat now.',
+    endodoncia: {
+      es: 'Endodoncia en Poblenou, Barcelona | Clínica Dental SET',
+      ca: 'Endodòncia al Poblenou, Barcelona | Clínica Dental SET',
+      en: 'Endodontics (Root Canal) in Poblenou | Clínica Dental SET',
     },
     'odontologia-general': {
-      es: 'Revisiones preventivas, empastes estéticos y limpiezas dentales en Poblenou para toda la familia. Trato humano y cercano sin prisas. Pide cita por WhatsApp.',
-      ca: 'Revisions preventives, empastaments estètics i higienes al Poblenou per a tota la família. Tracte proper sense presses. Cita per WhatsApp.',
-      en: 'Gentle family checkups, tooth-colored fillings, and prophylaxis in Poblenou. Conservative caring dentistry. Book your visit on WhatsApp.',
+      es: 'Odontología General y Prevención en Poblenou | Clínica Dental SET',
+      ca: 'Odontologia General i Prevenció al Poblenou | Clínica Dental SET',
+      en: 'General & Preventive Dentistry in Poblenou | Clínica Dental SET',
     },
     'bruxismo-atm': {
-      es: 'Férulas de descarga Michigan 3D en Poblenou. Alivia dolores de mandíbula, cuello y desgaste dental nocturno. Ajuste clínico con la Dra. Izbette Luis.',
-      ca: 'Fèrules de descàrrega Michigan 3D al Poblenou. Alleuja dolors de mandíbula, coll i desgast dental nocturn. Ajust amb la Dra. Izbette Luis.',
-      en: 'Custom 3D Michigan night guards in Poblenou. Eliminate jaw stiffness, neck tension, and enamel grinding. Clinical balancing by Dr. Izbette Luis.',
+      es: 'Bruxismo y Articulación ATM en Poblenou | Clínica Dental SET',
+      ca: 'Bruxisme i Articulació ATM al Poblenou | Clínica Dental SET',
+      en: 'Bruxism & TMJ Occlusion in Poblenou | Clínica Dental SET',
     },
-    'sedacion-consciente': {
-      es: 'Supera el miedo al dentista con sedación consciente en Poblenou. Supervisión por médico anestesista para tratamientos sin estrés ni dolor en 1 día.',
-      ca: 'Supera la por al dentista amb sedació conscient al Poblenou. Supervisió per metge anestesiòleg per a tractaments sense dolor en 1 dia.',
-      en: 'Overcome dental anxiety with medical conscious sedation in Poblenou. Continuous anesthesiologist monitoring for stress-free visits in 1 session.',
+    'protesis-dental': {
+      es: 'Prótesis Dental y Rehabilitación en Poblenou | Clínica Dental SET',
+      ca: 'Pròtesi Dental i Rehabilitació al Poblenou | Clínica Dental SET',
+      en: 'Dental Prosthetics & Rehabilitation in Poblenou | Clínica Dental SET',
     },
   };
 
   const title = titles[specialty.slug]?.[lang] || `${specTitle} en Poblenou | Clínica Dental SET`;
-  const description = descriptions[specialty.slug]?.[lang] || `${specSubtitle} Atención especializada en Carrer Doctor Trueta 213, Poblenou. Cita por WhatsApp.`;
-  const pageUrl = `${BASE_URL}/especialidades/${specialty.slug}`;
-  const localBusinessId = `${pageUrl}#localbusiness`;
+  const description =
+    lang === 'ca'
+      ? `${specTitle} a Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Atenció propera amb ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`
+      : lang === 'en'
+      ? `${specTitle} at Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Direct care with ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`
+      : `${specTitle} en Clínica Dental SET (Carrer del Doctor Trueta, 213, Poblenou). Atención cercana con ${specialty.leadDoctor.name} (${specialty.leadDoctor.colegiateNumber}).`;
 
-  const assignedTeam: MedicalTeamMemberSchedule[] = specialty.medicalTeamSchedule && specialty.medicalTeamSchedule.length > 0
-    ? specialty.medicalTeamSchedule
-    : [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia];
+  const localBusinessId = `${canonicalUrl}#localbusiness`;
 
-  const leadDoctorOpeningHours = (specialty.leadDoctor.hoursAvailable || MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable).map((slot) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: slot.dayOfWeek,
-    opens: slot.opens,
-    closes: slot.closes,
-    ...(slot.description ? { description: slot.description } : {}),
-  }));
+  const assignedTeam: MedicalTeamMemberSchedule[] =
+    specialty.medicalTeamSchedule && specialty.medicalTeamSchedule.length > 0
+      ? specialty.medicalTeamSchedule
+      : [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia];
 
-  // FAQ Schema items
   const faqSchema = specialty.faqs[lang].map((f) => ({
     '@type': 'Question',
     name: f.question,
@@ -428,29 +473,25 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
   const schemaJson = {
     '@context': 'https://schema.org',
     '@graph': [
-      // 1. Granular LocalBusiness Entity specific to this Specialty & Google Maps Local Pack
       {
         '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
         '@id': localBusinessId,
         name: `Clínica Dental SET · ${specTitle}`,
         alternateName: `Clínica Dental SET Poblenou - ${specialty.title.es}`,
-        description: `${description} ${specialty.leadDoctor.name}: ${specialty.leadDoctor.scheduleSummary?.[lang] || CLINIC_CONTACT.hours.weekdays}.`,
-        url: pageUrl,
-        mainEntityOfPage: pageUrl,
+        description,
+        url: canonicalUrl,
+        mainEntityOfPage: canonicalUrl,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
         image: [`${BASE_URL}${specialty.image}`, `${BASE_URL}/assets/logo-blanc.png`],
         logo: `${BASE_URL}/assets/logo-blanc.png`,
         telephone: CLINIC_CONTACT.phoneClean,
         email: CLINIC_CONTACT.email,
-        priceRange: '€€',
-        currenciesAccepted: 'EUR',
-        paymentAccepted: 'Cash, Credit Card, Debit Card, Financing',
         address: CLINIC_POSTAL_ADDRESS,
         geo: CLINIC_GEO_COORDINATES,
         hasMap: CLINIC_CONTACT.googleMapsUrl,
         sameAs: [CLINIC_CONTACT.googleMapsUrl, BASE_URL],
         areaServed: CLINIC_AREA_SERVED,
         publicAccess: true,
-        amenityFeature: CLINIC_AMENITIES,
         medicalSpecialty: specialty.schemaSpecialty || 'Dentistry',
         openingHoursSpecification: CLINIC_OPENING_HOURS_SPEC,
         parentOrganization: {
@@ -459,21 +500,18 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
           name: 'Clínica Dental SET',
           url: BASE_URL,
         },
-        // Granular Medical Team with Specific Individual Consultation Schedules
         employee: buildMedicalTeamSchema(assignedTeam, localBusinessId),
-        // Dedicated Clinical Specialty Department LocalBusiness node with Lead Specialist Hours
         department: {
           '@type': ['LocalBusiness', 'MedicalClinic'],
-          '@id': `${pageUrl}#department`,
-          name: `Unidad de ${specTitle} · ${specialty.leadDoctor.name}`,
+          '@id': `${canonicalUrl}#department`,
+          name: `${specTitle} · ${specialty.leadDoctor.name}`,
           telephone: CLINIC_CONTACT.phoneClean,
-          url: pageUrl,
+          url: canonicalUrl,
           address: CLINIC_POSTAL_ADDRESS,
           geo: CLINIC_GEO_COORDINATES,
           hasMap: CLINIC_CONTACT.googleMapsUrl,
-          openingHoursSpecification: leadDoctorOpeningHours,
+          openingHoursSpecification: CLINIC_OPENING_HOURS_SPEC,
         },
-        // Catalog of specific medical procedures offered under this specialty
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: `${specTitle} - Clínica Dental SET Poblenou`,
@@ -488,14 +526,13 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
           })),
         },
       },
-      // 2. MedicalWebPage Entity
       {
         '@type': 'MedicalWebPage',
-        '@id': `${pageUrl}#webpage`,
-        url: pageUrl,
+        '@id': `${canonicalUrl}#webpage`,
+        url: canonicalUrl,
         name: title,
-        description: description,
-        inLanguage: lang === 'ca' ? 'ca-ES' : lang === 'en' ? 'en-US' : 'es-ES',
+        description,
+        inLanguage: getOgLocale(lang).replace('_', '-'),
         about: {
           '@id': localBusinessId,
         },
@@ -504,10 +541,8 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
           name: specTitle,
           description: specialty.shortDescription[lang],
           bodyLocation: 'Mouth / Oral cavity',
-          howPerformed: specialty.treatments[lang].map((t) => t.name).join(', '),
         },
       },
-      // 3. BreadcrumbList for rich SERP navigation
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -515,23 +550,22 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
             '@type': 'ListItem',
             position: 1,
             name: lang === 'ca' ? 'Inici' : lang === 'en' ? 'Home' : 'Inicio',
-            item: `${BASE_URL}/`,
+            item: `${BASE_URL}${buildLocalizedPath('/', lang)}`,
           },
           {
             '@type': 'ListItem',
             position: 2,
             name: lang === 'ca' ? 'Especialitats' : lang === 'en' ? 'Specialties' : 'Especialidades',
-            item: `${BASE_URL}/especialidades`,
+            item: `${BASE_URL}${buildLocalizedPath('/especialidades', lang)}`,
           },
           {
             '@type': 'ListItem',
             position: 3,
             name: specTitle,
-            item: pageUrl,
+            item: canonicalUrl,
           },
         ],
       },
-      // 4. FAQPage for expandable rich snippets
       {
         '@type': 'FAQPage',
         mainEntity: faqSchema,
@@ -542,8 +576,13 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
   return {
     title,
     description,
-    canonicalPath: `/especialidades/${specialty.slug}`,
+    canonicalPath,
+    canonicalUrl,
+    alternates: buildAlternates(basePath),
+    robots: 'noindex, nofollow',
     ogType: 'article',
+    ogLocale: getOgLocale(lang),
+    ogImage: `${BASE_URL}${specialty.image}`,
     schemaJson,
   };
 }
@@ -551,32 +590,59 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
 /**
  * Updates DOM head elements dynamically for search engines and social crawlers
  */
-export function applySeoMetadata(seo: PageSeoMetadata): void {
+export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
   if (typeof document === 'undefined') return;
+
+  // 0. HTML lang attribute
+  document.documentElement.lang = lang;
 
   // 1. Title
   document.title = seo.title;
 
-  // 2. Meta Description
-  let metaDesc = document.querySelector('meta[name="description"]');
-  if (!metaDesc) {
-    metaDesc = document.createElement('meta');
-    metaDesc.setAttribute('name', 'description');
-    document.head.appendChild(metaDesc);
-  }
-  metaDesc.setAttribute('content', seo.description);
+  const setMetaName = (name: string, content: string) => {
+    let el = document.querySelector(`meta[name="${name}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute('name', name);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  };
+
+  // 2. Meta Description & Staging noindex protection
+  setMetaName('description', seo.description);
+  setMetaName('robots', seo.robots);
+  setMetaName('googlebot', seo.robots);
 
   // 3. Canonical Tag
-  const canonicalUrl = `${BASE_URL}${seo.canonicalPath}`;
   let linkCanonical = document.querySelector('link[rel="canonical"]');
   if (!linkCanonical) {
     linkCanonical = document.createElement('link');
     linkCanonical.setAttribute('rel', 'canonical');
     document.head.appendChild(linkCanonical);
   }
-  linkCanonical.setAttribute('href', canonicalUrl);
+  linkCanonical.setAttribute('href', seo.canonicalUrl);
 
-  // 4. OpenGraph Tags
+  // 4. Multilingual Hreflang Alternate Tags
+  const hreflangs: Array<{ key: keyof PageSeoMetadata['alternates']; href: string }> = [
+    { key: 'es', href: seo.alternates.es },
+    { key: 'ca', href: seo.alternates.ca },
+    { key: 'en', href: seo.alternates.en },
+    { key: 'x-default', href: seo.alternates['x-default'] },
+  ];
+
+  hreflangs.forEach(({ key, href }) => {
+    let linkAlt = document.querySelector(`link[rel="alternate"][hreflang="${key}"]`);
+    if (!linkAlt) {
+      linkAlt = document.createElement('link');
+      linkAlt.setAttribute('rel', 'alternate');
+      linkAlt.setAttribute('hreflang', key);
+      document.head.appendChild(linkAlt);
+    }
+    linkAlt.setAttribute('href', href);
+  });
+
+  // 5. OpenGraph Tags
   const setMetaProperty = (property: string, content: string) => {
     let el = document.querySelector(`meta[property="${property}"]`);
     if (!el) {
@@ -589,24 +655,16 @@ export function applySeoMetadata(seo: PageSeoMetadata): void {
 
   setMetaProperty('og:title', seo.title);
   setMetaProperty('og:description', seo.description);
-  setMetaProperty('og:url', canonicalUrl);
+  setMetaProperty('og:url', seo.canonicalUrl);
   setMetaProperty('og:type', seo.ogType);
+  setMetaProperty('og:locale', seo.ogLocale);
+  setMetaProperty('og:image', seo.ogImage);
 
-  // 5. Twitter Card Tags
-  const setMetaName = (name: string, content: string) => {
-    let el = document.querySelector(`meta[name="${name}"]`);
-    if (!el) {
-      el = document.createElement('meta');
-      el.setAttribute('name', name);
-      document.head.appendChild(el);
-    }
-    el.setAttribute('content', content);
-  };
-
+  // 6. Twitter Card Tags
   setMetaName('twitter:title', seo.title);
   setMetaName('twitter:description', seo.description);
 
-  // 6. Schema.org JSON-LD Script
+  // 7. Schema.org JSON-LD Script
   let schemaScript = document.getElementById('dynamic-schema-ld') as HTMLScriptElement | null;
   if (!schemaScript) {
     schemaScript = document.createElement('script');

@@ -3,18 +3,29 @@
 
 @layer base {
   :root {
-    --bg-cream: #FAF7F2;
-    --bg-cream-surface: #FFFFFF;
-    --bg-cream-muted: #F3EDE3;
-    --border-cream: #E5DCCE;
+    --bg-canvas: #080C0A;
+    --bg-surface: #101914;
+    --bg-surface-alt: #0B110E;
+    --border-subtle: #1F3125;
     --brand-green: #83C408;
-    --brand-emerald: #23A455;
-    --brand-emerald-hover: #1e8d49;
-    --brand-dark: #0A120D;
+    --brand-green-hover: #95DB0B;
+    --brand-ink: #F2F7F0;
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Raleway', system-ui, -apple-system, sans-serif;
+    background-color: #080C0A;
+    color: #F2F7F0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: 'Marcellus', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -25,16 +36,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0B110E;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(35, 164, 85, 0.25);
+  background: rgba(131, 196, 8, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(131, 196, 8, 0.45);
+  background: rgba(131, 196, 8, 0.7);
 }
 
 /* Smooth transitions */

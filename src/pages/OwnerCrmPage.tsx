@@ -1,8 +1,8 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Private CRM Page for Clinic Owner ("página oculta que se entre con contraseña solo dueño de clinica")
- * Tracks WhatsApp & Call interactions, timestamps, treatments, origin pages, and seen/unseen statuses.
+ * Private Password-Protected CRM Page for Clinic Owner (/crm)
+ * Tracks WhatsApp & Call click conversions, timestamps, treatments, origin pages, and seen/unseen statuses.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -10,26 +10,22 @@ import {
   Lock,
   Unlock,
   Key,
-  ShieldCheck,
   ShieldAlert,
   MessageCircle,
   Phone,
   CheckCircle2,
-  Clock,
   Calendar,
   Search,
-  Filter,
   Download,
   PlusCircle,
   Eye,
   EyeOff,
   ArrowLeft,
-  Sparkles,
   Trash2,
   FileText,
   Save,
   Check,
-  AlertTriangle
+  AlertTriangle,
 } from 'lucide-react';
 import {
   CrmLead,
@@ -43,11 +39,10 @@ import {
   isCrmAuthenticated,
   setCrmAuthenticated,
   checkCrmPassword,
-  getStoredPassword,
   setStoredPassword,
-  getUnseenLeadsCount
+  getUnseenLeadsCount,
 } from '../utils/crmTracker';
-import { CLINIC_CONTACT } from '../data/clinicData';
+import { CLINIC_CONTACT, SPECIALTIES } from '../data/clinicData';
 
 interface OwnerCrmPageProps {
   onBackToWeb: () => void;
@@ -59,7 +54,6 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
   const [passwordError, setPasswordError] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  // CRM State
   const [leads, setLeads] = useState<CrmLead[]>([]);
   const [activeTab, setActiveTab] = useState<'all' | 'sin_ver' | 'visto' | 'whatsapp' | 'call'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -67,17 +61,14 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
   const [noteDraft, setNoteDraft] = useState<string>('');
   const [savedNoteNotification, setSavedNoteNotification] = useState<string | null>(null);
 
-  // Settings
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [newPassword, setNewPassword] = useState<string>('');
   const [settingsSuccess, setSettingsSuccess] = useState<string>('');
 
-  // Initial check of auth
   useEffect(() => {
     setIsAuthenticated(isCrmAuthenticated());
   }, []);
 
-  // Load leads
   const refreshLeads = () => {
     setLeads(getCrmLeads());
   };
@@ -95,7 +86,6 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     };
   }, []);
 
-  // Handle Login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (checkCrmPassword(passwordInput)) {
@@ -107,13 +97,11 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     }
   };
 
-  // Handle Logout
   const handleLogout = () => {
     setCrmAuthenticated(false);
     setIsAuthenticated(false);
   };
 
-  // Toggle single lead status
   const handleToggleLeadStatus = (lead: CrmLead) => {
     if (lead.status === 'sin_ver') {
       markLeadAsSeen(lead.id);
@@ -122,7 +110,6 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     }
   };
 
-  // Save Note
   const handleSaveNote = (id: string) => {
     updateLeadNotes(id, noteDraft);
     setEditingNotesId(null);
@@ -130,32 +117,35 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     setTimeout(() => setSavedNoteNotification(null), 2500);
   };
 
-  // Simulate demo lead
   const handleSimulateLead = (type: 'whatsapp' | 'call') => {
-    const treatments = [
-      'Implantes Dentales y Carga Inmediata',
-      'Ortodoncia Invisible con Escáner 3D',
-      'Estética Dental y Carillas de Cerámica',
-      'Periodoncia y Cuidado de Encías',
-      'Endodoncia Rotatoria',
-      'Limpieza y Profilaxis Dental',
-      'Urgencia Dental en Poblenou'
-    ];
-    const randomTreatment = treatments[Math.floor(Math.random() * treatments.length)];
+    const specialtyTitles = SPECIALTIES.map((s) => s.title.es);
+    const randomTreatment =
+      specialtyTitles[Math.floor(Math.random() * specialtyTitles.length)] || 'Consulta General';
 
     trackCrmLead({
       type,
       treatment: randomTreatment,
-      sourcePage: `Web Clínica SET · Botón de Prueba (${type === 'whatsapp' ? 'WhatsApp' : 'Llamada'})`,
+      sourcePage: `Prueba CRM (${type === 'whatsapp' ? 'WhatsApp' : 'Llamada'})`,
       sourceUrl: '/',
-      phoneTarget: type === 'whatsapp' ? '+34 648 83 48 94' : '933 09 18 71',
+      phoneTarget: type === 'whatsapp' ? CLINIC_CONTACT.whatsapp : CLINIC_CONTACT.phone,
     });
   };
 
-  // Export CSV
   const handleExportCsv = () => {
-    const headers = ['ID', 'Fecha', 'Hora', 'Canal', 'Telefono_Destino', 'Tratamiento_Especialidad', 'Pagina_Origen', 'URL_Origen', 'Estado', 'Revisado_El', 'Notas'];
-    const rows = leads.map(l => [
+    const headers = [
+      'ID',
+      'Fecha',
+      'Hora',
+      'Canal',
+      'Telefono_Destino',
+      'Tratamiento_Especialidad',
+      'Pagina_Origen',
+      'URL_Origen',
+      'Estado',
+      'Revisado_El',
+      'Notas',
+    ];
+    const rows = leads.map((l) => [
       l.id,
       `"${l.formattedDate}"`,
       `"${l.formattedTime}"`,
@@ -166,10 +156,12 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
       `"${l.sourceUrl || ''}"`,
       `"${l.status === 'sin_ver' ? 'Sin Ver (Pendiente)' : 'Visto'}"`,
       `"${l.seenAt || '-'}"`,
-      `"${(l.notes || '').replace(/"/g, '""')}"`
+      `"${(l.notes || '').replace(/"/g, '""')}"`,
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+    const csvContent =
+      'data:text/csv;charset=utf-8,\uFEFF' +
+      [headers.join(';'), ...rows.map((r) => r.join(';'))].join('\n');
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
@@ -179,7 +171,6 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
     document.body.removeChild(link);
   };
 
-  // Change Password
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword.trim().length >= 4) {
@@ -194,25 +185,23 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
   const unseenCount = getUnseenLeadsCount();
   const seenCount = leads.length - unseenCount;
-  const whatsappCount = leads.filter(l => l.type === 'whatsapp').length;
-  const callCount = leads.filter(l => l.type === 'call').length;
+  const whatsappCount = leads.filter((l) => l.type === 'whatsapp').length;
+  const callCount = leads.filter((l) => l.type === 'call').length;
 
-  // Filtered Leads
   const filteredLeads = leads.filter((lead) => {
-    // Tab filter
     if (activeTab === 'sin_ver' && lead.status !== 'sin_ver') return false;
     if (activeTab === 'visto' && lead.status !== 'visto') return false;
     if (activeTab === 'whatsapp' && lead.type !== 'whatsapp') return false;
     if (activeTab === 'call' && lead.type !== 'call') return false;
 
-    // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      const matchTreatment = lead.treatment.toLowerCase().includes(q);
-      const matchDate = lead.formattedDate.toLowerCase().includes(q);
-      const matchPage = lead.sourcePage.toLowerCase().includes(q);
-      const matchNotes = (lead.notes || '').toLowerCase().includes(q);
-      return matchTreatment || matchDate || matchPage || matchNotes;
+      return (
+        lead.treatment.toLowerCase().includes(q) ||
+        lead.formattedDate.toLowerCase().includes(q) ||
+        lead.sourcePage.toLowerCase().includes(q) ||
+        (lead.notes || '').toLowerCase().includes(q)
+      );
     }
 
     return true;
@@ -221,13 +210,8 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
   // SCREEN 1: PASSWORD AUTHENTICATION GATE
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#08120c] flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#0d1a11] border border-emerald-950/80 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-          
-          {/* Subtle green ambient light */}
-          <div className="absolute -top-20 -right-20 w-44 h-44 bg-[#83C408]/10 rounded-full blur-3xl pointer-events-none" />
-
-          {/* Logo & Header */}
+      <div className="min-h-screen bg-[#080C0A] flex flex-col items-center justify-center p-4 text-[#F2F7F0]">
+        <div className="w-full max-w-md bg-[#101914] border border-[#1F3125] rounded-3xl p-8 shadow-2xl">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <img
@@ -236,26 +220,29 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                 className="h-10 w-auto object-contain"
               />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-[#83C408]/15 text-[#83C408] border border-[#83C408]/30 mb-2">
-              <Lock className="w-3 h-3" />
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#83C408] uppercase tracking-wider mb-1">
+              <Lock className="w-3.5 h-3.5" />
               <span>Acceso Exclusivo Dirección</span>
             </div>
-            <h1 className="text-xl font-extrabold text-white">
+            <h1 className="text-2xl text-[#F5FAF3]">
               Panel CRM y Registro de Contactos
             </h1>
-            <p className="text-xs text-stone-400 mt-1.5">
-              Control en tiempo real de WhatsApps y llamadas de pacientes generadas desde la web.
+            <p className="text-xs text-[#B9CEBE] mt-1.5 leading-relaxed">
+              Acceso privado protegido por contraseña para consultar los clics a WhatsApp y teléfono realizados desde la web.
             </p>
           </div>
 
-          {/* Password Form */}
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-stone-300 mb-1.5">
-                Contraseña de Acceso de la Dueña:
+              <label
+                htmlFor="crm-password-input"
+                className="block text-xs font-bold text-[#F5FAF3] mb-1.5"
+              >
+                Contraseña de Acceso:
               </label>
               <div className="relative">
                 <input
+                  id="crm-password-input"
                   type={showPassword ? 'text' : 'password'}
                   value={passwordInput}
                   onChange={(e) => {
@@ -263,20 +250,21 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                     setPasswordError('');
                   }}
                   placeholder="Introduce la contraseña"
-                  className="w-full px-4 py-3 bg-[#060e09] border border-emerald-900/60 rounded-xl text-white placeholder-stone-600 focus:outline-none focus:ring-2 focus:ring-[#83C408] text-sm pr-11"
+                  className="w-full px-4 py-3 bg-[#080C0A] border border-[#2A4232] rounded-xl text-[#F5FAF3] placeholder-[#7B9480] focus:outline-none focus:ring-2 focus:ring-[#83C408] text-sm pr-11"
                   autoFocus
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-200"
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#83C408] hover:text-[#95DB0B] cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
 
               {passwordError && (
-                <p className="text-xs text-rose-400 mt-2 flex items-center gap-1.5">
+                <p className="text-xs text-rose-400 mt-2 flex items-center gap-1.5 font-medium">
                   <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                   <span>{passwordError}</span>
                 </p>
@@ -285,112 +273,109 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 px-4 bg-[#23A455] hover:bg-[#1e8d49] text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3.5 px-4 bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] font-extrabold text-xs sm:text-sm rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Key className="w-4 h-4" />
               <span>Entrar al Panel Privado</span>
             </button>
           </form>
 
-          {/* Default Password Tip */}
-          <div className="mt-6 pt-5 border-t border-emerald-950/80 text-center">
-            <div className="p-3 bg-stone-900/60 rounded-xl border border-stone-800 text-[11px] text-stone-400">
-              <span className="font-semibold text-[#83C408]">Contraseña por defecto: </span>
-              <code className="bg-black/50 px-2 py-0.5 rounded text-white font-mono font-bold">
+          <div className="mt-6 pt-5 border-t border-[#1D2D22] text-center">
+            <div className="p-3 bg-[#0B110E] rounded-xl border border-[#1F3125] text-[11px] text-[#B9CEBE]">
+              <span className="font-bold text-[#83C408]">Clave inicial de demostración: </span>
+              <code className="bg-black px-2 py-0.5 rounded border border-[#1F3125] text-[#F5FAF3] font-mono font-bold">
                 set2026
               </code>
-              <p className="mt-1 text-[10px] text-stone-500">
-                (Podrás cambiarla dentro en cualquier momento)
+              <p className="mt-1 text-[10px] text-[#9AB39E]">
+                (Modificable desde Seguridad una vez dentro del panel)
               </p>
             </div>
 
             <button
+              type="button"
               onClick={onBackToWeb}
-              className="mt-4 text-xs text-stone-400 hover:text-white flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+              className="mt-4 text-xs font-bold text-[#83C408] hover:underline flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Volver a la página web</span>
             </button>
           </div>
-
         </div>
       </div>
     );
   }
 
-  // SCREEN 2: AUTHENTICATED CRM DASHBOARD
+  // SCREEN 2: AUTHENTICATED CRM DASHBOARD (Only visible after entering owner password)
   return (
-    <div className="min-h-screen bg-[#08120c] text-stone-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#080C0A] text-[#F2F7F0] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
-
-        {/* TOP BAR: Header, Logo, Status & Actions */}
-        <div className="bg-[#0d1a11] border border-emerald-950 rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* TOP BAR */}
+        <div className="bg-[#83C408] text-[#08120A] border border-[#6EA606] rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <img
               src="/assets/logo-blanc.png"
               alt="Clínica Dental SET"
-              className="h-9 sm:h-10 w-auto object-contain"
+              className="h-9 sm:h-10 w-auto object-contain brightness-0 contrast-125"
             />
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg sm:text-xl font-extrabold text-white">
-                  CRM de Dirección · Clínica Dental SET
-                </h1>
-                <span className="bg-[#83C408]/20 text-[#83C408] text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded-full border border-[#83C408]/30">
-                  Panel Propietario
-                </span>
-              </div>
-              <p className="text-xs text-stone-400">
-                Registro y auditoría en tiempo real de contactos generados por pacientes
+              <h1 className="text-lg sm:text-xl text-[#08120A]">
+                CRM de Dirección · Clínica Dental SET
+              </h1>
+              <p className="text-xs font-medium text-[#08120A]/80">
+                Registro privado de clics a WhatsApp y teléfono generados en la web
               </p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <button
+              type="button"
               onClick={() => setShowSettings(!showSettings)}
-              className="px-3 py-2 text-xs font-medium rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-300 border border-emerald-950 flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-2 text-xs font-bold rounded-xl bg-[#071408] hover:bg-[#112413] text-[#83C408] border border-[#071408] flex items-center gap-1.5 cursor-pointer"
             >
               <Key className="w-3.5 h-3.5 text-[#83C408]" />
               <span>Seguridad</span>
             </button>
 
             <button
+              type="button"
               onClick={handleExportCsv}
-              className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-[#122418] hover:bg-[#193322] text-[#83C408] border border-emerald-900/60 flex items-center gap-1.5 cursor-pointer"
-              title="Descargar todos los registros en formato Excel / CSV"
+              className="px-3.5 py-2 text-xs font-bold rounded-xl bg-[#071408] hover:bg-[#112413] text-[#83C408] border border-[#071408] flex items-center gap-1.5 cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5 text-[#83C408]" />
               <span>Exportar CSV</span>
             </button>
 
             <button
+              type="button"
               onClick={onBackToWeb}
-              className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-[#23A455] hover:bg-[#1e8d49] text-white flex items-center gap-1.5 shadow-sm cursor-pointer"
+              className="px-3.5 py-2 text-xs font-extrabold rounded-xl bg-[#071408] hover:bg-[#112413] text-[#83C408] flex items-center gap-1.5 shadow-xs cursor-pointer"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="w-3.5 h-3.5 text-[#83C408]" />
               <span>Volver a la Web</span>
             </button>
 
             <button
+              type="button"
               onClick={handleLogout}
-              className="px-3 py-2 text-xs font-medium rounded-xl bg-stone-900/80 hover:bg-stone-800 text-stone-400 hover:text-white border border-stone-800 cursor-pointer"
+              className="px-3 py-2 text-xs font-bold rounded-xl bg-[#071408] hover:bg-[#112413] text-[#83C408] cursor-pointer"
               title="Cerrar sesión"
+              aria-label="Cerrar sesión"
             >
               <Unlock className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* SETTINGS PANEL (Change Password) */}
+        {/* SETTINGS PANEL */}
         {showSettings && (
-          <div className="bg-[#0f1f14] border border-emerald-800/80 rounded-2xl p-5 animate-in fade-in duration-200">
-            <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+          <div className="bg-[#101914] border border-[#1F3125] rounded-2xl p-5 shadow-xs">
+            <h3 className="text-base text-[#F5FAF3] mb-1.5 flex items-center gap-2">
               <Key className="w-4 h-4 text-[#83C408]" />
-              <span>Configurar Contraseña de Dirección</span>
+              <span>Cambiar Contraseña de Dirección</span>
             </h3>
-            <p className="text-xs text-stone-400 mb-4">
-              Cambia la contraseña maestra de acceso a esta página privada de CRM.
+            <p className="text-xs text-[#B9CEBE] mb-4">
+              Actualiza la contraseña privada para acceder al registro CRM.
             </p>
             <form onSubmit={handleChangePassword} className="flex flex-col sm:flex-row gap-3 max-w-md">
               <input
@@ -398,257 +383,216 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Nueva contraseña (mínimo 4 caracteres)"
-                className="flex-1 px-3.5 py-2 bg-[#060e09] border border-emerald-900 rounded-xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-[#83C408]"
+                className="flex-1 px-3.5 py-2 bg-[#080C0A] border border-[#2A4232] rounded-xl text-[#F5FAF3] text-xs focus:outline-none focus:ring-1 focus:ring-[#83C408]"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#23A455] text-white text-xs font-bold rounded-xl hover:bg-[#1e8d49] cursor-pointer"
+                className="px-4 py-2 bg-[#83C408] text-[#071408] text-xs font-extrabold rounded-xl hover:bg-[#95DB0B] cursor-pointer"
               >
                 Guardar Contraseña
               </button>
             </form>
             {settingsSuccess && (
-              <p className="text-xs text-[#83C408] mt-2 font-medium">
+              <p className="text-xs text-[#83C408] mt-2 font-bold">
                 {settingsSuccess}
               </p>
             )}
           </div>
         )}
 
-        {/* PERSISTENT ILLUMINATED WARNING BANNER (Rule: Warning remains ON as long as there are unseen clients) */}
+        {/* ILLUMINATED UNSEEN ALERT INSIDE PRIVATE CRM DASHBOARD */}
         {unseenCount > 0 ? (
-          <div className="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-r from-red-950/90 via-rose-950/80 to-amber-950/70 border-2 border-red-500/80 shadow-[0_0_25px_rgba(239,68,68,0.4)]">
+          <div className="rounded-2xl p-5 bg-red-950/60 border-2 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.25)]">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-lg animate-pulse">
-                  <ShieldAlert className="w-6 h-6 text-yellow-300" />
+                <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0">
+                  <ShieldAlert className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
-                    </span>
-                    <h2 className="text-base sm:text-lg font-black text-white uppercase tracking-tight">
-                      Aviso para la Dueña: Tienes {unseenCount} {unseenCount === 1 ? 'cliente sin revisar' : 'clientes sin revisar'}
-                    </h2>
-                  </div>
-                  <p className="text-xs text-rose-200/90 mt-1 leading-relaxed">
-                    El botón de aviso en la web <strong className="text-yellow-300 underline font-semibold">permanecerá encendido e iluminado</strong> hasta que revises todos los contactos y los marques como vistos.
+                  <h2 className="text-base sm:text-lg font-bold text-white">
+                    Aviso: {unseenCount} {unseenCount === 1 ? 'contacto nuevo sin revisar' : 'contactos nuevos sin revisar'}
+                  </h2>
+                  <p className="text-xs text-rose-200 mt-0.5 leading-relaxed">
+                    Este aviso permanece encendido mientras existan registros pendientes de marcar como vistos.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
-                <button
-                  onClick={markAllLeadsAsSeen}
-                  className="px-5 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
-                >
-                  <CheckCircle2 className="w-4 h-4 text-yellow-300" />
-                  <span>Marcar todos como vistos</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={markAllLeadsAsSeen}
+                className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Marcar todos como vistos</span>
+              </button>
             </div>
           </div>
         ) : (
-          <div className="rounded-2xl p-4 bg-[#0d1a11] border border-emerald-950 flex items-center justify-between gap-4">
+          <div className="rounded-2xl p-4 bg-[#101914] border border-[#1F3125] flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#83C408]/20 text-[#83C408] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#16241B] text-[#83C408] flex items-center justify-center shrink-0">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-sm font-bold text-white">
-                  Todo al día · No hay clientes sin ver
+                <h2 className="text-sm font-bold text-[#F5FAF3]">
+                  Todos los contactos revisados · Sin avisos pendientes
                 </h2>
-                <p className="text-xs text-stone-400">
-                  El botón de aviso en la web se encuentra apagado en modo reposo.
+                <p className="text-xs text-[#9AB39E]">
+                  El estado del aviso se encuentra apagado.
                 </p>
               </div>
             </div>
 
-            <div className="text-xs text-stone-500 font-mono">
-              {leads.length} contactos registrados en histórico
+            <div className="text-xs text-[#9AB39E] font-mono tabular-nums">
+              {leads.length} registros totales
             </div>
           </div>
         )}
 
         {/* 4-COLUMN SUMMARY METRICS */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: Sin Ver */}
-          <div className={`p-4 rounded-2xl border transition-all ${
-            unseenCount > 0
-              ? 'bg-red-950/40 border-red-500/60 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-              : 'bg-[#0d1a11] border-emerald-950'
-          }`}>
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-400">Sin Ver (Pendientes)</span>
-              <span className={`w-2.5 h-2.5 rounded-full ${unseenCount > 0 ? 'bg-red-500 animate-ping' : 'bg-stone-600'}`} />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className={`text-2xl sm:text-3xl font-extrabold ${unseenCount > 0 ? 'text-red-400' : 'text-stone-300'}`}>
-                {unseenCount}
-              </span>
-              <span className="text-[11px] text-stone-500">requieren revisión</span>
-            </div>
+          <div
+            className={`p-4 rounded-2xl border ${
+              unseenCount > 0
+                ? 'bg-red-950/35 border-red-500/60'
+                : 'bg-[#101914] border-[#1F3125]'
+            }`}
+          >
+            <span className="text-xs font-semibold text-[#9AB39E] block">Sin Ver (Pendientes)</span>
+            <span
+              className={`font-display text-2xl sm:text-3xl tabular-nums mt-1.5 block ${
+                unseenCount > 0 ? 'text-rose-400' : 'text-[#F5FAF3]'
+              }`}
+            >
+              {unseenCount}
+            </span>
           </div>
 
-          {/* Card 2: Vistos */}
-          <div className="p-4 rounded-2xl bg-[#0d1a11] border border-emerald-950">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-400">Atendidos / Vistos</span>
-              <CheckCircle2 className="w-4 h-4 text-[#83C408]" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#83C408]">
-                {seenCount}
-              </span>
-              <span className="text-[11px] text-stone-500">contactos revisados</span>
-            </div>
+          <div className="p-4 rounded-2xl bg-[#101914] border border-[#1F3125]">
+            <span className="text-xs font-semibold text-[#9AB39E] block">Revisados / Vistos</span>
+            <span className="font-display text-2xl sm:text-3xl text-[#83C408] tabular-nums mt-1.5 block">
+              {seenCount}
+            </span>
           </div>
 
-          {/* Card 3: WhatsApps */}
-          <div className="p-4 rounded-2xl bg-[#0d1a11] border border-emerald-950">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-400">Canal WhatsApp</span>
-              <MessageCircle className="w-4 h-4 text-[#23A455]" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white">
-                {whatsappCount}
-              </span>
-              <span className="text-[11px] text-stone-500">clics a WhatsApp</span>
-            </div>
+          <div className="p-4 rounded-2xl bg-[#101914] border border-[#1F3125]">
+            <span className="text-xs font-semibold text-[#9AB39E] block">Clics a WhatsApp</span>
+            <span className="font-display text-2xl sm:text-3xl text-[#F5FAF3] tabular-nums mt-1.5 block">
+              {whatsappCount}
+            </span>
           </div>
 
-          {/* Card 4: Llamadas */}
-          <div className="p-4 rounded-2xl bg-[#0d1a11] border border-emerald-950">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-400">Llamadas Fijas</span>
-              <Phone className="w-4 h-4 text-[#83C408]" />
-            </div>
-            <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white">
-                {callCount}
-              </span>
-              <span className="text-[11px] text-stone-500">{CLINIC_CONTACT.phone}</span>
-            </div>
+          <div className="p-4 rounded-2xl bg-[#101914] border border-[#1F3125]">
+            <span className="text-xs font-semibold text-[#9AB39E] block">Clics a Teléfono</span>
+            <span className="font-display text-2xl sm:text-3xl text-[#F5FAF3] tabular-nums mt-1.5 block">
+              {callCount}
+            </span>
           </div>
         </div>
 
-        {/* TOOLBAR: Filter Tabs, Search & Simulate Test Action */}
-        <div className="bg-[#0d1a11] border border-emerald-950 rounded-2xl p-4 space-y-4">
+        {/* TOOLBAR: Filter Tabs, Search & Test Simulation */}
+        <div className="bg-[#101914] border border-[#1F3125] rounded-2xl p-4 space-y-4">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#060e09] rounded-xl border border-emerald-950">
+            <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#080C0A] rounded-xl border border-[#1F3125]">
               <button
+                type="button"
                 onClick={() => setActiveTab('all')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'all'
-                    ? 'bg-[#122418] text-[#83C408] font-bold shadow-xs'
-                    : 'text-stone-400 hover:text-white'
+                    ? 'bg-[#83C408] text-[#071408] font-extrabold'
+                    : 'text-[#83C408] hover:bg-[#16231B]'
                 }`}
               >
                 Todos ({leads.length})
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('sin_ver')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'sin_ver'
-                    ? 'bg-red-950 text-red-300 font-bold shadow-xs'
-                    : 'text-stone-400 hover:text-white'
+                    ? 'bg-red-600 text-white'
+                    : 'text-[#83C408] hover:bg-[#16231B]'
                 }`}
               >
-                <span className={`w-2 h-2 rounded-full ${unseenCount > 0 ? 'bg-red-500' : 'bg-stone-500'}`} />
-                <span>Sin Ver ({unseenCount})</span>
+                Sin Ver ({unseenCount})
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('visto')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'visto'
-                    ? 'bg-[#122418] text-white font-bold shadow-xs'
-                    : 'text-stone-400 hover:text-white'
+                    ? 'bg-[#83C408] text-[#071408] font-extrabold'
+                    : 'text-[#83C408] hover:bg-[#16231B]'
                 }`}
               >
                 Vistos ({seenCount})
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('whatsapp')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'whatsapp'
-                    ? 'bg-emerald-950 text-[#83C408] font-bold shadow-xs'
-                    : 'text-stone-400 hover:text-white'
+                    ? 'bg-[#83C408] text-[#071408] font-extrabold'
+                    : 'text-[#83C408] hover:bg-[#16231B]'
                 }`}
               >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>WhatsApp ({whatsappCount})</span>
+                WhatsApp ({whatsappCount})
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('call')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer ${
                   activeTab === 'call'
-                    ? 'bg-emerald-950 text-[#83C408] font-bold shadow-xs'
-                    : 'text-stone-400 hover:text-white'
+                    ? 'bg-[#83C408] text-[#071408] font-extrabold'
+                    : 'text-[#83C408] hover:bg-[#16231B]'
                 }`}
               >
-                <Phone className="w-3.5 h-3.5" />
-                <span>Llamadas ({callCount})</span>
+                Llamadas ({callCount})
               </button>
             </div>
 
-            {/* Test Simulation Buttons (Useful for the owner to test the illuminated alert feature immediately) */}
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-stone-500 hidden sm:inline">Probar alerta:</span>
               <button
+                type="button"
                 onClick={() => handleSimulateLead('whatsapp')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#23A455]/20 hover:bg-[#23A455]/30 text-[#83C408] border border-[#23A455]/40 flex items-center gap-1.5 cursor-pointer"
-                title="Genera un clic simulado a WhatsApp para comprobar cómo se ilumina el aviso de la dueña"
+                className="px-3 py-1.5 text-xs font-extrabold rounded-lg bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] flex items-center gap-1.5 cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>+ Simular WhatsApp</span>
               </button>
 
               <button
+                type="button"
                 onClick={() => handleSimulateLead('call')}
-                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-800 flex items-center gap-1.5 cursor-pointer"
-                title="Genera una llamada simulada para comprobar el registro"
+                className="px-3 py-1.5 text-xs font-bold rounded-lg bg-[#16231B] hover:bg-[#1D2E24] text-[#83C408] border border-[#83C408]/60 flex items-center gap-1.5 cursor-pointer"
               >
-                <Phone className="w-3.5 h-3.5 text-[#83C408]" />
+                <Phone className="w-3.5 h-3.5" />
                 <span>+ Simular Llamada</span>
               </button>
             </div>
-
           </div>
 
-          {/* Search Bar */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-500" />
+            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#83C408]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por tratamiento, fecha, origen o notas privadas..."
-              className="w-full pl-10 pr-4 py-2 bg-[#060e09] border border-emerald-950 rounded-xl text-white placeholder-stone-600 text-xs focus:outline-none focus:ring-1 focus:ring-[#83C408]"
+              placeholder="Buscar por tratamiento, fecha, página de origen o notas..."
+              className="w-full pl-10 pr-4 py-2 bg-[#080C0A] border border-[#1F3125] rounded-xl text-[#F5FAF3] placeholder-[#7B9480] text-xs focus:outline-none focus:ring-1 focus:ring-[#83C408]"
             />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-stone-400 hover:text-white"
-              >
-                Limpiar
-              </button>
-            )}
           </div>
         </div>
 
         {/* LEADS LIST */}
         <div className="space-y-3">
           {filteredLeads.length === 0 ? (
-            <div className="bg-[#0d1a11] border border-emerald-950 rounded-2xl p-12 text-center">
+            <div className="bg-[#101914] border border-[#1F3125] rounded-2xl p-12 text-center">
               <CheckCircle2 className="w-10 h-10 text-[#83C408] mx-auto mb-3 opacity-60" />
-              <h3 className="text-sm font-bold text-white">No hay contactos con este criterio</h3>
-              <p className="text-xs text-stone-400 mt-1 max-w-sm mx-auto">
-                No se encontraron contactos en esta pestaña o búsqueda. Prueba a cambiar el filtro o pulsa en "Simular WhatsApp" para añadir uno de prueba.
+              <h3 className="text-base text-[#F5FAF3]">No hay registros con este filtro</h3>
+              <p className="text-xs text-[#9AB39E] mt-1 max-w-sm mx-auto">
+                Cambia la pestaña de filtro o pulsa en «Simular WhatsApp» para comprobar el registro.
               </p>
             </div>
           ) : (
@@ -661,90 +605,63 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                   key={lead.id}
                   className={`rounded-2xl border transition-all p-4 sm:p-5 ${
                     isUnseen
-                      ? 'bg-[#150a0a] border-red-500/70 shadow-[0_0_15px_rgba(239,68,68,0.15)] ring-1 ring-red-500/30'
-                      : 'bg-[#0d1a11] border-emerald-950/80 hover:border-emerald-900/60'
+                      ? 'bg-red-950/25 border-red-500/70 shadow-xs'
+                      : 'bg-[#101914] border-[#1F3125]'
                   }`}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    
-                    {/* Left: Lead details */}
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {/* Channel Badge */}
-                        {lead.type === 'whatsapp' ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#23A455] text-white shadow-xs">
-                            <MessageCircle className="w-3.5 h-3.5" />
-                            <span>WhatsApp</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-stone-800 text-[#83C408] border border-emerald-900/40">
-                            <Phone className="w-3.5 h-3.5" />
-                            <span>Llamada Fija</span>
-                          </span>
-                        )}
-
-                        {/* Status Badge */}
+                    <div className="space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2 text-xs">
+                        <span className="font-bold text-[#83C408] uppercase tracking-wider">
+                          {lead.type === 'whatsapp' ? 'WhatsApp' : 'Llamada Telefónica'}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span className="font-mono text-[#E5F0E3] tabular-nums">
+                          {lead.phoneTarget}
+                        </span>
+                        <span aria-hidden="true">·</span>
                         {isUnseen ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold bg-red-600 text-white animate-pulse">
-                            <span className="w-2 h-2 rounded-full bg-yellow-300" />
-                            <span>SIN VER (Nuevo)</span>
+                          <span className="font-bold text-rose-400">
+                            Pendiente (Sin Ver)
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-950/80 text-[#83C408] border border-emerald-900/50">
-                            <Check className="w-3 h-3 text-[#83C408]" />
+                          <span className="inline-flex items-center gap-1 font-semibold text-[#83C408]">
+                            <Check className="w-3.5 h-3.5" />
                             <span>Visto {lead.seenAt ? `(${lead.seenAt})` : ''}</span>
                           </span>
                         )}
-
-                        {/* Target phone */}
-                        <span className="text-xs text-stone-400 font-mono">
-                          {lead.phoneTarget}
-                        </span>
                       </div>
 
-                      {/* Treatment and origin */}
-                      <div>
-                        <h4 className="text-sm sm:text-base font-extrabold text-white">
-                          {lead.treatment}
-                        </h4>
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-stone-400 mt-0.5">
-                          <span className="flex items-center gap-1 text-stone-300">
-                            <Calendar className="w-3 h-3 text-[#83C408]" />
-                            {lead.formattedDate} a las {lead.formattedTime}
-                          </span>
-                          <span>•</span>
-                          <span>Origen: <strong className="text-stone-300">{lead.sourcePage}</strong></span>
-                        </div>
+                      <h4 className="text-base text-[#F5FAF3]">
+                        {lead.treatment}
+                      </h4>
+
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-[#9AB39E]">
+                        <span className="flex items-center gap-1 tabular-nums">
+                          <Calendar className="w-3.5 h-3.5 text-[#83C408]" />
+                          {lead.formattedDate} · {lead.formattedTime}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span>Origen: <strong className="text-[#F5FAF3]">{lead.sourcePage}</strong></span>
                       </div>
                     </div>
 
-                    {/* Right: Actions */}
-                    <div className="flex flex-wrap items-center gap-2.5 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-stone-800">
-                      
-                      {/* Mark as seen / unseen button */}
+                    <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-[#1D2D22]">
                       <button
+                        type="button"
                         onClick={() => handleToggleLeadStatus(lead)}
-                        className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
+                        className={`px-4 py-2 text-xs font-extrabold rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer ${
                           isUnseen
-                            ? 'bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white shadow-md'
-                            : 'bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-white border border-stone-800'
+                            ? 'bg-red-600 hover:bg-red-500 text-white'
+                            : 'bg-[#83C408] hover:bg-[#95DB0B] text-[#071408]'
                         }`}
-                        title={isUnseen ? 'Marcar como visto para apagar el aviso' : 'Volver a marcar como sin ver'}
                       >
-                        {isUnseen ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4 text-yellow-300" />
-                            <span>Marcar como Visto</span>
-                          </>
-                        ) : (
-                          <>
-                            <span>Marcar como Sin Ver</span>
-                          </>
-                        )}
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>{isUnseen ? 'Marcar como Visto' : 'Marcar como Sin Ver'}</span>
                       </button>
 
-                      {/* Add/Edit Notes button */}
                       <button
+                        type="button"
                         onClick={() => {
                           if (isEditingNote) {
                             setEditingNotesId(null);
@@ -753,92 +670,75 @@ export const OwnerCrmPage: React.FC<OwnerCrmPageProps> = ({ onBackToWeb }) => {
                             setNoteDraft(lead.notes || '');
                           }
                         }}
-                        className="px-3 py-2 text-xs font-medium rounded-xl bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-800 flex items-center gap-1.5 cursor-pointer"
-                        title="Añadir notas internas de la paciente o cita"
+                        className="px-3 py-2 text-xs font-bold rounded-xl bg-[#16231B] hover:bg-[#1D2E24] text-[#83C408] border border-[#83C408]/60 flex items-center gap-1.5 cursor-pointer"
                       >
                         <FileText className="w-3.5 h-3.5 text-[#83C408]" />
                         <span>{lead.notes ? 'Editar Nota' : '+ Nota'}</span>
                       </button>
 
-                      {/* Delete Lead */}
                       <button
-                        onClick={() => {
-                          if (window.confirm('¿Eliminar este registro del CRM?')) {
-                            deleteCrmLead(lead.id);
-                          }
-                        }}
-                        className="p-2 text-stone-500 hover:text-rose-400 hover:bg-stone-900 rounded-xl transition-colors cursor-pointer"
+                        type="button"
+                        onClick={() => deleteCrmLead(lead.id)}
+                        className="p-2 text-[#9AB39E] hover:text-rose-400 hover:bg-[#16231B] rounded-xl transition-colors cursor-pointer"
                         title="Eliminar registro"
+                        aria-label="Eliminar registro"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-
                     </div>
-
                   </div>
 
-                  {/* Notes Display & Editor */}
                   {isEditingNote ? (
-                    <div className="mt-4 pt-3 border-t border-stone-800/80 space-y-2">
-                      <label className="text-[11px] font-semibold text-[#83C408] block">
-                        Notas privadas de la clínica sobre este contacto:
+                    <div className="mt-4 pt-3 border-t border-[#1D2D22] space-y-2">
+                      <label className="text-xs font-bold text-[#F5FAF3] block">
+                        Notas privadas sobre este contacto:
                       </label>
                       <textarea
                         value={noteDraft}
                         onChange={(e) => setNoteDraft(e.target.value)}
-                        placeholder="Ejemplo: Paciente preguntó por precio de Invisalign. Cita agendada para el jueves a las 11:30h con Dra. Ruby."
+                        placeholder="Escribe aquí notas internas de seguimiento o cita..."
                         rows={2}
-                        className="w-full p-2.5 bg-[#060e09] border border-emerald-950 rounded-xl text-white text-xs placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-[#83C408]"
+                        className="w-full p-2.5 bg-[#080C0A] border border-[#2A4232] rounded-xl text-[#F5FAF3] text-xs focus:outline-none focus:ring-1 focus:ring-[#83C408]"
                         autoFocus
                       />
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
                           onClick={() => handleSaveNote(lead.id)}
-                          className="px-3.5 py-1.5 bg-[#23A455] hover:bg-[#1e8d49] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer"
+                          className="px-3.5 py-1.5 bg-[#83C408] hover:bg-[#95DB0B] text-[#071408] text-xs font-extrabold rounded-lg flex items-center gap-1.5 cursor-pointer"
                         >
                           <Save className="w-3.5 h-3.5" />
                           <span>Guardar Nota</span>
                         </button>
                         <button
+                          type="button"
                           onClick={() => setEditingNotesId(null)}
-                          className="px-3 py-1.5 bg-stone-900 text-stone-400 hover:text-white text-xs rounded-lg cursor-pointer"
+                          className="px-3 py-1.5 bg-[#16231B] border border-[#83C408]/50 text-[#83C408] text-xs font-bold rounded-lg cursor-pointer"
                         >
                           Cancelar
                         </button>
                       </div>
                     </div>
                   ) : lead.notes ? (
-                    <div className="mt-3 pt-3 border-t border-stone-800/60 flex items-start justify-between gap-3 text-xs">
-                      <div className="bg-[#060e09]/70 rounded-xl p-2.5 border border-emerald-950/60 flex-1">
+                    <div className="mt-3 pt-3 border-t border-[#1D2D22] flex items-start justify-between gap-3 text-xs">
+                      <div className="bg-[#080C0A] rounded-xl p-2.5 border border-[#1D2D22] flex-1">
                         <span className="text-[10px] font-bold text-[#83C408] uppercase tracking-wider block mb-0.5">
                           Nota de la Clínica:
                         </span>
-                        <p className="text-stone-300 italic">{lead.notes}</p>
+                        <p className="text-[#B9CEBE]">{lead.notes}</p>
                       </div>
                       {savedNoteNotification === lead.id && (
-                        <span className="text-[11px] text-[#83C408] font-bold self-center animate-in fade-in">
-                          ¡Nota guardada!
+                        <span className="text-xs text-[#83C408] font-bold self-center">
+                          Nota guardada
                         </span>
                       )}
                     </div>
                   ) : null}
-
                 </div>
               );
             })
           )}
         </div>
-
-        {/* FOOTER INFO */}
-        <div className="pt-8 border-t border-emerald-950 text-center text-xs text-stone-500">
-          <p>
-            Clínica Dental SET · Carrer Doctor Trueta 213, Poblenou, Barcelona · Panel Privado de Dirección
-          </p>
-          <p className="mt-1 text-[11px]">
-            La información se almacena localmente de forma segura en tu navegador y persiste entre sesiones.
-          </p>
-        </div>
-
       </div>
     </div>
   );
