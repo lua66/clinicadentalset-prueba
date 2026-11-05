@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CheckCircle2, MessageCircle, ChevronDown, ChevronUp, ShieldCheck, Sparkles } from 'lucide-react';
-import { DentalSphere } from '../components/DentalSphere';
+import { PageHeader } from '../components/PageHeader';
 import { Specialty, Language } from '../types';
 import { SPECIALTIES, CLINIC_CONTACT } from '../data/clinicData';
 import { UI_TRANSLATIONS } from '../i18n/translations';
@@ -27,30 +27,22 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
   const otherSpecialties = SPECIALTIES.filter((s) => s.id !== specialty.id).slice(0, 4);
 
   return (
-    <div className="min-h-screen py-10 md:py-16 bg-[#FAF7F2] dark:bg-[#08120c] transition-colors duration-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Breadcrumb Navigation */}
-        <div className="flex items-center gap-2 text-xs text-stone-500 mb-8">
-          <button
-            onClick={() => onNavigate('/')}
-            className="hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
-          >
-            Inicio
-          </button>
-          <span>/</span>
-          <button
-            onClick={() => onNavigate('/especialidades')}
-            className="hover:text-stone-900 dark:hover:text-white transition-colors cursor-pointer"
-          >
-            Especialidades
-          </button>
-          <span>/</span>
-          <span className="text-emerald-800 dark:text-[#83C408] font-bold truncate">
-            {specialty.title[lang]}
-          </span>
-        </div>
+    <div className="bg-[#FAF7F2] dark:bg-[#08120c] transition-colors duration-200">
+      {/* Unified Page Header with 1 right-aligned 3D Sphere at exact standard height */}
+      <PageHeader
+        breadcrumbs={[
+          { label: t.navHome, path: '/' },
+          { label: t.navSpecialties, path: '/especialidades' },
+          { label: specialty.title[lang] },
+        ]}
+        eyebrowIcon={<Sparkles className="w-3.5 h-3.5 text-[#83C408]" />}
+        eyebrowText={`${specialty.badge[lang]} · Poblenou, Barcelona`}
+        title={specialty.title[lang]}
+        subtitle={specialty.subtitle[lang]}
+        onNavigate={onNavigate}
+      />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         {/* Back Link */}
         <button
           onClick={() => onNavigate('/especialidades')}
@@ -60,52 +52,41 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
           <span>Volver a todas las especialidades</span>
         </button>
 
-        {/* Hero Section of Specialty */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white dark:bg-[#0d1a11] border border-stone-200/90 dark:border-emerald-950/80 rounded-3xl p-6 sm:p-10 shadow-sm">
-          <div className="lg:col-span-7 space-y-4">
-            
-            {/* Title with Small 3D Brand Sphere on the right */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
-                  <Sparkles className="w-3.5 h-3.5 text-[#83C408]" />
-                  <span>{specialty.badge[lang]} · Poblenou, Barcelona</span>
+        {/* Specialty Clinical Specialist & Showcase Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch bg-white dark:bg-[#0d1a11] border border-stone-200/90 dark:border-emerald-950/80 rounded-3xl p-6 sm:p-8 shadow-sm">
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-5">
+            <div className="space-y-4">
+              <div className="text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider">
+                Especialista Responsable y Consulta Directa
+              </div>
+
+              {/* Doctor in charge & Specific Schedule */}
+              <div className="flex items-start gap-3.5">
+                <img
+                  src={specialty.leadDoctor.image}
+                  alt={specialty.leadDoctor.name}
+                  referrerPolicy="no-referrer"
+                  className="w-14 h-14 rounded-full object-cover object-top border-2 border-[#83C408] shrink-0"
+                />
+                <div className="text-xs space-y-1">
+                  <span className="font-bold text-sm text-stone-900 dark:text-white block">
+                    {specialty.leadDoctor.name}
+                  </span>
+                  <span className="text-stone-600 dark:text-stone-300 block leading-snug">
+                    {specialty.leadDoctor.role}
+                  </span>
+                  {specialty.leadDoctor.scheduleSummary?.[lang] && (
+                    <span className="text-xs font-medium text-emerald-700 dark:text-[#83C408] block pt-0.5 tabular-nums">
+                      {lang === 'ca' ? 'Horari de consulta: ' : lang === 'en' ? 'Consultation hours: ' : 'Horario de consulta: '}
+                      {specialty.leadDoctor.scheduleSummary[lang]}
+                    </span>
+                  )}
                 </div>
-
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white" style={{ textWrap: 'balance' }}>
-                  {specialty.title[lang]}
-                </h1>
-              </div>
-
-              {/* Small 3D Sphere at the right of the title (Not floating) */}
-              <div className="shrink-0 pt-1">
-                <DentalSphere mode="small" />
-              </div>
-            </div>
-
-            <p className="text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed">
-              {specialty.subtitle[lang]}
-            </p>
-
-            {/* Doctor in charge */}
-            <div className="pt-2 flex items-center gap-3">
-              <img
-                src={specialty.leadDoctor.image}
-                alt={specialty.leadDoctor.name}
-                className="w-12 h-12 rounded-full object-cover object-top border-2 border-[#83C408]"
-              />
-              <div className="text-xs">
-                <span className="font-bold text-stone-900 dark:text-white block">
-                  {specialty.leadDoctor.name}
-                </span>
-                <span className="text-stone-500">
-                  {specialty.leadDoctor.role}
-                </span>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="pt-4 flex flex-wrap items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <a
                 href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20informaci%C3%B3n%20sobre%20${encodeURIComponent(specialty.title[lang])}%20en%20Cl%C3%ADnica%20Dental%20SET.`}
                 target="_blank"
@@ -134,7 +115,7 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
                     sourceUrl: `/especialidades/${specialty.slug}`,
                   });
                 }}
-                className="inline-flex items-center gap-2 px-4 py-3 text-xs font-medium text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-emerald-950/40 hover:bg-stone-200 dark:hover:bg-emerald-900/60 rounded-xl transition-colors border border-stone-200 dark:border-emerald-900/50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-3 text-xs font-medium text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-emerald-950/40 hover:bg-stone-200 dark:hover:bg-emerald-900/60 rounded-xl transition-colors border border-stone-200 dark:border-emerald-900/50 tabular-nums cursor-pointer"
               >
                 <span>Llamar al {CLINIC_CONTACT.phone}</span>
               </a>
@@ -142,7 +123,7 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
           </div>
 
           {/* Specialty Hero Image */}
-          <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden border border-stone-200 dark:border-emerald-950 shadow-md">
+          <div className="lg:col-span-5 relative aspect-[4/3] lg:aspect-auto lg:h-full min-h-[220px] rounded-2xl overflow-hidden border border-stone-200 dark:border-emerald-950 shadow-md">
             <img
               src={specialty.image}
               alt={specialty.title[lang]}

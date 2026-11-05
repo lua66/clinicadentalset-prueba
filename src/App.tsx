@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { DentalSphere } from './components/DentalSphere';
+import { PageHeader } from './components/PageHeader';
 import { TreatmentsSummary } from './components/TreatmentsSummary';
 import { SpecialtiesGrid } from './components/SpecialtiesGrid';
 import { TeamSection } from './components/TeamSection';
 import { ClinicGallery } from './components/ClinicGallery';
+import { DoctorPresentationVideo } from './components/DoctorPresentationVideo';
 import { DirectContactAndMap } from './components/DirectContactAndMap';
 import { SpecialtyDetailPage } from './pages/SpecialtyDetailPage';
 import { OwnerCrmPage } from './pages/OwnerCrmPage';
@@ -15,7 +17,18 @@ import { Language, Specialty } from './types';
 import { UI_TRANSLATIONS } from './i18n/translations';
 import { SPECIALTIES, CLINIC_CONTACT, TESTIMONIALS } from './data/clinicData';
 import { getSeoMetadata, applySeoMetadata } from './utils/seoManager';
-import { MessageCircle, Phone, MapPin, ArrowRight, Star, ShieldCheck, HeartPulse, Building2 } from 'lucide-react';
+import {
+  MessageCircle,
+  Phone,
+  MapPin,
+  ArrowRight,
+  Star,
+  ShieldCheck,
+  HeartPulse,
+  Building2,
+  Sparkles,
+  GraduationCap,
+} from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<Language>('es');
@@ -74,7 +87,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FAF7F2] dark:bg-[#08120c] text-stone-900 dark:text-stone-100 transition-colors duration-200 selection:bg-[#83C408] selection:text-stone-900 pb-20 lg:pb-0">
-      
       {/* Top Bar Header with Official Logo */}
       <Header
         currentPath={currentPath}
@@ -87,7 +99,7 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* ROUTE 1: Individual Specialty Pillar Page */}
+        {/* ROUTE 1: Individual Specialty Pillar Page (1 sphere in PageHeader) */}
         {selectedSpecialty ? (
           <>
             <SpecialtyDetailPage
@@ -95,90 +107,91 @@ export default function App() {
               lang={lang}
               onNavigate={navigateTo}
             />
-            {/* Direct Contact & Map (Without Form) */}
-            <DirectContactAndMap lang={lang} showSphere={false} />
+            <DirectContactAndMap lang={lang} showHeader={true} showSphere={false} />
           </>
         ) : currentPath === '/especialidades' ? (
-          /* ROUTE 2: All Specialties Index */
-          <div className="py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="text-xs text-stone-500 mb-4 flex items-center gap-2">
-                <button onClick={() => navigateTo('/')} className="hover:underline cursor-pointer">Inicio</button>
-                <span>/</span>
-                <span className="text-emerald-800 dark:text-[#83C408] font-bold">Especialidades</span>
-              </div>
-
-              {/* Title with small 3D Sphere at the right */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
-                <div>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white mb-2">
-                    Especialidades Odontológicas en Poblenou
-                  </h1>
-                  <p className="text-sm text-stone-600 dark:text-stone-400 max-w-2xl">
-                    Tratamientos multidisciplinares con dedicación exclusiva. Cada especialidad cuenta con su propia página y equipo de doctoras colegiadas.
-                  </p>
-                </div>
-
-                {/* Small 3D Sphere to the right of title */}
-                <div className="shrink-0 self-start sm:self-center">
-                  <DentalSphere mode="small" />
-                </div>
-              </div>
-            </div>
-
+          /* ROUTE 2: All Specialties Index (1 sphere in PageHeader, none in grid) */
+          <>
+            <PageHeader
+              breadcrumbs={[
+                { label: t.navHome, path: '/' },
+                { label: t.navSpecialties },
+              ]}
+              eyebrowIcon={<Sparkles className="w-3.5 h-3.5 text-[#83C408]" />}
+              eyebrowText="Tratamientos Odontológicos Integrales"
+              title={t.pageSpecialtiesTitle}
+              subtitle={t.pageSpecialtiesSubtitle}
+              onNavigate={navigateTo}
+            />
             <SpecialtiesGrid
               lang={lang}
               onSelectSpecialty={(slug) => navigateTo(`/especialidades/${slug}`)}
-              showSphere={true}
+              showHeader={false}
+              showSphere={false}
             />
-            <DirectContactAndMap lang={lang} showSphere={false} />
-          </div>
+            <DirectContactAndMap lang={lang} showHeader={true} showSphere={false} />
+          </>
         ) : currentPath === '/equipo' ? (
-          /* ROUTE 3: Team Dedicated Page */
-          <div className="py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="text-xs text-stone-500 mb-4 flex items-center gap-2">
-                <button onClick={() => navigateTo('/')} className="hover:underline cursor-pointer">Inicio</button>
-                <span>/</span>
-                <span className="text-emerald-800 dark:text-[#83C408] font-bold">Equipo Médico</span>
-              </div>
-            </div>
-            <TeamSection lang={lang} showSphere={true} />
-            <DirectContactAndMap lang={lang} showSphere={false} />
-          </div>
+          /* ROUTE 3: Team Dedicated Page (1 sphere in PageHeader) */
+          <>
+            <PageHeader
+              breadcrumbs={[
+                { label: t.navHome, path: '/' },
+                { label: t.navTeam },
+              ]}
+              eyebrowIcon={<GraduationCap className="w-4 h-4 text-[#83C408]" />}
+              eyebrowText="Vocación Médica & Proximidad"
+              title={t.teamHeading}
+              subtitle={t.teamSubtitle}
+              onNavigate={navigateTo}
+            />
+            <TeamSection lang={lang} showHeader={false} showSphere={false} />
+            <DirectContactAndMap lang={lang} showHeader={true} showSphere={false} />
+          </>
         ) : currentPath === '/clinica' ? (
-          /* ROUTE 4: Clinic Facilities Dedicated Page */
-          <div className="py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="text-xs text-stone-500 mb-4 flex items-center gap-2">
-                <button onClick={() => navigateTo('/')} className="hover:underline cursor-pointer">Inicio</button>
-                <span>/</span>
-                <span className="text-emerald-800 dark:text-[#83C408] font-bold">La Clínica</span>
-              </div>
-            </div>
-            <ClinicGallery lang={lang} showSphere={true} />
-            <DirectContactAndMap lang={lang} showSphere={false} />
-          </div>
+          /* ROUTE 4: Clinic Facilities Dedicated Page (1 sphere in PageHeader) */
+          <>
+            <PageHeader
+              breadcrumbs={[
+                { label: t.navHome, path: '/' },
+                { label: t.navClinic },
+              ]}
+              eyebrowIcon={<Sparkles className="w-3.5 h-3.5 text-[#83C408]" />}
+              eyebrowText="Instalaciones en Poblenou"
+              title={t.galleryHeading}
+              subtitle={t.gallerySubtitle}
+              onNavigate={navigateTo}
+            />
+            <ClinicGallery lang={lang} showHeader={false} showSphere={false} />
+            <DoctorPresentationVideo
+              lang={lang}
+              sourcePage="Página La Clínica (Vídeo Presentación Doctora)"
+            />
+            <DirectContactAndMap lang={lang} showHeader={true} showSphere={false} />
+          </>
         ) : currentPath === '/contacto' ? (
-          /* ROUTE 5: Contact & Location Dedicated Page */
-          <div className="py-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
-              <div className="text-xs text-stone-500 mb-4 flex items-center gap-2">
-                <button onClick={() => navigateTo('/')} className="hover:underline cursor-pointer">Inicio</button>
-                <span>/</span>
-                <span className="text-emerald-800 dark:text-[#83C408] font-bold">Contacto y Cita</span>
-              </div>
-            </div>
-            <DirectContactAndMap lang={lang} showSphere={true} />
-          </div>
+          /* ROUTE 5: Contact & Location Dedicated Page (1 sphere in PageHeader) */
+          <>
+            <PageHeader
+              breadcrumbs={[
+                { label: t.navHome, path: '/' },
+                { label: t.navContact },
+              ]}
+              eyebrowIcon={<MapPin className="w-3.5 h-3.5 text-[#83C408]" />}
+              eyebrowText="Poblenou · Sant Martí · Barcelona"
+              title={t.contactHeading}
+              subtitle={t.contactSubtitle}
+              onNavigate={navigateTo}
+            />
+            <DirectContactAndMap lang={lang} showHeader={false} showSphere={false} />
+          </>
         ) : (
-          /* ROUTE 6: Clean, Uncluttered Homepage */
+          /* ROUTE 6: Clean, Uncluttered Homepage with Original Hero Sphere Size & Position */
           <>
             {/* HERO SECTION */}
             <section className="relative overflow-hidden py-14 sm:py-20 lg:py-24 border-b border-stone-200/80 dark:border-emerald-950/70">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                  
                   {/* Left Column: Authority Copy & High-Intent Conversion CTAs */}
                   <div className="lg:col-span-7 space-y-6">
                     {/* Heritage badge in Brand Green */}
@@ -188,7 +201,10 @@ export default function App() {
                     </div>
 
                     {/* Headline */}
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-white leading-[1.12]" style={{ textWrap: 'balance' }}>
+                    <h1
+                      className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-white leading-[1.12]"
+                      style={{ textWrap: 'balance' }}
+                    >
                       {t.heroTitlePart1}{' '}
                       <span className="text-[#23A455] dark:text-[#83C408]">
                         {t.heroTitleHighlight}
@@ -201,7 +217,6 @@ export default function App() {
 
                     {/* Direct Contact Buttons (No forms, direct action) */}
                     <div className="pt-2 flex flex-wrap items-center gap-3">
-                      {/* Direct WhatsApp */}
                       <a
                         href={`https://wa.me/${CLINIC_CONTACT.whatsappClean}?text=Hola,%20quisiera%20pedir%20cita%20en%20Cl%C3%ADnica%20Dental%20SET.`}
                         target="_blank"
@@ -220,7 +235,6 @@ export default function App() {
                         <span>WhatsApp</span>
                       </a>
 
-                      {/* Direct Call (933 09 18 71) */}
                       <a
                         href={`tel:${CLINIC_CONTACT.phoneClean}`}
                         onClick={() => {
@@ -231,13 +245,12 @@ export default function App() {
                             sourceUrl: '/',
                           });
                         }}
-                        className="inline-flex items-center gap-2 px-5 py-3.5 text-xs sm:text-sm font-bold text-stone-800 dark:text-stone-200 bg-white dark:bg-[#0e1d13] hover:bg-stone-100 dark:hover:bg-emerald-950/70 border border-stone-200 dark:border-emerald-900/60 rounded-xl shadow-xs transition-all cursor-pointer"
+                        className="inline-flex items-center gap-2 px-5 py-3.5 text-xs sm:text-sm font-bold text-stone-800 dark:text-stone-200 bg-white dark:bg-[#0e1d13] hover:bg-stone-100 dark:hover:bg-emerald-950/70 border border-stone-200 dark:border-emerald-900/60 rounded-xl shadow-xs tabular-nums transition-all cursor-pointer"
                       >
                         <Phone className="w-4 h-4 text-[#83C408]" />
                         <span>Llamar {CLINIC_CONTACT.phone}</span>
                       </a>
 
-                      {/* Explore Specialties */}
                       <button
                         onClick={() => navigateTo('/especialidades')}
                         className="inline-flex items-center gap-1.5 px-4 py-3.5 text-xs sm:text-sm font-bold text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-[#83C408] transition-colors cursor-pointer"
@@ -260,17 +273,16 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Right Column: Central 3D Sphere (Logo and Name without collision) */}
+                  {/* Right Column: Original Central 3D Sphere */}
                   <div className="lg:col-span-5 flex flex-col items-center justify-center">
                     <DentalSphere mode="hero" />
                   </div>
-
                 </div>
 
                 {/* 4-COLUMN TRUST METRICS STRIP */}
                 <div className="mt-16 pt-10 border-t border-stone-200/70 dark:border-emerald-950/70 grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="p-4 rounded-xl bg-white/60 dark:bg-[#0d1a11]/60 border border-stone-200/50 dark:border-emerald-950">
-                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] block">
+                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] tabular-nums block">
                       {t.statExperience}
                     </span>
                     <span className="text-xs text-stone-600 dark:text-stone-400 mt-1 block">
@@ -279,7 +291,7 @@ export default function App() {
                   </div>
 
                   <div className="p-4 rounded-xl bg-white/60 dark:bg-[#0d1a11]/60 border border-stone-200/50 dark:border-emerald-950">
-                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] block">
+                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] tabular-nums block">
                       {t.statPatients}
                     </span>
                     <span className="text-xs text-stone-600 dark:text-stone-400 mt-1 block">
@@ -297,7 +309,7 @@ export default function App() {
                   </div>
 
                   <div className="p-4 rounded-xl bg-white/60 dark:bg-[#0d1a11]/60 border border-stone-200/50 dark:border-emerald-950">
-                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] block">
+                    <span className="text-xl sm:text-2xl font-extrabold text-[#23A455] dark:text-[#83C408] tabular-nums block">
                       {t.statSatisfaction}
                     </span>
                     <span className="text-xs text-stone-600 dark:text-stone-400 mt-1 block">
@@ -305,7 +317,6 @@ export default function App() {
                     </span>
                   </div>
                 </div>
-
               </div>
             </section>
 
@@ -314,6 +325,12 @@ export default function App() {
               lang={lang}
               onSelectSpecialty={(slug) => navigateTo(`/especialidades/${slug}`)}
               onViewAll={() => navigateTo('/especialidades')}
+            />
+
+            {/* DOCTOR CLINIC PRESENTATION VIDEO (Primary Showcase Location) */}
+            <DoctorPresentationVideo
+              lang={lang}
+              sourcePage="Página de Inicio (Vídeo Presentación Doctora)"
             />
 
             {/* TEAM SECTION (The Collective of Work) */}

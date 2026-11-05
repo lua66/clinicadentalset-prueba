@@ -9,42 +9,49 @@ import { DentalSphere } from './DentalSphere';
 interface SpecialtiesGridProps {
   lang: Language;
   onSelectSpecialty: (slug: string) => void;
+  showHeader?: boolean;
   showSphere?: boolean;
 }
 
 export const SpecialtiesGrid: React.FC<SpecialtiesGridProps> = ({
   lang,
   onSelectSpecialty,
+  showHeader = true,
   showSphere = false,
 }) => {
   const t = UI_TRANSLATIONS[lang];
 
   return (
-    <section id="especialidades" className="py-16 md:py-24 bg-white dark:bg-[#08120c] transition-colors duration-200">
+    <section
+      id="especialidades"
+      className={`${showHeader ? 'py-16 md:py-24' : 'py-12 md:py-16'} bg-white dark:bg-[#08120c] transition-colors duration-200`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header with 3D Sphere at the right of the title */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-16 max-w-4xl mx-auto">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#83C408]" />
-              <span>Tratamientos Odontológicos Integrales</span>
+        {showHeader && (
+          <div className="flex items-center justify-between gap-6 mb-14">
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-[#83C408]" />
+                <span>Tratamientos Odontológicos Integrales</span>
+              </div>
+              <h2
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white"
+                style={{ textWrap: 'balance' }}
+              >
+                {t.specialtiesHeading}
+              </h2>
+              <p className="mt-3 text-sm text-stone-600 dark:text-stone-400 max-w-2xl">
+                {t.specialtiesSubtitle}
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white" style={{ textWrap: 'balance' }}>
-              {t.specialtiesHeading}
-            </h2>
-            <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">
-              {t.specialtiesSubtitle}
-            </p>
-          </div>
 
-          {/* Small 3D Sphere to the right of the title */}
-          {showSphere && (
-            <div className="shrink-0 self-start sm:self-center">
-              <DentalSphere mode="small" />
-            </div>
-          )}
-        </div>
+            {showSphere && (
+              <div className="shrink-0">
+                <DentalSphere mode="page" />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Bento Grid of 8 Specialties */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

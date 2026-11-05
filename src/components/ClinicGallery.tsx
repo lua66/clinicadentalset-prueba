@@ -7,10 +7,15 @@ import { CLINIC_GALLERY } from '../data/clinicData';
 
 interface ClinicGalleryProps {
   lang: Language;
+  showHeader?: boolean;
   showSphere?: boolean;
 }
 
-export const ClinicGallery: React.FC<ClinicGalleryProps> = ({ lang, showSphere = true }) => {
+export const ClinicGallery: React.FC<ClinicGalleryProps> = ({
+  lang,
+  showHeader = true,
+  showSphere = false,
+}) => {
   const t = UI_TRANSLATIONS[lang];
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeImage, setActiveImage] = useState<ClinicImage | null>(null);
@@ -27,26 +32,55 @@ export const ClinicGallery: React.FC<ClinicGalleryProps> = ({ lang, showSphere =
     : CLINIC_GALLERY.filter((img) => img.category.es === selectedCategory);
 
   return (
-    <section id="instalaciones" className="py-16 md:py-24 bg-white dark:bg-[#08120c] transition-colors duration-200">
+    <section
+      id="instalaciones"
+      className={`${showHeader ? 'py-16 md:py-24' : 'py-12 md:py-16'} bg-white dark:bg-[#08120c] transition-colors duration-200`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header with 3D Sphere at the right of the title */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-          <div className="flex-1 max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#83C408]" />
-              <span>Instalaciones en Poblenou</span>
+        {showHeader ? (
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div className="flex-1 max-w-2xl">
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-[#83C408]" />
+                <span>Instalaciones en Poblenou</span>
+              </div>
+              <h2
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white"
+                style={{ textWrap: 'balance' }}
+              >
+                {t.galleryHeading}
+              </h2>
+              <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">
+                {t.gallerySubtitle}
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white" style={{ textWrap: 'balance' }}>
-              {t.galleryHeading}
-            </h2>
-            <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">
-              {t.gallerySubtitle}
-            </p>
-          </div>
 
-          <div className="flex items-center gap-4 self-start md:self-center">
-            {/* Filter Tabs */}
+            <div className="flex items-center gap-4 self-start md:self-center">
+              <div className="flex flex-wrap items-center gap-1.5 p-1 bg-stone-100 dark:bg-[#0d1a11] rounded-xl border border-stone-200 dark:border-emerald-950">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                      selectedCategory === cat.id
+                        ? 'bg-white dark:bg-[#15291b] text-emerald-800 dark:text-[#83C408] shadow-xs'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {showSphere && (
+                <div className="shrink-0">
+                  <DentalSphere mode="page" />
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
             <div className="flex flex-wrap items-center gap-1.5 p-1 bg-stone-100 dark:bg-[#0d1a11] rounded-xl border border-stone-200 dark:border-emerald-950">
               {categories.map((cat) => (
                 <button
@@ -62,15 +96,8 @@ export const ClinicGallery: React.FC<ClinicGalleryProps> = ({ lang, showSphere =
                 </button>
               ))}
             </div>
-
-            {/* Small 3D Sphere at the right of the title */}
-            {showSphere && (
-              <div className="shrink-0 hidden sm:block">
-                <DentalSphere mode="small" />
-              </div>
-            )}
           </div>
-        </div>
+        )}
 
         {/* Subtle Photo Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -7,38 +7,48 @@ import { TEAM_MEMBERS, CLINIC_CONTACT } from '../data/clinicData';
 
 interface TeamSectionProps {
   lang: Language;
+  showHeader?: boolean;
   showSphere?: boolean;
 }
 
-export const TeamSection: React.FC<TeamSectionProps> = ({ lang, showSphere = true }) => {
+export const TeamSection: React.FC<TeamSectionProps> = ({
+  lang,
+  showHeader = true,
+  showSphere = false,
+}) => {
   const t = UI_TRANSLATIONS[lang];
 
   return (
-    <section id="equipo" className="py-16 md:py-24 bg-stone-50 dark:bg-[#08120c] transition-colors duration-200">
+    <section
+      id="equipo"
+      className={`${showHeader ? 'py-16 md:py-24' : 'py-12 md:py-16'} bg-stone-50 dark:bg-[#08120c] transition-colors duration-200`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header with 3D Sphere at the right of the title */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-16 max-w-4xl mx-auto">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
-              <GraduationCap className="w-4 h-4 text-[#83C408]" />
-              <span>Vocación Médica & Proximidad</span>
+        {showHeader && (
+          <div className="flex items-center justify-between gap-6 mb-14">
+            <div className="flex-1 min-w-0">
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-[#83C408] uppercase tracking-wider mb-2">
+                <GraduationCap className="w-4 h-4 text-[#83C408]" />
+                <span>Vocación Médica & Proximidad</span>
+              </div>
+              <h2
+                className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white"
+                style={{ textWrap: 'balance' }}
+              >
+                {t.teamHeading}
+              </h2>
+              <p className="mt-3 text-sm text-stone-600 dark:text-stone-400 max-w-2xl">
+                {t.teamSubtitle}
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white" style={{ textWrap: 'balance' }}>
-              {t.teamHeading}
-            </h2>
-            <p className="mt-3 text-sm text-stone-600 dark:text-stone-400">
-              {t.teamSubtitle}
-            </p>
-          </div>
 
-          {/* Small 3D Sphere at the right of the title (Not floating) */}
-          {showSphere && (
-            <div className="shrink-0 self-start sm:self-center">
-              <DentalSphere mode="small" />
-            </div>
-          )}
-        </div>
+            {showSphere && (
+              <div className="shrink-0">
+                <DentalSphere mode="page" />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Collective Team Presentation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

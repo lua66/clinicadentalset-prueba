@@ -1,4 +1,4 @@
-import { Specialty, TeamMember, ClinicImage, Testimonial } from '../types';
+import { Specialty, TeamMember, ClinicImage, Testimonial, MedicalTeamMemberSchedule } from '../types';
 
 export const CLINIC_CONTACT = {
   phone: '933 09 18 71',
@@ -14,8 +14,87 @@ export const CLINIC_CONTACT = {
     weekdays: '10:00h – 14:00h / 15:00h – 20:00h',
     weekend: 'Sábados y Domingos: Urgencias con cita previa',
   },
+  geo: {
+    latitude: 41.4005081,
+    longitude: 2.2008324,
+  },
   googleMapsUrl: 'https://maps.google.com/?q=Clinica+Dental+Set+Carrer+del+Doctor+Trueta+213+08005+Barcelona',
   googleMapsEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2992.839611598918!2d2.200832376602334!3d41.40050809525418!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4a33c29fb9f55%3A0x6b8b0e77d0799818!2sCl%C3%ADnica%20Dental%20SET!5e0!3m2!1ses!2ses!4v1715000000000!5m2!1ses!2ses',
+};
+
+export const MEDICAL_TEAM_SCHEDULES: Record<'izbette' | 'ruby' | 'silvia', MedicalTeamMemberSchedule> = {
+  izbette: {
+    name: 'Dra. Izbette Luis Torres',
+    role: 'Directora Clínica & Especialista en Estética, Ortodoncia y Rehabilitación Oral',
+    medicalSpecialty: 'Prosthodontics',
+    scheduleSummary: {
+      es: 'Lunes a Viernes · 10:00h – 14:00h y Lunes, Miércoles, Jueves · 15:00h – 20:00h',
+      ca: 'Dilluns a Divendres · 10:00h – 14:00h i Dilluns, Dimecres, Dijous · 15:00h – 20:00h',
+      en: 'Monday to Friday · 10:00 – 14:00 & Mon, Wed, Thu · 15:00 – 20:00',
+    },
+    hoursAvailable: [
+      {
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '10:00',
+        closes: '14:00',
+        description: 'Consulta clínica de mañana (Estética, Ortodoncia y Rehabilitación)',
+      },
+      {
+        dayOfWeek: ['Monday', 'Wednesday', 'Thursday'],
+        opens: '15:00',
+        closes: '20:00',
+        description: 'Consulta clínica de tarde',
+      },
+    ],
+  },
+  ruby: {
+    name: 'Dra. Ruby Alexandra Herrera Villamil',
+    role: 'Especialista en Cirugía Oral, Periodoncia e Implantología',
+    medicalSpecialty: 'OralSurgery',
+    scheduleSummary: {
+      es: 'Lunes, Miércoles, Viernes · 10:00h – 14:00h y Lunes a Viernes · 15:00h – 20:00h',
+      ca: 'Dilluns, Dimecres, Divendres · 10:00h – 14:00h i Dilluns a Divendres · 15:00h – 20:00h',
+      en: 'Mon, Wed, Fri · 10:00 – 14:00 & Monday to Friday · 15:00 – 20:00',
+    },
+    hoursAvailable: [
+      {
+        dayOfWeek: ['Monday', 'Wednesday', 'Friday'],
+        opens: '10:00',
+        closes: '14:00',
+        description: 'Gabinete quirúrgico y consulta de mañana (Implantes y Periodoncia)',
+      },
+      {
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '15:00',
+        closes: '20:00',
+        description: 'Gabinete quirúrgico y consulta de tarde',
+      },
+    ],
+  },
+  silvia: {
+    name: 'Sílvia Degorgue Magrazo',
+    role: 'Coordinadora de Pacientes & Higienista Bucodental',
+    medicalSpecialty: 'Dentistry',
+    scheduleSummary: {
+      es: 'Lunes a Viernes · 10:00h – 14:00h / 15:00h – 20:00h',
+      ca: 'Dilluns a Divendres · 10:00h – 14:00h / 15:00h – 20:00h',
+      en: 'Monday to Friday · 10:00 – 14:00 / 15:00 – 20:00',
+    },
+    hoursAvailable: [
+      {
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '10:00',
+        closes: '14:00',
+        description: 'Coordinación de pacientes e higiene dental (mañana)',
+      },
+      {
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '15:00',
+        closes: '20:00',
+        description: 'Coordinación de pacientes e higiene dental (tarde)',
+      },
+    ],
+  },
 };
 
 export const TEAM_MEMBERS: TeamMember[] = [
@@ -45,6 +124,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
       'Especialista en planificación digital de sonrisa (DSD)',
     ],
     image: '/assets/equip1.jpg',
+    scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+    hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
   },
   {
     id: 'ruby-herrera',
@@ -72,6 +153,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
       'Miembro de la Sociedad Española de Periodoncia (SEPA)',
     ],
     image: '/assets/equip4.jpg',
+    scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+    hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
   },
   {
     id: 'silvia-degorgue',
@@ -97,6 +180,8 @@ export const TEAM_MEMBERS: TeamMember[] = [
       'Responsable de Protocolos de Bioseguridad y Esterilización',
     ],
     image: '/assets/equip2.jpg',
+    scheduleSummary: MEDICAL_TEAM_SCHEDULES.silvia.scheduleSummary,
+    hoursAvailable: MEDICAL_TEAM_SCHEDULES.silvia.hoursAvailable,
   },
 ];
 
@@ -104,6 +189,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'implantes-dentales',
     slug: 'implantes-dentales',
+    schemaSpecialty: 'OralSurgery',
     title: {
       es: 'Implantes Dentales y Cirugía Guiada',
       ca: 'Implants Dentals i Cirurgia Guiada',
@@ -121,10 +207,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Ruby Alexandra Herrera Villamil',
-      role: 'Máster en Cirugía e Implantes (Col. 5929)',
-      colegiateNumber: '5929 COEC',
+      role: 'Máster en Cirugía e Implantes · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip4.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.ruby, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Sustitución fija y definitiva de piezas perdidas mediante cirugía guiada por ordenador, microcirugía y regeneración ósea.',
       ca: 'Substitució fixa i definitiva de peces perdudes mitjançant cirurgia guiada per ordinador i regeneració òssia.',
@@ -200,6 +289,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'ortodoncia',
     slug: 'ortodoncia',
+    schemaSpecialty: 'Orthodontics',
     title: {
       es: 'Ortodoncia Invisible e Invisalign',
       ca: 'Ortodòncia Invisible i Invisalign',
@@ -217,10 +307,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Izbette Luis Torres',
-      role: 'Especialista en Estética y Ortodoncia (Col. 5664)',
-      colegiateNumber: '5664 COEC',
+      role: 'Especialista en Estética y Ortodoncia · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Férulas transparentes extraíbles y brackets estéticos de zafiro adaptados a niños, jóvenes y adultos.',
       ca: 'Fèrules transparents extraïbles i brackets estètics de safir per a totes les edats.',
@@ -293,6 +386,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'estetica-dental',
     slug: 'estetica-dental',
+    schemaSpecialty: 'Prosthodontics',
     title: {
       es: 'Estética Dental, Carillas y Blanqueamiento',
       ca: 'Estètica Dental, Carilles i Blanquejament',
@@ -310,10 +404,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Izbette Luis Torres',
-      role: 'Directora Clínica (Col. 5664)',
-      colegiateNumber: '5664 COEC',
+      role: 'Directora Clínica · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Carillas ultrafinas de porcelana feldespática, carillas de composite estratificado y blanqueamiento clínico con luz LED.',
       ca: 'Carilles ultrafines de porcellana, compòsit estratificat i blanquejament clínic LED.',
@@ -386,6 +483,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'periodoncia',
     slug: 'periodoncia',
+    schemaSpecialty: 'Periodontics',
     title: {
       es: 'Periodoncia y Salud de Encías',
       ca: 'Periodòncia i Salut de les Genives',
@@ -403,10 +501,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Ruby Alexandra Herrera Villamil',
-      role: 'Especialista en Periodoncia (Col. 5929)',
-      colegiateNumber: '5929 COEC',
+      role: 'Especialista en Periodoncia · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip4.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.ruby, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Tratamiento de gingivitis y periodontitis mediante raspados periodontales, desinfección y microcirugía regenerativa.',
       ca: 'Tractament de gingivitis i periodontitis mitjançant curetatges i regeneració gingival.',
@@ -479,6 +580,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'endodoncia',
     slug: 'endodoncia',
+    schemaSpecialty: 'Dentistry',
     title: {
       es: 'Endodoncia Microscópica',
       ca: 'Endodòncia Microscòpica',
@@ -496,10 +598,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Izbette Luis Torres',
-      role: 'Odontología Conservadora (Col. 5664)',
-      colegiateNumber: '5664 COEC',
+      role: 'Odontología Conservadora · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Limpieza, desinfección y sellado tridimensional de la pulpa dental afectada por caries profundas o traumatismos.',
       ca: 'Neteja, desinfecció i segellat tridimensional del conducte pulpar afectat per càries profunda.',
@@ -572,6 +677,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'odontologia-general',
     slug: 'odontologia-general',
+    schemaSpecialty: 'Dentistry',
     title: {
       es: 'Odontología General y Prevención',
       ca: 'Odontologia General i Prevenció',
@@ -589,10 +695,17 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Izbette Luis Torres',
-      role: 'Directora Médica (Col. 5664)',
-      colegiateNumber: '5664 COEC',
+      role: 'Directora Médica · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
     },
+    medicalTeamSchedule: [
+      MEDICAL_TEAM_SCHEDULES.izbette,
+      MEDICAL_TEAM_SCHEDULES.ruby,
+      MEDICAL_TEAM_SCHEDULES.silvia,
+    ],
     shortDescription: {
       es: 'Empastes de composite estético sin amalgama, limpiezas dentales con ultrasonidos y revisiones diagnósticas con cámara intraoral.',
       ca: 'Empastaments de compòsit estètic, higienes dentals i revisions amb càmera intraoral.',
@@ -665,6 +778,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'bruxismo-atm',
     slug: 'bruxismo-atm',
+    schemaSpecialty: 'Prosthodontics',
     title: {
       es: 'Bruxismo, Oclusión y Articulación ATM',
       ca: 'Bruxisme, Oclusió i Articulació ATM',
@@ -682,10 +796,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Izbette Luis Torres',
-      role: 'Especialista en Oclusión y ATM (Col. 5664)',
-      colegiateNumber: '5664 COEC',
+      role: 'Especialista en Oclusión y ATM · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip1.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.izbette.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.izbette.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.izbette, MEDICAL_TEAM_SCHEDULES.silvia],
     shortDescription: {
       es: 'Férulas de descarga Michigan fabricadas por diseño digital 3D para relajar la musculatura y proteger los dientes.',
       ca: 'Fèrules de descàrrega Michigan de disseny digital 3D per relaxar la mandíbula.',
@@ -755,6 +872,7 @@ export const SPECIALTIES: Specialty[] = [
   {
     id: 'sedacion-consciente',
     slug: 'sedacion-consciente',
+    schemaSpecialty: 'Anesthesia',
     title: {
       es: 'Sedación Consciente y Odontofobia',
       ca: 'Sedació Conscient i Odontofòbia',
@@ -772,10 +890,13 @@ export const SPECIALTIES: Specialty[] = [
     },
     leadDoctor: {
       name: 'Dra. Ruby Alexandra Herrera Villamil',
-      role: 'Cirugía e Implantología (Col. 5929)',
-      colegiateNumber: '5929 COEC',
+      role: 'Cirugía e Implantología · Odontóloga Colegiada COEC',
+      colegiateNumber: 'COEC',
       image: '/assets/equip4.jpg',
+      scheduleSummary: MEDICAL_TEAM_SCHEDULES.ruby.scheduleSummary,
+      hoursAvailable: MEDICAL_TEAM_SCHEDULES.ruby.hoursAvailable,
     },
+    medicalTeamSchedule: [MEDICAL_TEAM_SCHEDULES.ruby, MEDICAL_TEAM_SCHEDULES.izbette],
     shortDescription: {
       es: 'Asistencia especializada con médico anestesista para tratamientos sin estrés ni ansiedad en una sola sesión.',
       ca: 'Supervisió d’anestesiòleg per realitzar tractaments sense estrès ni ansietat.',

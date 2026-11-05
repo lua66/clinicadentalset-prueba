@@ -11,9 +11,25 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface ScheduleSlot {
+  dayOfWeek: string[];
+  opens: string;
+  closes: string;
+  description?: string;
+}
+
+export interface MedicalTeamMemberSchedule {
+  name: string;
+  role: string;
+  medicalSpecialty: string;
+  scheduleSummary: Record<Language, string>;
+  hoursAvailable: ScheduleSlot[];
+}
+
 export interface Specialty {
   id: string;
   slug: string;
+  schemaSpecialty?: string;
   title: Record<Language, string>;
   subtitle: Record<Language, string>;
   badge: Record<Language, string>;
@@ -22,7 +38,10 @@ export interface Specialty {
     role: string;
     colegiateNumber: string;
     image: string;
+    scheduleSummary?: Record<Language, string>;
+    hoursAvailable?: ScheduleSlot[];
   };
+  medicalTeamSchedule?: MedicalTeamMemberSchedule[];
   shortDescription: Record<Language, string>;
   fullDescription: Record<Language, string>;
   indications: Record<Language, string[]>;
@@ -42,6 +61,8 @@ export interface TeamMember {
   bio: Record<Language, string>;
   credentials: string[];
   image: string;
+  scheduleSummary?: Record<Language, string>;
+  hoursAvailable?: ScheduleSlot[];
 }
 
 export interface ClinicImage {

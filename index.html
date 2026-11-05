@@ -18,34 +18,74 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="application/ld+json">
+    <script id="dynamic-schema-ld" type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Dentist",
+      "@type": ["LocalBusiness", "Dentist", "MedicalClinic"],
+      "@id": "https://clinicadentalset.com/#localbusiness",
       "name": "Clínica Dental SET",
-      "image": "https://clinicadentalset.com/wp-content/uploads/2020/04/logo-blanc_.png",
-      "@id": "https://clinicadentalset.com",
+      "image": "https://clinicadentalset.com/assets/logo-blanc.png",
+      "logo": "https://clinicadentalset.com/assets/logo-blanc.png",
       "url": "https://clinicadentalset.com",
       "telephone": "+34933091871",
+      "email": "info@clinicadentalset.com",
       "priceRange": "€€",
+      "currenciesAccepted": "EUR",
+      "paymentAccepted": "Cash, Credit Card, Debit Card, Financing",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Carrer del Doctor Trueta, 213, Bajos",
         "addressLocality": "Barcelona",
+        "addressRegion": "Cataluña",
         "postalCode": "08005",
         "addressCountry": "ES"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 41.4005,
-        "longitude": 2.2031
+        "latitude": 41.4005081,
+        "longitude": 2.2008324
       },
+      "hasMap": "https://maps.google.com/?q=Clinica+Dental+Set+Carrer+del+Doctor+Trueta+213+08005+Barcelona",
       "openingHoursSpecification": [
         {
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
           "opens": "10:00",
-          "closes": "20:00"
+          "closes": "14:00",
+          "description": "Horario asistencial de mañana"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "15:00",
+          "closes": "20:00",
+          "description": "Horario asistencial de tarde"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "14:00",
+          "description": "Urgencias odontológicas con cita previa"
+        }
+      ],
+      "employee": [
+        {
+          "@type": ["Person", "Physician"],
+          "name": "Dra. Izbette Luis Torres",
+          "jobTitle": "Directora Clínica & Especialista en Estética, Ortodoncia y Rehabilitación Oral",
+          "medicalSpecialty": "Prosthodontics"
+        },
+        {
+          "@type": ["Person", "Physician"],
+          "name": "Dra. Ruby Alexandra Herrera Villamil",
+          "jobTitle": "Especialista en Cirugía Oral, Periodoncia e Implantología",
+          "medicalSpecialty": "OralSurgery"
+        },
+        {
+          "@type": "Person",
+          "name": "Sílvia Degorgue Magrazo",
+          "jobTitle": "Coordinadora de Pacientes & Higienista Bucodental"
         }
       ],
       "medicalSpecialty": [

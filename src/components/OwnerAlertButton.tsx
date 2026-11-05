@@ -3,16 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  * Illuminated Alert & Access Button for the Clinic Owner ("botón encendido de aviso que hay clientes sin ver")
  * Strict z-index and positioning logic:
- * - Header variant: z-50, constant square dimensions so it never expands or displaces the WhatsApp button.
- * - Floating variant: z-30, on mobile placed on the LEFT (left-3 sm:left-6) and ABOVE the sticky contact bar (bottom-20),
- *   while the fixed telephone call button is on the RIGHT at bottom-0 with z-40.
- *   On desktop, moves to the bottom-right (lg:bottom-6 lg:right-6 lg:left-auto) where the mobile contact bar is hidden.
- *   Zero overlap, zero collision across all mobile and desktop viewports.
+ * - Header variant: z-50, constant square dimensions on #83C408 corporate header so it never expands or displaces WhatsApp.
+ * - Floating variant: z-30, placed on LEFT on mobile (bottom-20 left-3 sm:left-6) and bottom-right on desktop (lg:bottom-6 lg:right-6 lg:left-auto).
  * - Footer variant: embedded cleanly in footer flow.
  */
 
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, CheckCircle2, Lock, BellRing } from 'lucide-react';
+import { ShieldAlert, Lock, BellRing } from 'lucide-react';
 import { getUnseenLeadsCount } from '../utils/crmTracker';
 
 interface OwnerAlertButtonProps {
@@ -45,21 +42,18 @@ export const OwnerAlertButton: React.FC<OwnerAlertButtonProps> = ({
 
   const hasUnseen = unseenCount > 0;
 
-  // 1. HEADER VARIANT: Fixed-size icon button (z-50 context). NEVER expands or displaces WhatsApp CTA.
+  // 1. HEADER VARIANT: Fixed-size icon button styled for high contrast on corporate #83C408 header
   if (variant === 'header') {
     if (hasUnseen) {
       return (
         <button
           onClick={onOpenCrm}
-          className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white shadow-[0_0_15px_rgba(239,68,68,0.75)] ring-2 ring-red-400/80 animate-pulse flex items-center justify-center shrink-0 cursor-pointer transition-all"
+          className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-700 hover:bg-red-800 text-white shadow-[0_0_15px_rgba(185,28,28,0.75)] ring-2 ring-[#07180c] animate-pulse flex items-center justify-center shrink-0 cursor-pointer transition-all"
           title={`Aviso Dueña: ${unseenCount} ${unseenCount === 1 ? 'cliente sin ver' : 'clientes sin ver'} en el CRM`}
           aria-label={`Aviso Dueña: ${unseenCount} clientes sin ver`}
         >
-          {/* Animated beacon bell */}
           <BellRing className="w-4 h-4 text-yellow-200 animate-bounce" />
-
-          {/* Absolute floating counter badge (consumes 0 horizontal layout space) */}
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-yellow-300 text-red-950 text-[10px] font-black rounded-full flex items-center justify-center border-2 border-red-700 shadow-sm leading-none pointer-events-none">
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-yellow-300 text-red-950 text-[10px] font-black rounded-full flex items-center justify-center border-2 border-[#07180c] shadow-sm leading-none pointer-events-none tabular-nums">
             {unseenCount}
           </span>
         </button>
@@ -69,19 +63,17 @@ export const OwnerAlertButton: React.FC<OwnerAlertButtonProps> = ({
     return (
       <button
         onClick={onOpenCrm}
-        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-stone-500 hover:text-stone-800 dark:text-stone-400 dark:hover:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-emerald-950/60 flex items-center justify-center shrink-0 cursor-pointer transition-colors"
+        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-[#07180c] hover:bg-[#07180c]/15 flex items-center justify-center shrink-0 cursor-pointer transition-colors"
         title="Acceso Privado Dirección / CRM (Al día)"
         aria-label="Acceso Privado CRM Dirección"
       >
-        <Lock className="w-4 h-4 text-stone-400" />
-        <span className="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-[#83C408]" />
+        <Lock className="w-4 h-4 text-[#07180c]" />
+        <span className="absolute bottom-2 right-2 w-1.5 h-1.5 rounded-full bg-[#07180c] ring-1 ring-[#FAF7F2]" />
       </button>
     );
   }
 
   // 2. FLOATING VARIANT: Strict z-index & positioning logic preventing ANY overlap with the fixed phone button
-  // - Mobile: z-30, bottom-20 left-3 sm:left-6 (Opposite side from phone on bottom-right, and 24px above bottom bar).
-  // - Desktop: z-30, lg:bottom-6 lg:right-6 lg:left-auto (Where the mobile bar is hidden).
   if (variant === 'floating') {
     return (
       <aside
@@ -95,7 +87,6 @@ export const OwnerAlertButton: React.FC<OwnerAlertButtonProps> = ({
             title={`Aviso Dueña: ${unseenCount} clientes sin revisar en el CRM`}
             aria-label="Aviso Dueña CRM"
           >
-            {/* Pulsing indicator */}
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-90" />
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-300" />
@@ -107,7 +98,7 @@ export const OwnerAlertButton: React.FC<OwnerAlertButtonProps> = ({
               <div className="text-[9px] uppercase font-bold text-yellow-200 tracking-wider leading-tight">
                 Aviso Dueña
               </div>
-              <div className="text-xs font-extrabold text-white leading-tight flex items-center gap-1">
+              <div className="text-xs font-extrabold text-white leading-tight flex items-center gap-1 tabular-nums">
                 <span>{unseenCount} sin ver</span>
               </div>
             </div>
@@ -141,7 +132,7 @@ export const OwnerAlertButton: React.FC<OwnerAlertButtonProps> = ({
         <>
           <span className="w-2 h-2 rounded-full bg-yellow-300 animate-ping" />
           <ShieldAlert className="w-3.5 h-3.5 text-white" />
-          <span>Panel Dueña ({unseenCount} sin ver)</span>
+          <span className="tabular-nums">Panel Dueña ({unseenCount} sin ver)</span>
         </>
       ) : (
         <>

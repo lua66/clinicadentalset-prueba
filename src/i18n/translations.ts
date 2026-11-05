@@ -39,6 +39,8 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     specialtiesSubtitle: 'Cada disciplina atendida por especialistas colegiadas con dedicación exclusiva.',
     viewSpecialtyDetails: 'Ver tratamiento y detalles',
     allSpecialties: 'Todas las Especialidades',
+    pageSpecialtiesTitle: 'Especialidades Odontológicas en Poblenou',
+    pageSpecialtiesSubtitle: 'Tratamientos multidisciplinares con dedicación exclusiva. Cada especialidad cuenta con su propia página y equipo de doctoras colegiadas.',
 
     // Team section
     teamHeading: 'Cuadro Médico y Equipo Humano',
@@ -136,6 +138,8 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     specialtiesSubtitle: 'Cada disciplina atesa per especialistes col·legiades amb dedicació exclusiva.',
     viewSpecialtyDetails: 'Veure tractament i detalls',
     allSpecialties: 'Totes les Especialitats',
+    pageSpecialtiesTitle: 'Especialitats Odontològiques al Poblenou',
+    pageSpecialtiesSubtitle: 'Tractaments multidisciplinaris amb dedicació exclusiva. Cada especialitat compta amb la seva pròpia pàgina i equip de doctores col·legiades.',
 
     // Team section
     teamHeading: 'Quadre Mèdic i Equip Humà',
@@ -233,6 +237,8 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     specialtiesSubtitle: 'Each discipline delivered by board-certified specialists dedicated to your health.',
     viewSpecialtyDetails: 'View treatment & details',
     allSpecialties: 'All Specialties',
+    pageSpecialtiesTitle: 'Dental Specialties in Poblenou, Barcelona',
+    pageSpecialtiesSubtitle: 'Multidisciplinary treatments with dedicated clinical care. Each specialty features its own guide and board-certified doctors.',
 
     // Team section
     teamHeading: 'Our Doctors & Clinical Team',

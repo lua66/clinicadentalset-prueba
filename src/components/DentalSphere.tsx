@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 interface DentalSphereProps {
-  mode?: 'hero' | 'small';
+  mode?: 'hero' | 'page' | 'small';
   className?: string;
 }
 
@@ -16,13 +16,14 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     const container = mountRef.current;
     if (!container) return;
 
-    const width = container.clientWidth || (mode === 'hero' ? 380 : 100);
-    const height = container.clientHeight || (mode === 'hero' ? 380 : 100);
+    const isHero = mode === 'hero';
+    const width = container.clientWidth || (isHero ? 380 : 220);
+    const height = container.clientHeight || (isHero ? 380 : 220);
 
     // Three.js Scene, Camera, Renderer
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.z = mode === 'hero' ? 4.2 : 4.0;
+    camera.position.z = isHero ? 4.2 : 5.0;
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -89,7 +90,6 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
           logoTargetH
         );
       } else {
-        // High-contrast clean fallback text if image is loading
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = '700 64px "Plus Jakarta Sans", sans-serif';
@@ -128,8 +128,8 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     sphereTexture.wrapS = THREE.RepeatWrapping;
     sphereTexture.wrapT = THREE.ClampToEdgeWrapping;
 
-    // Main Sphere Mesh
-    const sphereRadius = mode === 'hero' ? 1.55 : 1.35;
+    // Main Sphere Mesh (Exact original 1.55 radius on Homepage Hero)
+    const sphereRadius = isHero ? 1.55 : 1.5;
     const geometry = new THREE.SphereGeometry(sphereRadius, 64, 64);
     const material = new THREE.MeshStandardMaterial({
       map: sphereTexture,
@@ -155,7 +155,7 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     const ringMaterial = new THREE.MeshBasicMaterial({
       color: 0x23a455,
       transparent: true,
-      opacity: mode === 'hero' ? 0.35 : 0.25,
+      opacity: isHero ? 0.35 : 0.3,
       side: THREE.DoubleSide,
     });
     const ring = new THREE.Mesh(ringGeometry, ringMaterial);
@@ -164,7 +164,7 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     scene.add(ring);
 
     // Particles
-    const particleCount = mode === 'hero' ? 50 : 20;
+    const particleCount = isHero ? 50 : 32;
     const particlesGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -205,6 +205,7 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = container.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
       mouseX = x * 2;
@@ -221,14 +222,12 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Continuous smooth rotation: Logo appears, then Name appears
-      const baseSpeed = mode === 'hero' ? 0.008 : 0.012;
+      const baseSpeed = isHero ? 0.008 : 0.01;
       sphere.rotation.y += baseSpeed;
       glowSphere.rotation.y += baseSpeed * 0.8;
       ring.rotation.z -= baseSpeed * 0.4;
       particles.rotation.y += baseSpeed * 0.2;
 
-      // Mouse Parallax
       targetRotationY = mouseX * 0.4;
       targetRotationX = mouseY * 0.25;
       sphere.rotation.x += (targetRotationX - sphere.rotation.x) * 0.05;
@@ -250,12 +249,16 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
       }
     };
 
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(container);
     window.addEventListener('resize', handleResize);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       container.removeEventListener('mousemove', handleMouseMove);
+      sphereTexture.dispose();
       renderer.dispose();
       geometry.dispose();
       material.dispose();
@@ -271,28 +274,32 @@ export const DentalSphere: React.FC<DentalSphereProps> = ({
     };
   }, [mode]);
 
-  if (mode === 'small') {
+  if (mode === 'hero') {
+    // Original Homepage Hero Mode (420x420 centerpiece)
     return (
-      <div
-        className={`relative inline-flex items-center justify-center shrink-0 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#08160e]/80 backdrop-blur-md border border-[#83C408]/40 shadow-md hover:scale-105 transition-transform duration-300 overflow-hidden ${className}`}
-        title="Esfera Clínica Dental SET"
-        aria-label="Esfera 3D con el logo y nombre de Clínica Dental SET"
-      >
-        <div ref={mountRef} className="w-full h-full" />
+      <div className={`relative w-full max-w-[420px] aspect-square mx-auto flex items-center justify-center ${className}`}>
+        {/* Background ambient glow aura in brand green */}
+        <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#23A455]/25 via-[#83C408]/20 to-transparent blur-3xl pointer-events-none" />
+
+        {/* 3D Three.js Canvas Container */}
+        <div
+          ref={mountRef}
+          className="w-full h-full cursor-grab active:cursor-grabbing transition-transform duration-300 hover:scale-[1.02]"
+          aria-label="Esfera 3D interactiva con el logo y nombre de Clínica Dental SET"
+        />
       </div>
     );
   }
 
-  // Hero Mode (Homepage Centerpiece)
+  // Unified Subpage Header Mode (consistent height across all secondary pages)
   return (
-    <div className={`relative w-full max-w-[420px] aspect-square mx-auto flex items-center justify-center ${className}`}>
-      {/* Background ambient glow aura in brand green */}
-      <div className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#23A455]/25 via-[#83C408]/20 to-transparent blur-3xl pointer-events-none" />
-
-      {/* 3D Three.js Canvas Container */}
+    <div
+      className={`relative w-24 h-24 sm:w-40 sm:h-40 lg:w-[220px] lg:h-[220px] aspect-square shrink-0 flex items-center justify-center ${className}`}
+    >
+      <div className="absolute inset-3 rounded-full bg-gradient-to-tr from-[#23A455]/25 via-[#83C408]/20 to-transparent blur-2xl pointer-events-none" />
       <div
         ref={mountRef}
-        className="w-full h-full cursor-grab active:cursor-grabbing transition-transform duration-300 hover:scale-[1.02]"
+        className="w-full h-full cursor-grab active:cursor-grabbing transition-transform duration-200 hover:scale-[1.03]"
         aria-label="Esfera 3D interactiva con el logo y nombre de Clínica Dental SET"
       />
     </div>
