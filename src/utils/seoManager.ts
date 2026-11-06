@@ -17,10 +17,27 @@ export interface PageSeoMetadata {
   ogType: string;
   ogLocale: string;
   ogImage: string;
+  ogImageAlt: string;
   schemaJson: object;
 }
 
 export const BASE_URL = 'https://clinicadentalset.com';
+export const DEFAULT_OG_IMAGE_PATH = '/assets/og-share.png';
+
+const SOCIAL_BASE_URL =
+  (typeof process !== 'undefined' &&
+    process.env &&
+    (process.env.SITE_URL ||
+      process.env.APP_URL ||
+      (process.env.VERCEL_PROJECT_PRODUCTION_URL
+        ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+        : process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : ''))) ||
+  BASE_URL;
+
+export const DEFAULT_OG_IMAGE = `${SOCIAL_BASE_URL.replace(/\/+$/, '')}${DEFAULT_OG_IMAGE_PATH}`;
+export const DEFAULT_OG_IMAGE_ALT = 'Clínica Dental SET · Poblenou, Barcelona';
 
 const CLINIC_POSTAL_ADDRESS = {
   '@type': 'PostalAddress',
@@ -149,7 +166,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow',
       ogType: 'website',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
@@ -184,7 +202,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow, noarchive',
       ogType: 'website',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'WebPage',
@@ -215,7 +234,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow',
       ogType: 'website',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
@@ -259,7 +279,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow',
       ogType: 'profile',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/equip1.jpg`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'AboutPage',
@@ -303,7 +324,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow',
       ogType: 'website',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/clinica1.jpg`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': ['LocalBusiness', 'MedicalClinic', 'Dentist'],
@@ -342,7 +364,8 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
       robots: 'noindex, nofollow',
       ogType: 'website',
       ogLocale: getOgLocale(lang),
-      ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+      ogImage: DEFAULT_OG_IMAGE,
+      ogImageAlt: DEFAULT_OG_IMAGE_ALT,
       schemaJson: {
         '@context': 'https://schema.org',
         '@type': 'ContactPage',
@@ -397,14 +420,15 @@ export function getSeoMetadata(rawPath: string, explicitLang?: Language): PageSe
     robots: 'noindex, nofollow',
     ogType: 'website',
     ogLocale: getOgLocale(lang),
-    ogImage: `${BASE_URL}/assets/logo-blanc.png`,
+    ogImage: DEFAULT_OG_IMAGE,
+    ogImageAlt: DEFAULT_OG_IMAGE_ALT,
     schemaJson: {
       '@context': 'https://schema.org',
       '@type': ['LocalBusiness', 'Dentist', 'MedicalClinic'],
       '@id': `${BASE_URL}/#localbusiness`,
       name: 'Clínica Dental SET',
       description: 'Clínica dental en Poblenou, Barcelona, con más de 25 años de experiencia.',
-      image: `${BASE_URL}/assets/logo-blanc.png`,
+      image: DEFAULT_OG_IMAGE,
       logo: `${BASE_URL}/assets/logo-blanc.png`,
       url: canonicalUrl,
       inLanguage: getOgLocale(lang).replace('_', '-'),
@@ -695,7 +719,8 @@ function getSpecialtySeo(specialty: Specialty, lang: Language): PageSeoMetadata 
     robots: 'noindex, nofollow',
     ogType: 'article',
     ogLocale: getOgLocale(lang),
-    ogImage: `${BASE_URL}${specialty.image}`,
+    ogImage: DEFAULT_OG_IMAGE,
+    ogImageAlt: `${specTitle} · Clínica Dental SET Barcelona`,
     schemaJson,
   };
 }
@@ -759,15 +784,28 @@ export function applySeoMetadata(seo: PageSeoMetadata, lang: Language): void {
     el.setAttribute('content', content);
   };
 
+  const liveOgImage =
+    typeof window !== 'undefined' && window.location?.origin
+      ? `${window.location.origin}${DEFAULT_OG_IMAGE_PATH}`
+      : seo.ogImage;
+
   setMetaProperty('og:title', seo.title);
   setMetaProperty('og:description', seo.description);
   setMetaProperty('og:url', seo.canonicalUrl);
   setMetaProperty('og:type', seo.ogType);
   setMetaProperty('og:locale', seo.ogLocale);
-  setMetaProperty('og:image', seo.ogImage);
+  setMetaProperty('og:image', liveOgImage);
+  setMetaProperty('og:image:secure_url', liveOgImage);
+  setMetaProperty('og:image:type', 'image/png');
+  setMetaProperty('og:image:width', '1200');
+  setMetaProperty('og:image:height', '630');
+  setMetaProperty('og:image:alt', seo.ogImageAlt);
 
+  setMetaName('twitter:card', 'summary_large_image');
   setMetaName('twitter:title', seo.title);
   setMetaName('twitter:description', seo.description);
+  setMetaName('twitter:image', liveOgImage);
+  setMetaName('twitter:image:alt', seo.ogImageAlt);
 
   let schemaScript = document.getElementById('dynamic-schema-ld') as HTMLScriptElement | null;
   if (!schemaScript) {

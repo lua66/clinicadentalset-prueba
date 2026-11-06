@@ -126,12 +126,28 @@ async function runPrerender() {
       () => `<meta property="og:image" content="${escapeAttr(seo.ogImage)}" />`
     );
     pageHtml = pageHtml.replace(
+      /<meta\s+property="og:image:secure_url"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta property="og:image:secure_url" content="${escapeAttr(seo.ogImage)}" />`
+    );
+    pageHtml = pageHtml.replace(
+      /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta property="og:image:alt" content="${escapeAttr(seo.ogImageAlt)}" />`
+    );
+    pageHtml = pageHtml.replace(
       /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
       () => `<meta name="twitter:title" content="${escapeAttr(seo.title)}" />`
     );
     pageHtml = pageHtml.replace(
       /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
       () => `<meta name="twitter:description" content="${escapeAttr(seo.description)}" />`
+    );
+    pageHtml = pageHtml.replace(
+      /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta name="twitter:image" content="${escapeAttr(seo.ogImage)}" />`
+    );
+    pageHtml = pageHtml.replace(
+      /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta name="twitter:image:alt" content="${escapeAttr(seo.ogImageAlt)}" />`
     );
 
     // 6. Replace JSON-LD Schema script

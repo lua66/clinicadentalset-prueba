@@ -1,0 +1,29 @@
+{
+  "name": "Clínica Dental SET · Poblenou, Barcelona",
+  "short_name": "Dental SET",
+  "description": "Clínica Dental SET en Poblenou, Barcelona (Carrer del Doctor Trueta, 213). Más de 25 años cuidando tu salud bucodental.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080C0A",
+  "theme_color": "#83C408",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

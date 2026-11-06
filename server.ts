@@ -35,6 +35,32 @@ function getOgLocale(lang: string): string {
   return 'es_ES';
 }
 
+function resolveRequestOrigin(req: express.Request): string | null {
+  const rawHost = (req.headers['x-forwarded-host'] || req.headers.host || '')
+    .toString()
+    .split(',')[0]
+    .trim();
+  if (!rawHost || !/^[a-zA-Z0-9.-]+(:\d{1,5})?$/.test(rawHost)) {
+    return null;
+  }
+  const rawProto = (req.headers['x-forwarded-proto'] || req.protocol || 'https')
+    .toString()
+    .split(',')[0]
+    .trim()
+    .toLowerCase();
+  const isLocalHost =
+    rawHost.startsWith('localhost') || rawHost.startsWith('127.0.0.1');
+  const proto = rawProto === 'http' && isLocalHost ? 'http' : 'https';
+  return `${proto}://${rawHost}`;
+}
+
+function rewriteSocialImageOriginForRequest(html: string, req: express.Request): string {
+  const origin = resolveRequestOrigin(req);
+  if (!origin) return html;
+  const escapedImgUrl = escapeHtmlAttr(`${origin}/assets/og-share.png`);
+  return html.replace(/https?:\/\/[^"'\s<>]+\/assets\/og-share\.png/g, () => escapedImgUrl);
+}
+
 function applySeoToHtmlTemplate(
   templateHtml: string,
   payload: {
@@ -48,6 +74,7 @@ function applySeoToHtmlTemplate(
       robots: string;
       ogType: string;
       ogImage: string;
+      ogImageAlt: string;
       schemaJson: unknown;
     };
   }
@@ -117,12 +144,28 @@ function applySeoToHtmlTemplate(
       () => `<meta property="og:image" content="${escapeHtmlAttr(seo.ogImage)}" />`
     )
     .replace(
+      /<meta\s+property="og:image:secure_url"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta property="og:image:secure_url" content="${escapeHtmlAttr(seo.ogImage)}" />`
+    )
+    .replace(
+      /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta property="og:image:alt" content="${escapeHtmlAttr(seo.ogImageAlt)}" />`
+    )
+    .replace(
       /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
       () => `<meta name="twitter:title" content="${escapeHtmlAttr(seo.title)}" />`
     )
     .replace(
       /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
       () => `<meta name="twitter:description" content="${escapeHtmlAttr(seo.description)}" />`
+    )
+    .replace(
+      /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta name="twitter:image" content="${escapeHtmlAttr(seo.ogImage)}" />`
+    )
+    .replace(
+      /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta name="twitter:image:alt" content="${escapeHtmlAttr(seo.ogImageAlt)}" />`
     )
     .replace(
       /<script\s+id="dynamic-schema-ld"\s+type="application\/ld\+json">[\s\S]*?<\/script>/,
@@ -298,7 +341,10 @@ async function startServer() {
         const transformedTemplate = await vite.transformIndexHtml(req.originalUrl, rawTemplate);
         const ssrModule = await vite.ssrLoadModule('/src/entry-server.tsx');
         const rendered = ssrModule.renderRoute(reqPath);
-        const finalHtml = applySeoToHtmlTemplate(transformedTemplate, rendered);
+        const finalHtml = rewriteSocialImageOriginForRequest(
+          applySeoToHtmlTemplate(transformedTemplate, rendered),
+          req
+        );
 
         res
           .status(statusCode)
@@ -322,6 +368,8 @@ async function startServer() {
             res.setHeader('Content-Type', 'text/plain; charset=utf-8');
           } else if (filePath.endsWith('sitemap.xml')) {
             res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+          } else if (filePath.endsWith('.webmanifest')) {
+            res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
           }
         },
       })
@@ -333,6 +381,11 @@ async function startServer() {
       const legacyTarget = getLegacyRedirectPath(reqPath);
       if (legacyTarget) {
         res.redirect(301, legacyTarget);
+        return;
+      }
+
+      if (/\.[a-zA-Z0-9]{2,11}$/.test(reqPath) && !reqPath.endsWith('.html')) {
+        res.status(404).type('text/plain').send('404 Not Found');
         return;
       }
 
@@ -352,7 +405,11 @@ async function startServer() {
         res.setHeader('X-Robots-Tag', 'noindex, nofollow');
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         if (fs.existsSync(target404)) {
-          res.status(404).sendFile(target404);
+          const html404 = rewriteSocialImageOriginForRequest(
+            fs.readFileSync(target404, 'utf-8'),
+            req
+          );
+          res.status(404).send(html404);
         } else {
           res.status(404).send('404 - Página no encontrada');
         }
@@ -373,7 +430,11 @@ async function startServer() {
       res.setHeader('X-Robots-Tag', 'noindex, nofollow');
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       if (matchedHtml) {
-        res.status(200).sendFile(matchedHtml);
+        const htmlBody = rewriteSocialImageOriginForRequest(
+          fs.readFileSync(matchedHtml, 'utf-8'),
+          req
+        );
+        res.status(200).send(htmlBody);
       } else {
         res.status(404).send('404 - Página no encontrada');
       }
