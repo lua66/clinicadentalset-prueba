@@ -5,6 +5,7 @@ import { Specialty, Language } from '../types';
 import { SPECIALTIES, CLINIC_CONTACT } from '../data/clinicData';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { trackCrmLead } from '../utils/crmTracker';
+import { sendGa4ContactLead, sendGa4Event } from '../utils/googleAnalytics';
 import { buildLocalizedPath } from '../utils/routing';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 
@@ -24,7 +25,20 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
   const [doctorImgError, setDoctorImgError] = useState<boolean>(false);
 
   const toggleFaq = (index: number) => {
-    setOpenFaqIndex(openFaqIndex === index ? null : index);
+    const nextIdx = openFaqIndex === index ? null : index;
+    setOpenFaqIndex(nextIdx);
+    if (nextIdx !== null) {
+      const faq = specialty.faqs[lang]?.[index];
+      if (faq) {
+        sendGa4Event('faq_expand', {
+          faq_question: faq.question.slice(0, 100),
+          item_id: specialty.slug,
+          item_name: specialty.title[lang],
+          language: lang,
+          page_path: buildLocalizedPath(`/especialidades/${specialty.slug}`, lang),
+        });
+      }
+    }
   };
 
   const otherSpecialties = SPECIALTIES.filter((s) => s.id !== specialty.id).slice(0, 4);
@@ -122,6 +136,13 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
                     sourcePage: `Página de Especialidad: ${specialty.title[lang]}`,
                     sourceUrl: currentSpecUrl,
                   });
+                  sendGa4ContactLead({
+                    channel: 'whatsapp',
+                    treatment: specialty.title[lang],
+                    uiLocation: 'Specialty Hero Card',
+                    lang,
+                    pagePath: currentSpecUrl,
+                  });
                 }}
                 className="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors cursor-pointer"
               >
@@ -137,6 +158,13 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
                     treatment: specialty.title[lang],
                     sourcePage: `Página de Especialidad: ${specialty.title[lang]}`,
                     sourceUrl: currentSpecUrl,
+                  });
+                  sendGa4ContactLead({
+                    channel: 'phone',
+                    treatment: specialty.title[lang],
+                    uiLocation: 'Specialty Hero Card',
+                    lang,
+                    pagePath: currentSpecUrl,
                   });
                 }}
                 className="inline-flex items-center justify-center min-h-[44px] gap-2 px-4 py-3 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] rounded-xl transition-colors border border-[#83C408]/60 hover:border-[#83C408] tabular-nums cursor-pointer"
@@ -307,6 +335,13 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
                     sourcePage: `Lateral de Reserva: ${specialty.title[lang]}`,
                     sourceUrl: currentSpecUrl,
                   });
+                  sendGa4ContactLead({
+                    channel: 'whatsapp',
+                    treatment: specialty.title[lang],
+                    uiLocation: 'Specialty Sticky Sidebar',
+                    lang,
+                    pagePath: currentSpecUrl,
+                  });
                 }}
                 className="w-full min-h-[44px] py-3 px-4 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
@@ -322,6 +357,13 @@ export const SpecialtyDetailPage: React.FC<SpecialtyDetailPageProps> = ({
                     treatment: specialty.title[lang],
                     sourcePage: `Lateral de Reserva: ${specialty.title[lang]}`,
                     sourceUrl: currentSpecUrl,
+                  });
+                  sendGa4ContactLead({
+                    channel: 'phone',
+                    treatment: specialty.title[lang],
+                    uiLocation: 'Specialty Sticky Sidebar',
+                    lang,
+                    pagePath: currentSpecUrl,
                   });
                 }}
                 className="w-full min-h-[44px] mt-2.5 py-2.5 px-4 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] rounded-xl transition-colors flex items-center justify-center gap-2 border border-[#83C408]/60 hover:border-[#83C408] tabular-nums cursor-pointer"

@@ -5,6 +5,7 @@ import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { sendGa4ContactLead, sendGa4Event } from '../utils/googleAnalytics';
 import { hasThirdPartyCookieConsent, saveCookieConsent } from '../utils/cookieConsent';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 
@@ -38,6 +39,10 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
   const handleEnableMap = () => {
     saveCookieConsent('accepted');
     setMapConsented(true);
+    sendGa4Event('map_load', {
+      ui_location: 'DirectContactAndMap',
+      language: lang,
+    });
   };
 
   return (
@@ -192,6 +197,12 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       treatment: 'Consulta General (Sección Contacto y Mapa)',
                       sourcePage: 'Sección Contacto y Mapa Poblenou',
                     });
+                    sendGa4ContactLead({
+                      channel: 'whatsapp',
+                      treatment: 'Consulta General (Sección Contacto y Mapa)',
+                      uiLocation: 'Contact & Map Section',
+                      lang,
+                    });
                   }}
                   className="w-full sm:w-auto min-h-[44px] px-6 py-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer"
                 >
@@ -232,6 +243,12 @@ export const DirectContactAndMap: React.FC<DirectContactAndMapProps> = ({
                       type: 'call',
                       treatment: 'Consulta General (Sección Contacto y Mapa)',
                       sourcePage: 'Sección Contacto y Mapa Poblenou',
+                    });
+                    sendGa4ContactLead({
+                      channel: 'phone',
+                      treatment: 'Consulta General (Sección Contacto y Mapa)',
+                      uiLocation: 'Contact & Map Section',
+                      lang,
                     });
                   }}
                   className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] rounded-xl border border-[#83C408]/60 hover:border-[#83C408] transition-colors flex items-center justify-center gap-2 tabular-nums cursor-pointer"

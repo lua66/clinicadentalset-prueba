@@ -72,10 +72,18 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Aceptar cookies y mostrar mapa',
     mapOpenExternal: 'Abrir en Google Maps',
     cookieBannerTitle: 'Uso de cookies y privacidad',
-    cookieBannerDesc: 'Utilizamos almacenamiento técnico esencial para la navegación y, solo si nos das tu consentimiento, cookies de terceros para mostrar el mapa interactivo de Google Maps.',
+    cookieBannerDesc:
+      'Utilizamos almacenamiento técnico esencial para la navegación y, solo si nos das tu consentimiento, cookies de terceros para mostrar el mapa interactivo de Google Maps y analizar estadísticas de navegación y clics de contacto con Google Analytics 4.',
     cookieAcceptAll: 'Aceptar todas',
     cookieEssentialOnly: 'Solo esenciales',
     cookieConfigure: 'Configurar cookies',
+    cookieDetailsToggle: 'Ver detalle de privacidad y cookies',
+    cookieDetailsHide: 'Ocultar detalle de privacidad',
+    cookieDetailsEssential: 'Esenciales: guardan tu preferencia de consentimiento (siempre activas).',
+    cookieDetailsAnalytics:
+      'Analítica (Google Analytics 4): medición agregada de visitas y clics de contacto con IP anonimizada (requiere consentimiento).',
+    cookieDetailsMaps:
+      'Mapa (Google Maps): carga del mapa de ubicación en Poblenou (requiere consentimiento).',
     viewGalleryBtn: 'Ver galería de instalaciones',
 
     // 404 Page
@@ -174,10 +182,18 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Acceptar cookies i mostrar mapa',
     mapOpenExternal: 'Obrir a Google Maps',
     cookieBannerTitle: 'Ús de cookies i privadesa',
-    cookieBannerDesc: 'Utilitzem emmagatzematge tècnic essencial per a la navegació i, només amb el teu consentiment, cookies de tercers per mostrar el mapa interactiu de Google Maps.',
+    cookieBannerDesc:
+      'Utilitzem emmagatzematge tècnic essencial per a la navegació i, només amb el teu consentiment, cookies de tercers per mostrar el mapa interactiu de Google Maps i analitzar estadístiques de navegació i clics de contacte amb Google Analytics 4.',
     cookieAcceptAll: 'Acceptar totes',
     cookieEssentialOnly: 'Només essencials',
     cookieConfigure: 'Configurar cookies',
+    cookieDetailsToggle: 'Veure detall de privadesa i cookies',
+    cookieDetailsHide: 'Amagar detall de privadesa',
+    cookieDetailsEssential: 'Essencials: desen la teva preferència de consentiment (sempre actives).',
+    cookieDetailsAnalytics:
+      'Analítica (Google Analytics 4): mesurament agregat de visites i clics de contacte amb IP anonimitzada (requereix consentiment).',
+    cookieDetailsMaps:
+      'Mapa (Google Maps): càrrega del mapa d’ubicació al Poblenou (requereix consentiment).',
     viewGalleryBtn: 'Veure galeria d’instal·lacions',
 
     // 404 Page
@@ -276,10 +292,18 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     mapAcceptBtn: 'Accept cookies & load map',
     mapOpenExternal: 'Open in Google Maps',
     cookieBannerTitle: 'Cookies & Privacy Preferences',
-    cookieBannerDesc: 'We use essential technical storage for navigation and, only with your consent, third-party cookies to display the interactive Google Map.',
+    cookieBannerDesc:
+      'We use essential technical storage for browsing and, only with your consent, third-party cookies to display the interactive Google Map and measure site traffic and contact clicks via Google Analytics 4.',
     cookieAcceptAll: 'Accept all',
     cookieEssentialOnly: 'Essential only',
     cookieConfigure: 'Cookie settings',
+    cookieDetailsToggle: 'View privacy & cookie details',
+    cookieDetailsHide: 'Hide privacy details',
+    cookieDetailsEssential: 'Essential: stores your consent choice (always active).',
+    cookieDetailsAnalytics:
+      'Analytics (Google Analytics 4): aggregate page views and contact click measurement with IP anonymization (requires consent).',
+    cookieDetailsMaps:
+      'Map (Google Maps): loads the interactive Poblenou clinic map (requires consent).',
     viewGalleryBtn: 'View clinic facilities gallery',
 
     // 404 Page

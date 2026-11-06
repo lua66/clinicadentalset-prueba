@@ -4,6 +4,7 @@ import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { CLINIC_CONTACT, SPECIALTIES } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { sendGa4ContactLead } from '../utils/googleAnalytics';
 import { buildLocalizedPath } from '../utils/routing';
 import { resetCookieConsentPrompt } from '../utils/cookieConsent';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
@@ -124,6 +125,12 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                   treatment: 'Consulta General (Pie de Página)',
                   sourcePage: 'Pie de Página (Footer)',
                 });
+                sendGa4ContactLead({
+                  channel: 'whatsapp',
+                  treatment: 'Consulta General (Pie de Página)',
+                  uiLocation: 'Footer CTA',
+                  lang,
+                });
               }}
               className="flex items-center justify-center min-h-[44px] gap-2 w-full py-2.5 px-4 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"
             >
@@ -138,6 +145,12 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
                   type: 'call',
                   treatment: 'Consulta General (Pie de Página)',
                   sourcePage: 'Pie de Página (Footer)',
+                });
+                sendGa4ContactLead({
+                  channel: 'phone',
+                  treatment: 'Consulta General (Pie de Página)',
+                  uiLocation: 'Footer CTA',
+                  lang,
                 });
               }}
               className="flex items-center justify-center min-h-[44px] gap-2 w-full py-2.5 px-4 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg transition-colors border border-[#83C408]/60 hover:border-[#83C408] tabular-nums cursor-pointer"
@@ -154,20 +167,20 @@ export const Footer: React.FC<FooterProps> = ({ lang, onNavigate }) => {
 
           <div className="flex flex-wrap items-center gap-3 sm:gap-5">
             <a
-              href={buildLocalizedPath('/contacto', lang)}
+              href={`${buildLocalizedPath('/contacto', lang)}#politica-privacidad-cookies`}
               onClick={(e) => {
                 e.preventDefault();
-                onNavigate(buildLocalizedPath('/contacto', lang));
+                onNavigate(`${buildLocalizedPath('/contacto', lang)}#politica-privacidad-cookies`);
               }}
               className="inline-flex items-center min-h-[44px] px-1 hover:text-[#83C408] cursor-pointer"
             >
               {t.legalNotice}
             </a>
             <a
-              href={buildLocalizedPath('/contacto', lang)}
+              href={`${buildLocalizedPath('/contacto', lang)}#politica-privacidad-cookies`}
               onClick={(e) => {
                 e.preventDefault();
-                onNavigate(buildLocalizedPath('/contacto', lang));
+                onNavigate(`${buildLocalizedPath('/contacto', lang)}#politica-privacidad-cookies`);
               }}
               className="inline-flex items-center min-h-[44px] px-1 hover:text-[#83C408] cursor-pointer"
             >

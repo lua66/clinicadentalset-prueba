@@ -4,6 +4,7 @@ import { Language } from '../types';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { SPECIALTIES, CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { sendGa4ContactLead, sendGa4Event } from '../utils/googleAnalytics';
 import { DentalSphere } from './DentalSphere';
 import { buildLocalizedPath } from '../utils/routing';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
@@ -107,6 +108,12 @@ export const SpecialtiesGrid: React.FC<SpecialtiesGridProps> = ({
                     href={specHref}
                     onClick={(e) => {
                       e.preventDefault();
+                      sendGa4Event('select_content', {
+                        content_type: 'dental_specialty',
+                        item_id: spec.slug,
+                        item_name: spec.title[lang],
+                        language: lang,
+                      });
                       onSelectSpecialty(spec.slug);
                     }}
                     className="flex-1 min-h-[44px] py-2.5 px-3 text-xs font-bold text-[#83C408] bg-[#16231B] hover:bg-[#1D2E24] border border-[#83C408]/60 hover:border-[#83C408] rounded-lg transition-colors flex items-center justify-between cursor-pointer"
@@ -128,6 +135,13 @@ export const SpecialtiesGrid: React.FC<SpecialtiesGridProps> = ({
                         treatment: spec.title[lang],
                         sourcePage: `Catálogo de Especialidades: ${spec.title[lang]}`,
                         sourceUrl: specHref,
+                      });
+                      sendGa4ContactLead({
+                        channel: 'whatsapp',
+                        treatment: spec.title[lang],
+                        uiLocation: 'Specialties Grid Card',
+                        lang,
+                        pagePath: specHref,
                       });
                     }}
                     className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] p-2.5 text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs transition-colors cursor-pointer"

@@ -55,10 +55,22 @@ function resolveRequestOrigin(req: express.Request): string | null {
 }
 
 function rewriteSocialImageOriginForRequest(html: string, req: express.Request): string {
+  let out = html;
+  const runtimeGa4Id = (
+    process.env.VITE_GA4_MEASUREMENT_ID ||
+    process.env.GA4_MEASUREMENT_ID ||
+    ''
+  ).trim();
+  if (/^G-[A-Z0-9]{6,16}$/i.test(runtimeGa4Id) && runtimeGa4Id.toUpperCase() !== 'G-XXXXXXXXXX') {
+    out = out.replace(
+      /<meta\s+name="ga4-measurement-id"\s+content="[^"]*"\s*\/?>/,
+      () => `<meta name="ga4-measurement-id" content="${escapeHtmlAttr(runtimeGa4Id.toUpperCase())}" />`
+    );
+  }
   const origin = resolveRequestOrigin(req);
-  if (!origin) return html;
+  if (!origin) return out;
   const escapedImgUrl = escapeHtmlAttr(`${origin}/assets/og-share.png`);
-  return html.replace(/https?:\/\/[^"'\s<>]+\/assets\/og-share\.png/g, () => escapedImgUrl);
+  return out.replace(/https?:\/\/[^"'\s<>]+\/assets\/og-share\.png/g, () => escapedImgUrl);
 }
 
 function applySeoToHtmlTemplate(

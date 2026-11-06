@@ -9,10 +9,12 @@ import { TeamSection } from './components/TeamSection';
 import { ClinicGallery } from './components/ClinicGallery';
 import { DoctorPresentationVideo } from './components/DoctorPresentationVideo';
 import { DirectContactAndMap } from './components/DirectContactAndMap';
+import { PrivacyAndCookiesNotice } from './components/PrivacyAndCookiesNotice';
 import { CookieBanner } from './components/CookieBanner';
 import { SpecialtyDetailPage } from './pages/SpecialtyDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { trackCrmLead } from './utils/crmTracker';
+import { useGoogleAnalytics } from './hooks/useGoogleAnalytics';
 import { buildWhatsAppUrl } from './utils/whatsapp';
 import { Language, Specialty } from './types';
 import { UI_TRANSLATIONS } from './i18n/translations';
@@ -47,6 +49,18 @@ export function App({ initialPath }: AppProps = {}) {
   });
 
   const { lang, basePath, specialtySlug, isNotFound } = parseUrlPath(currentPath);
+  const seoMetadata = React.useMemo(
+    () => getSeoMetadata(currentPath, lang),
+    [currentPath, lang]
+  );
+
+  // Privacy-compliant Google Analytics 4 custom hook (active strictly after user cookie consent)
+  const { trackContactClick, trackLanguageSwitch } = useGoogleAnalytics({
+    currentPath,
+    lang,
+    pageTitle: seoMetadata.title,
+    disabled: basePath === '/crm',
+  });
 
   // Sync URL bar if a legacy untranslated path was normalized on client mount
   useEffect(() => {
@@ -61,17 +75,29 @@ export function App({ initialPath }: AppProps = {}) {
 
   // Dynamically update unique meta descriptions, canonical tags, hreflang, and schema per route & language
   useEffect(() => {
-    const seo = getSeoMetadata(currentPath, lang);
-    applySeoMetadata(seo, lang);
-  }, [currentPath, lang]);
+    applySeoMetadata(seoMetadata, lang);
+  }, [seoMetadata, lang]);
 
-  // Handle URL change
+  // Handle URL change (supporting optional anchor scrolling such as #politica-privacidad-cookies)
   const navigateTo = (path: string) => {
-    const target = getLegacyRedirectPath(path) || path;
-    setCurrentPath(target);
+    const [rawPathOnly, hashFragment] = path.split('#');
+    const cleanTarget = getLegacyRedirectPath(rawPathOnly || '/') || rawPathOnly || '/';
+    setCurrentPath(cleanTarget);
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', target);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const nextBrowserUrl = hashFragment ? `${cleanTarget}#${hashFragment}` : cleanTarget;
+      window.history.pushState({}, '', nextBrowserUrl);
+      if (hashFragment) {
+        window.setTimeout(() => {
+          const el = document.getElementById(hashFragment);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 60);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
@@ -81,6 +107,11 @@ export function App({ initialPath }: AppProps = {}) {
       isNotFound ? `/404` : basePath,
       newLang
     );
+    trackLanguageSwitch({
+      fromLang: lang,
+      toLang: newLang,
+      targetPath: localized,
+    });
     navigateTo(localized);
   };
 
@@ -214,7 +245,7 @@ export function App({ initialPath }: AppProps = {}) {
             <DirectContactAndMap lang={lang} showHeader={true} showSphere={false} />
           </>
         ) : basePath === '/contacto' ? (
-          /* ROUTE 5: Contact & Location Dedicated Page */
+          /* ROUTE 5: Contact, Location & Privacy/Cookies Policy Dedicated Page */
           <>
             <PageHeader
               breadcrumbs={[
@@ -229,6 +260,7 @@ export function App({ initialPath }: AppProps = {}) {
               onNavigate={navigateTo}
             />
             <DirectContactAndMap lang={lang} showHeader={false} showSphere={false} />
+            <PrivacyAndCookiesNotice lang={lang} />
           </>
         ) : (
           /* ROUTE 6: Homepage */
@@ -271,6 +303,12 @@ export function App({ initialPath }: AppProps = {}) {
                             sourcePage: 'Página de Inicio (Hero)',
                             sourceUrl: currentPath,
                           });
+                          trackContactClick({
+                            channel: 'whatsapp',
+                            treatment: 'Consulta General (Hero Principal)',
+                            uiLocation: 'Hero Primary CTA',
+                            pagePath: currentPath,
+                          });
                         }}
                         className="inline-flex items-center justify-center min-h-[44px] gap-2.5 px-6 py-3 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm hover:shadow-md transition-all whitespace-nowrap shrink-0 cursor-pointer"
                       >
@@ -286,6 +324,12 @@ export function App({ initialPath }: AppProps = {}) {
                             treatment: 'Consulta General (Hero Principal)',
                             sourcePage: 'Página de Inicio (Hero)',
                             sourceUrl: currentPath,
+                          });
+                          trackContactClick({
+                            channel: 'phone',
+                            treatment: 'Consulta General (Hero Principal)',
+                            uiLocation: 'Hero Secondary Call CTA',
+                            pagePath: currentPath,
                           });
                         }}
                         className="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all whitespace-nowrap shrink-0 cursor-pointer"
@@ -492,6 +536,12 @@ export function App({ initialPath }: AppProps = {}) {
               sourcePage: 'Barra Inferior Móvil',
               sourceUrl: currentPath,
             });
+            trackContactClick({
+              channel: 'whatsapp',
+              treatment: 'Consulta General (Barra Inferior Móvil)',
+              uiLocation: 'Mobile Sticky Bottom Bar',
+              pagePath: currentPath,
+            });
           }}
           className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-lg shadow-xs cursor-pointer"
         >
@@ -508,6 +558,12 @@ export function App({ initialPath }: AppProps = {}) {
               sourcePage: 'Barra Inferior Móvil',
               sourceUrl: currentPath,
             });
+            trackContactClick({
+              channel: 'phone',
+              treatment: 'Consulta General (Barra Inferior Móvil)',
+              uiLocation: 'Mobile Sticky Bottom Bar',
+              pagePath: currentPath,
+            });
           }}
           className="flex-1 min-h-[44px] flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] rounded-lg border border-[#83C408]/70 tabular-nums cursor-pointer"
         >
@@ -523,7 +579,12 @@ export function App({ initialPath }: AppProps = {}) {
       />
 
       {/* GDPR COOKIE CONSENT BANNER */}
-      <CookieBanner lang={lang} />
+      <CookieBanner
+        lang={lang}
+        onOpenPrivacyPolicy={() =>
+          navigateTo(`${buildLocalizedPath('/contacto', lang)}#politica-privacidad-cookies`)
+        }
+      />
     </div>
   );
 }

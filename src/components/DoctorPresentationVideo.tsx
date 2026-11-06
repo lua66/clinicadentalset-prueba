@@ -3,6 +3,7 @@ import { Play, CheckCircle2, MessageCircle, Phone, MapPin, Video } from 'lucide-
 import { Language } from '../types';
 import { CLINIC_CONTACT } from '../data/clinicData';
 import { trackCrmLead } from '../utils/crmTracker';
+import { sendGa4ContactLead, sendGa4Event } from '../utils/googleAnalytics';
 import { UI_TRANSLATIONS } from '../i18n/translations';
 import { buildWhatsAppUrl } from '../utils/whatsapp';
 
@@ -95,9 +96,23 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                 controls
                 playsInline
                 preload="metadata"
-                onPlay={() => setIsPlaying(true)}
+                onPlay={() => {
+                  setIsPlaying(true);
+                  sendGa4Event('video_start', {
+                    video_title: 'Presentación Clínica Dental SET Poblenou',
+                    ui_location: sourcePage,
+                    language: lang,
+                  });
+                }}
                 onPause={() => setIsPlaying(false)}
-                onEnded={() => setIsPlaying(false)}
+                onEnded={() => {
+                  setIsPlaying(false);
+                  sendGa4Event('video_complete', {
+                    video_title: 'Presentación Clínica Dental SET Poblenou',
+                    ui_location: sourcePage,
+                    language: lang,
+                  });
+                }}
                 className="w-full h-full object-cover"
                 aria-label={copy.heading}
               >
@@ -184,6 +199,12 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                     treatment: 'Consulta General (Vídeo Presentación Doctora)',
                     sourcePage,
                   });
+                  sendGa4ContactLead({
+                    channel: 'whatsapp',
+                    treatment: 'Consulta General (Vídeo Presentación Doctora)',
+                    uiLocation: 'Doctor Presentation Video',
+                    lang,
+                  });
                 }}
                 className="inline-flex items-center justify-center min-h-[44px] gap-2.5 px-6 py-3 text-xs sm:text-sm font-extrabold text-[#071408] bg-[#83C408] hover:bg-[#95DB0B] rounded-xl shadow-sm transition-all cursor-pointer"
               >
@@ -198,6 +219,12 @@ export const DoctorPresentationVideo: React.FC<DoctorPresentationVideoProps> = (
                     type: 'call',
                     treatment: 'Consulta General (Vídeo Presentación Doctora)',
                     sourcePage,
+                  });
+                  sendGa4ContactLead({
+                    channel: 'phone',
+                    treatment: 'Consulta General (Vídeo Presentación Doctora)',
+                    uiLocation: 'Doctor Presentation Video',
+                    lang,
                   });
                 }}
                 className="inline-flex items-center justify-center min-h-[44px] gap-2 px-5 py-3 text-xs sm:text-sm font-bold text-[#83C408] bg-[#101914] hover:bg-[#16231B] border border-[#83C408]/60 hover:border-[#83C408] rounded-xl shadow-xs tabular-nums transition-all cursor-pointer"
